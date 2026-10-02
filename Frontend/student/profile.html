@@ -204,6 +204,27 @@
         .level-badge.class12  { background: linear-gradient(135deg, #c9f3ec, #c2efe6); color: #0c5460; }
         .level-badge.grad     { background: linear-gradient(135deg, #d3f4e5, #c9f0df); color: #155724; }
 
+        /* ---------- AI Tips Box ---------- */
+        .ai-tips-box {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.06) 0%, rgba(5, 150, 105, 0.02) 100%);
+            border: 1px solid rgba(16, 185, 129, 0.15);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+            transition: transform 0.2s var(--pp-ease), box-shadow 0.2s var(--pp-ease);
+        }
+        .ai-tips-box:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.08);
+        }
+        .ai-tip-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(8px);
+            border-radius: 12px;
+            padding: 14px;
+            height: 100%;
+            transition: background 0.2s;
+        }
+        .ai-tip-card:hover { background: rgba(255, 255, 255, 0.9); }
+
         /* ---------- Unsaved indicator dot ---------- */
         #unsavedDot {
             width: 10px; height: 10px;
@@ -623,7 +644,8 @@
             <!--  TECHNICAL SKILLS                                   -->
             <!-- ═══════════════════════════════════════════════════ -->
             <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
-                <h5 class="fw-bold text-primary mb-3"><i class="fa fa-code me-2"></i>Technical Skills</h5>
+                <h5 class="fw-bold text-primary mb-1"><i class="fa fa-code me-2"></i>Technical Skills</h5>
+                <p class="text-success small mb-3 edit-only" style="display:none!important; font-size: 0.8rem;"><i class="fa fa-lightbulb me-1"></i><strong>Suggestion:</strong> List languages you can confidently write logic in. Avoid buzzwords you can't explain.</p>
                 <div class="row g-3">
                     <div class="col-md-12">
                         <label class="form-label fw-bold small text-muted text-uppercase">Programming Languages <small>(comma-separated)</small></label>
@@ -674,8 +696,11 @@
             <!--  PROJECTS                                           -->
             <!-- ═══════════════════════════════════════════════════ -->
             <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="fw-bold text-primary mb-0"><i class="fa fa-diagram-project me-2"></i>Projects</h5>
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                        <h5 class="fw-bold text-primary mb-0"><i class="fa fa-diagram-project me-2"></i>Projects</h5>
+                        <p class="text-success small mb-0 mt-1 edit-only" style="display:none!important; font-size: 0.8rem;"><i class="fa fa-lightbulb me-1"></i><strong>Suggestion:</strong> Add 2-3 impactful projects. Mention the tech stack and the problem it solves.</p>
+                    </div>
                     <button type="button" class="btn btn-sm btn-outline-primary rounded-pill edit-only" style="display:none!important;"
                             onclick="addProjectCard()">
                         <i class="fa fa-plus me-1"></i>Add Project
@@ -692,6 +717,7 @@
                     <div>
                         <h5 class="fw-bold text-primary mb-0"><i class="fa fa-trophy me-2"></i>Hackathons &amp; Flagship Projects</h5>
                         <small class="text-muted">Competition wins, hackathon participations, and major independent projects.</small>
+                        <p class="text-success small mb-0 mt-1 edit-only" style="display:none!important; font-size: 0.8rem;"><i class="fa fa-lightbulb me-1"></i><strong>Suggestion:</strong> Highlight your role and the outcome (e.g., Top 10 finish, Built MVP).</p>
                     </div>
                 </div>
                 <!-- View mode -->
@@ -716,6 +742,7 @@
                     <div>
                         <h5 class="fw-bold text-primary mb-0"><i class="fa fa-laptop-code me-2"></i>Coding Contests &amp; Competitive Programming</h5>
                         <small class="text-muted">Platforms, ratings, and notable contest achievements.</small>
+                        <p class="text-success small mb-0 mt-1 edit-only" style="display:none!important; font-size: 0.8rem;"><i class="fa fa-lightbulb me-1"></i><strong>Suggestion:</strong> Include your highest rating or rank on platforms like LeetCode or Codeforces.</p>
                     </div>
                 </div>
                 <div id="contests-view">
@@ -738,6 +765,7 @@
                     <div>
                         <h5 class="fw-bold text-primary mb-0"><i class="fa fa-briefcase me-2"></i>Internships &amp; Work Experience</h5>
                         <small class="text-muted">Company, role, duration, and key deliverables.</small>
+                        <p class="text-success small mb-0 mt-1 edit-only" style="display:none!important; font-size: 0.8rem;"><i class="fa fa-lightbulb me-1"></i><strong>Suggestion:</strong> Focus on metrics (e.g., "Improved load time by 20%") and technologies used.</p>
                     </div>
                 </div>
                 <div id="internships-view">
@@ -760,6 +788,7 @@
                     <div>
                         <h5 class="fw-bold text-primary mb-0"><i class="fa fa-chalkboard-user me-2"></i>Workshops &amp; Seminars Attended</h5>
                         <small class="text-muted">Workshop title, organizer, date/duration, and key learnings.</small>
+                        <p class="text-success small mb-0 mt-1 edit-only" style="display:none!important; font-size: 0.8rem;"><i class="fa fa-lightbulb me-1"></i><strong>Suggestion:</strong> Add workshops or certificates relevant to your target role (e.g., AI/ML, Web Dev).</p>
                     </div>
                 </div>
                 <div id="workshops-view">
@@ -782,6 +811,7 @@
                     <div>
                         <h5 class="fw-bold text-primary mb-0"><i class="fa fa-star me-2"></i>Extracurricular Activities</h5>
                         <small class="text-muted">Leadership, clubs, sports, cultural, and community contributions.</small>
+                        <p class="text-success small mb-0 mt-1 edit-only" style="display:none!important; font-size: 0.8rem;"><i class="fa fa-lightbulb me-1"></i><strong>Suggestion:</strong> Mention leadership roles (e.g., "Lead Organizer") to show soft skills.</p>
                     </div>
                 </div>
                 <div id="extra-view">

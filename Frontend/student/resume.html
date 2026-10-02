@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resume Generator - PlacementPro AI</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
     <!-- html2pdf.js for client-side PDF generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
@@ -26,7 +28,8 @@
                 0 1px 2px rgba(15, 23, 42, .08),
                 0 18px 38px -14px rgba(60, 65, 130, .35),
                 0 40px 70px -24px rgba(49, 46, 129, .35);
-            min-height: 842px;   /* A4 height @ 96dpi */
+            min-height: 842px;
+            /* A4 height @ 96dpi */
             width: 100%;
             font-family: 'Georgia', 'Times New Roman', serif;
             font-size: 12.5px;
@@ -34,6 +37,7 @@
             position: relative;
             transition: box-shadow .35s var(--pp-ease), transform .35s var(--pp-ease);
         }
+
         /* Subtle paper-lift hover — disabled for print fidelity */
         .resume-preview:not(:active):hover {
             transform: translateY(-4px);
@@ -42,6 +46,7 @@
                 0 18px 36px -12px rgba(15, 23, 42, .26),
                 0 42px 80px -20px rgba(49, 46, 129, .32);
         }
+
         /* Soft contact shadow that grounds the sheet on the clay desk */
         .resume-paper-desk-shadow {
             width: 62%;
@@ -49,8 +54,8 @@
             margin: 26px auto 8px;
             border-radius: 50%;
             background: radial-gradient(ellipse at center,
-                rgba(35, 40, 83, .22) 0%,
-                rgba(35, 40, 83, 0) 70%);
+                    rgba(35, 40, 83, .22) 0%,
+                    rgba(35, 40, 83, 0) 70%);
         }
 
         /* ════════════════════════════════════════════════════
@@ -65,7 +70,11 @@
             padding-bottom: 14px;
             margin-bottom: 18px;
         }
-        .resume-header-text { flex: 1; }
+
+        .resume-header-text {
+            flex: 1;
+        }
+
         .resume-header-text h1 {
             font-size: 22px;
             font-weight: 800;
@@ -74,25 +83,30 @@
             margin-bottom: 4px;
             color: #1a1a2e;
         }
+
         .resume-header-text .role-line {
             color: var(--pp-primary);
             font-weight: 600;
             font-size: 12px;
             margin-bottom: 5px;
         }
+
         .resume-header-text .contact-line {
             font-size: 11px;
             color: #444;
             line-height: 1.6;
         }
+
         .resume-header-text .contact-line .contact-item {
             display: inline-block;
             margin-right: 14px;
         }
+
         .resume-header-text .contact-line .contact-icon {
             font-size: 9px;
             margin-right: 4px;
         }
+
         /* Address line sits below contact on its own line */
         .resume-address-line {
             font-size: 10.5px;
@@ -116,7 +130,13 @@
             justify-content: center;
             flex-shrink: 0;
         }
-        .resume-photo-box img { width: 100%; height: 100%; object-fit: cover; }
+
+        .resume-photo-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
         .resume-photo-box .photo-placeholder {
             font-size: 11px;
             color: #999;
@@ -138,7 +158,10 @@
             margin-bottom: 10px;
             padding-bottom: 4px;
         }
-        .resume-section { margin-bottom: 16px; }
+
+        .resume-section {
+            margin-bottom: 16px;
+        }
 
         /* ════════════════════════════════════════════════════
            EDUCATION TABLE
@@ -148,6 +171,7 @@
             border-collapse: collapse;
             font-size: 11.5px;
         }
+
         .edu-table th {
             background: #f5f5f5;
             font-size: 10px;
@@ -159,13 +183,18 @@
             color: #333;
             white-space: nowrap;
         }
+
         .edu-table td {
             padding: 6px 10px;
             border: 1px solid #e0e0e0;
             vertical-align: middle;
             line-height: 1.4;
         }
-        .edu-table tr:nth-child(even) td { background: #fafafa; }
+
+        .edu-table tr:nth-child(even) td {
+            background: #fafafa;
+        }
+
         .edu-level-badge {
             display: inline-block;
             padding: 2px 7px;
@@ -173,9 +202,21 @@
             font-size: 9.5px;
             font-weight: 700;
         }
-        .edu-level-badge.class10  { background: #fff3cd; color: #856404; }
-        .edu-level-badge.class12  { background: #d1ecf1; color: #0c5460; }
-        .edu-level-badge.grad     { background: #d4edda; color: #155724; }
+
+        .edu-level-badge.class10 {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .edu-level-badge.class12 {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .edu-level-badge.grad {
+            background: #d4edda;
+            color: #155724;
+        }
 
         /* ════════════════════════════════════════════════════
            TRAINING & PLACEMENT BADGES (refactored)
@@ -186,6 +227,7 @@
             gap: 8px;
             align-items: center;
         }
+
         .tp-badge {
             display: inline-flex;
             align-items: center;
@@ -196,20 +238,68 @@
             font-weight: 700;
             border: 1px solid currentColor;
         }
-        .tp-badge.readiness  { background: #d4edda; color: #155724; border-color: #c3e6cb; }
-        .tp-badge.domain     { background: #cce5ff; color: #004085; border-color: #b8daff; }
-        .tp-badge.training   { background: #fff3cd; color: #856404; border-color: #ffeeba; }
-        .tp-badge.dsa-level  { background: #f8d7da; color: #721c24; border-color: #f5c6cb; }
+
+        .tp-badge.readiness {
+            background: #d4edda;
+            color: #155724;
+            border-color: #c3e6cb;
+        }
+
+        .tp-badge.domain {
+            background: #cce5ff;
+            color: #004085;
+            border-color: #b8daff;
+        }
+
+        .tp-badge.training {
+            background: #fff3cd;
+            color: #856404;
+            border-color: #ffeeba;
+        }
+
+        .tp-badge.dsa-level {
+            background: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
+        }
 
         /* ════════════════════════════════════════════════════
            CONTENT TYPOGRAPHY
            ════════════════════════════════════════════════════ */
-        .resume-preview ul { padding-left: 18px; margin: 5px 0 0; }
-        .resume-preview ul li { margin-bottom: 3px; line-height: 1.5; }
-        .resume-preview p { margin-bottom: 5px; line-height: 1.55; }
-        .proj-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2px; }
-        .exp-header  { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 2px; }
-        .exp-role    { font-style: italic; font-size: 11.5px; color: #444; }
+        .resume-preview ul {
+            padding-left: 18px;
+            margin: 5px 0 0;
+        }
+
+        .resume-preview ul li {
+            margin-bottom: 3px;
+            line-height: 1.5;
+        }
+
+        .resume-preview p {
+            margin-bottom: 5px;
+            line-height: 1.55;
+        }
+
+        .proj-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 2px;
+        }
+
+        .exp-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 2px;
+        }
+
+        .exp-role {
+            font-style: italic;
+            font-size: 11.5px;
+            color: #444;
+        }
 
         /* ════════════════════════════════════════════════════
            TOOLBAR
@@ -222,7 +312,12 @@
             gap: 12px;
             margin-bottom: 20px;
         }
-        .resume-toolbar .actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+        .resume-toolbar .actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
 
         /* Photo upload row — dashed clay well */
         .resume-photo-upload-row {
@@ -237,6 +332,7 @@
             margin-bottom: 16px;
             transition: border-color .2s, background .2s;
         }
+
         .resume-photo-upload-row:hover {
             background: #e9e7ff;
             border-color: var(--pp-primary);
@@ -247,39 +343,159 @@
            ════════════════════════════════════════════════════ */
         .ats-panel {
             background: linear-gradient(120deg, #312e81 0%, #4338ca 55%, #6d28d9 110%);
-            border-radius: 22px; padding: 20px 24px;
-            color: #fff; display: flex; align-items: center;
-            gap: 20px; flex-wrap: wrap; margin-bottom: 16px;
+            border-radius: 22px;
+            padding: 20px 24px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
             border: 1px solid rgba(255, 255, 255, .22);
             box-shadow: inset 0 -4px 8px rgba(0, 0, 0, .22),
-                        inset 0 2px 3px rgba(255, 255, 255, .32),
-                        0 20px 42px -16px rgba(49, 46, 129, .55);
+                inset 0 2px 3px rgba(255, 255, 255, .32),
+                0 20px 42px -16px rgba(49, 46, 129, .55);
         }
+
         .ats-ring-wrap {
-            position: relative; display: flex; align-items: center;
-            justify-content: center; width: 90px; height: 90px; flex-shrink: 0;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 90px;
+            height: 90px;
+            flex-shrink: 0;
         }
-        .ats-ring-wrap svg { position: absolute; top: 0; left: 0; transform: rotate(-90deg); }
-        .ats-ring-track { fill: none; stroke: rgba(255,255,255,0.15); stroke-width: 8; }
-        .ats-ring-fill  {
-            fill: none; stroke-width: 8; stroke-linecap: round;
-            stroke-dasharray: 251; stroke-dashoffset: 251;
-            transition: stroke-dashoffset 1.3s cubic-bezier(.4,0,.2,1);
+
+        .ats-ring-wrap svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform: rotate(-90deg);
         }
-        .ats-ring-text { position: relative; text-align: center; line-height: 1; }
-        .ats-ring-text .ats-score-num { font-size: 1.5rem; font-weight: 800; display: block; }
-        .ats-ring-text small { font-size: 0.6rem; opacity: 0.7; }
+
+        .ats-ring-track {
+            fill: none;
+            stroke: rgba(255, 255, 255, 0.15);
+            stroke-width: 8;
+        }
+
+        .ats-ring-fill {
+            fill: none;
+            stroke-width: 8;
+            stroke-linecap: round;
+            stroke-dasharray: 251;
+            stroke-dashoffset: 251;
+            transition: stroke-dashoffset 1.3s cubic-bezier(.4, 0, .2, 1);
+        }
+
+        .ats-ring-text {
+            position: relative;
+            text-align: center;
+            line-height: 1;
+        }
+
+        .ats-ring-text .ats-score-num {
+            font-size: 1.5rem;
+            font-weight: 800;
+            display: block;
+        }
+
+        .ats-ring-text small {
+            font-size: 0.6rem;
+            opacity: 0.7;
+        }
+
         .ats-keyword-pill-good {
-            display: inline-block; padding: 4px 11px; border-radius: 50px;
-            background: rgba(16,185,129,0.22); color: #6ee7b7;
-            font-size: 0.75rem; font-weight: 700; margin: 2px;
-            box-shadow: inset 0 -2px 4px rgba(0,0,0,.15), inset 0 1px 1px rgba(255,255,255,.25);
+            display: inline-block;
+            padding: 4px 11px;
+            border-radius: 50px;
+            background: rgba(16, 185, 129, 0.22);
+            color: #6ee7b7;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin: 2px;
+            box-shadow: inset 0 -2px 4px rgba(0, 0, 0, .15), inset 0 1px 1px rgba(255, 255, 255, .25);
         }
+
         .ats-keyword-pill-miss {
-            display: inline-block; padding: 4px 11px; border-radius: 50px;
-            background: rgba(239,68,68,0.22); color: #fca5a5;
-            font-size: 0.75rem; font-weight: 700; margin: 2px;
-            box-shadow: inset 0 -2px 4px rgba(0,0,0,.15), inset 0 1px 1px rgba(255,255,255,.25);
+            display: inline-block;
+            padding: 4px 11px;
+            border-radius: 50px;
+            background: rgba(239, 68, 68, 0.22);
+            color: #fca5a5;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin: 2px;
+            box-shadow: inset 0 -2px 4px rgba(0, 0, 0, .15), inset 0 1px 1px rgba(255, 255, 255, .25);
+        }
+
+        /* AI ATS Optimizer Pro Panel */
+        .ai-optimizer-box {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            padding: 18px;
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        .ai-opt-title {
+            font-size: 14px;
+            font-weight: 800;
+            color: #facc15;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ai-opt-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.18);
+            padding: 12px 18px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            transition: background 0.3s;
+        }
+
+        .ai-opt-row:hover {
+            background: rgba(0, 0, 0, 0.25);
+        }
+
+        .ai-opt-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .ai-opt-text {
+            font-size: 13.5px;
+            color: #e2e8f0;
+            font-weight: 500;
+        }
+
+        .ai-opt-text strong {
+            color: #fff;
+        }
+
+        .ai-opt-btn {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border: none;
+            color: white;
+            font-size: 11.5px;
+            font-weight: 800;
+            padding: 8px 16px;
+            border-radius: 50px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            white-space: nowrap;
+        }
+
+        .ai-opt-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(16, 185, 129, 0.4);
         }
 
         /* ════════════════════════════════════════════════════
@@ -297,23 +513,32 @@
             margin-bottom: 20px;
             box-shadow: var(--pp-clay-sm);
         }
+
         .premium-banner .badge-pro {
-            background: #78350f; color: #facc15; padding: 4px 10px; border-radius: 8px; font-size: 11px; margin-right: 10px;
+            background: #78350f;
+            color: #facc15;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 11px;
+            margin-right: 10px;
         }
+
         /* Premium Resume Template overrides */
         .resume-preview.premium-theme {
             background: #f8fafc;
             border-top: 12px solid var(--pp-primary);
-            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.1);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.1);
         }
+
         .resume-preview.premium-theme .resume-header-row {
             border-bottom: none;
             background: #fff;
             padding: 20px;
             border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
             margin-bottom: 24px;
         }
+
         .resume-preview.premium-theme .resume-section-title {
             color: var(--pp-primary);
             border-bottom: 2px solid var(--pp-primary-soft);
@@ -323,8 +548,19 @@
            PRINT STYLES
            ════════════════════════════════════════════════════ */
         @media print {
-            .sidebar, .resume-toolbar, .resume-photo-upload-row, .ats-panel, #noprint { display: none !important; }
-            body { background: white !important; }
+
+            .sidebar,
+            .resume-toolbar,
+            .resume-photo-upload-row,
+            .ats-panel,
+            #noprint {
+                display: none !important;
+            }
+
+            body {
+                background: white !important;
+            }
+
             .resume-preview {
                 box-shadow: none !important;
                 transform: none !important;
@@ -332,361 +568,413 @@
                 padding: 20px 30px !important;
                 min-height: auto !important;
             }
-            .resume-paper-desk-shadow { display: none !important; }
+
+            .resume-paper-desk-shadow {
+                display: none !important;
+            }
         }
     </style>
 </head>
+
 <body>
-<div class="d-flex">
-    <div class="pp-aurora-b" aria-hidden="true"></div>
-    <!-- Sidebar -->
-    <div class="sidebar p-3 d-flex flex-column" id="ppSidebar" style="width: 250px; min-height: 100vh;">
-        <h4 class="fw-bold text-primary mb-4 px-2">PlacementPro</h4>
-        <ul class="nav flex-column mb-auto">
-            <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="fa fa-gauge me-2"></i>Dashboard</a></li>
-            <li class="nav-item"><a href="profile.html" class="nav-link"><i class="fa fa-user me-2"></i>My Profile</a></li>
-            <li class="nav-item"><a href="analysis.html" class="nav-link"><i class="fa fa-chart-bar me-2"></i>My Analysis</a></li>
-            <li class="nav-item"><a href="companies.html" class="nav-link"><i class="fa fa-building me-2"></i>Companies</a></li>
-            <li class="nav-item"><a href="roles.html" class="nav-link"><i class="fa fa-briefcase me-2"></i>Career Roles</a></li>
-            <li class="nav-item"><a href="skill-gap.html" class="nav-link"><i class="fa fa-triangle-exclamation me-2"></i>Skill Gap</a></li>
-            <li class="nav-item"><a href="resume.html" class="nav-link active"><i class="fa fa-file-lines me-2"></i>Resume Generator</a></li>
-        </ul>
-        <a href="#" onclick="handleLogout(); return false;" class="nav-link text-danger mt-4"><i class="fa fa-right-from-bracket me-2"></i>Logout</a>
-    </div>
-    <div class="pp-backdrop" aria-hidden="true"></div>
-
-    <!-- Main Content -->
-    <div class="flex-grow-1 p-4 bg-light">
-        <!-- Mobile topbar (hidden ≥992px) -->
-        <div class="pp-topbar" id="noprint">
-            <button class="pp-burger" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="ppSidebar">
-                <i class="fa fa-bars"></i>
-            </button>
-            <span class="pp-topbar-brand"><i class="fa fa-robot me-2"></i>PlacementPro</span>
+    <div class="d-flex">
+        <div class="pp-aurora-b" aria-hidden="true"></div>
+        <!-- Sidebar -->
+        <div class="sidebar p-3 d-flex flex-column" id="ppSidebar" style="width: 250px; min-height: 100vh;">
+            <h4 class="fw-bold text-primary mb-4 px-2">PlacementPro</h4>
+            <ul class="nav flex-column mb-auto">
+                <li class="nav-item"><a href="dashboard.html" class="nav-link"><i
+                            class="fa fa-gauge me-2"></i>Dashboard</a></li>
+                <li class="nav-item"><a href="profile.html" class="nav-link"><i class="fa fa-user me-2"></i>My
+                        Profile</a></li>
+                <li class="nav-item"><a href="analysis.html" class="nav-link"><i class="fa fa-chart-bar me-2"></i>My
+                        Analysis</a></li>
+                <li class="nav-item"><a href="companies.html" class="nav-link"><i
+                            class="fa fa-building me-2"></i>Companies</a></li>
+                <li class="nav-item"><a href="roles.html" class="nav-link"><i class="fa fa-briefcase me-2"></i>Career
+                        Roles</a></li>
+                <li class="nav-item"><a href="skill-gap.html" class="nav-link"><i
+                            class="fa fa-triangle-exclamation me-2"></i>Skill Gap</a></li>
+                <li class="nav-item"><a href="resume.html" class="nav-link active"><i
+                            class="fa fa-file-lines me-2"></i>Resume Generator</a></li>
+            </ul>
+            <a href="#" onclick="handleLogout(); return false;" class="nav-link text-danger mt-4"><i
+                    class="fa fa-right-from-bracket me-2"></i>Logout</a>
         </div>
+        <div class="pp-backdrop" aria-hidden="true"></div>
 
-        <!-- Toolbar -->
-        <div class="resume-toolbar" id="noprint">
-            <div>
-                <h2 class="fw-bold mb-0">Resume Generator</h2>
-                <small class="text-muted">Auto-filled from your saved profile. <a href="profile.html">Edit Profile →</a></small>
-            </div>
-            <div class="actions">
-                <button class="btn btn-outline-secondary rounded-pill" onclick="refreshResume()">
-                    <i class="fa fa-arrows-rotate me-2"></i>Refresh from Profile
+        <!-- Main Content -->
+        <div class="flex-grow-1 p-4 bg-light">
+            <!-- Mobile topbar (hidden ≥992px) -->
+            <div class="pp-topbar" id="noprint">
+                <button class="pp-burger" type="button" aria-label="Toggle navigation" aria-expanded="false"
+                    aria-controls="ppSidebar">
+                    <i class="fa fa-bars"></i>
                 </button>
-                <button class="btn btn-success fw-bold rounded-pill" onclick="downloadPDF()">
-                    <i class="fa fa-download me-2"></i>Download PDF
-                </button>
+                <span class="pp-topbar-brand"><i class="fa fa-robot me-2"></i>PlacementPro</span>
             </div>
-        </div>
 
-        <!-- Premium Pro Banner (Inspired by Naukri) -->
-        <div class="premium-banner" id="noprint">
-            <div>
-                <span class="badge-pro"><i class="fa fa-crown me-1"></i>PlacementPro PREMIUM</span>
-                <span>Stand out to recruiters with Expert AI Writing & Visual Templates!</span>
+            <!-- Toolbar -->
+            <div class="resume-toolbar" id="noprint">
+                <div>
+                    <h2 class="fw-bold mb-0">Resume Generator</h2>
+                    <small class="text-muted">Auto-filled from your saved profile. <a href="profile.html">Edit Profile
+                            →</a></small>
+                </div>
+                <div class="actions">
+                    <button class="btn btn-outline-secondary rounded-pill" onclick="refreshResume()">
+                        <i class="fa fa-arrows-rotate me-2"></i>Refresh from Profile
+                    </button>
+                    <button class="btn btn-success fw-bold rounded-pill" onclick="downloadPDF()">
+                        <i class="fa fa-download me-2"></i>Download PDF
+                    </button>
+                </div>
             </div>
-            <div class="d-flex gap-2">
-                <button class="btn btn-sm btn-light rounded-pill" onclick="togglePremiumTheme()" style="color:#78350f; font-weight:800;">
-                    <i class="fa fa-wand-magic-sparkles me-1"></i>Visual Template
-                </button>
-                <button class="btn btn-sm btn-dark rounded-pill" onclick="applyAIExpertWriting()">
-                    <i class="fa fa-robot me-1"></i>AI Expert Writer
-                </button>
-            </div>
-        </div>
 
-        <!-- Photo Upload Row -->
-        <div class="resume-photo-upload-row" id="noprint">
-            <i class="fa fa-camera text-primary fs-5"></i>
-            <div class="flex-grow-1">
-                <strong class="d-block" style="font-size:0.9rem;">Profile Photo (upper-right corner of resume)</strong>
-                <small class="text-muted" id="resumePhotoStatus">No photo uploaded yet.</small>
+            <!-- Premium Pro Banner (Inspired by Naukri) -->
+            <div class="premium-banner" id="noprint">
+                <div>
+                    <span class="badge-pro"><i class="fa fa-crown me-1"></i>PlacementPro PREMIUM</span>
+                    <span>Stand out to recruiters with Expert AI Writing & Visual Templates!</span>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-sm btn-light rounded-pill" onclick="togglePremiumTheme()"
+                        style="color:#78350f; font-weight:800;">
+                        <i class="fa fa-wand-magic-sparkles me-1"></i>Visual Template
+                    </button>
+                    <button class="btn btn-sm btn-dark rounded-pill" onclick="applyAIExpertWriting()">
+                        <i class="fa fa-robot me-1"></i>AI Expert Writer
+                    </button>
+                </div>
             </div>
-            <label for="resumePhotoInput" class="btn btn-sm btn-primary rounded-pill mb-0">
-                <i class="fa fa-upload me-1"></i>Choose Photo
-            </label>
-            <input type="file" id="resumePhotoInput" accept="image/*" style="display:none;" onchange="handleResumePhotoUpload(this)">
-            <button class="btn btn-sm btn-outline-danger rounded-pill" id="resumeRemovePhotoBtn"
+
+            <!-- Photo Upload Row -->
+            <div class="resume-photo-upload-row" id="noprint">
+                <i class="fa fa-camera text-primary fs-5"></i>
+                <div class="flex-grow-1">
+                    <strong class="d-block" style="font-size:0.9rem;">Profile Photo (upper-right corner of
+                        resume)</strong>
+                    <small class="text-muted" id="resumePhotoStatus">No photo uploaded yet.</small>
+                </div>
+                <label for="resumePhotoInput" class="btn btn-sm btn-primary rounded-pill mb-0">
+                    <i class="fa fa-upload me-1"></i>Choose Photo
+                </label>
+                <input type="file" id="resumePhotoInput" accept="image/*" style="display:none;"
+                    onchange="handleResumePhotoUpload(this)">
+                <button class="btn btn-sm btn-outline-danger rounded-pill" id="resumeRemovePhotoBtn"
                     onclick="handleResumeRemovePhoto()" style="display:none;">
-                <i class="fa fa-trash me-1"></i>Remove
-            </button>
-        </div>
+                    <i class="fa fa-trash me-1"></i>Remove
+                </button>
+            </div>
 
-        <!-- ATS Score Panel -->
-        <div class="ats-panel">
-            <div class="ats-ring-wrap">
-                <svg width="90" height="90" viewBox="0 0 90 90">
-                    <circle class="ats-ring-track" cx="45" cy="45" r="40"/>
-                    <circle class="ats-ring-fill" id="atsRingFill" cx="45" cy="45" r="40"/>
-                </svg>
-                <div class="ats-ring-text">
-                    <span class="ats-score-num" id="atsScoreNum">—</span>
-                    <small>ATS Score</small>
+            <!-- ATS Score Panel -->
+            <div class="ats-panel">
+                <div class="d-flex align-items-center gap-4 flex-wrap w-100">
+                    <div class="ats-ring-wrap">
+                        <svg width="90" height="90" viewBox="0 0 90 90">
+                            <circle class="ats-ring-track" cx="45" cy="45" r="40" />
+                            <circle class="ats-ring-fill" id="atsRingFill" cx="45" cy="45" r="40" />
+                        </svg>
+                        <div class="ats-ring-text">
+                            <span class="ats-score-num" id="atsScoreNum">—</span>
+                            <small>ATS Score</small>
+                        </div>
+                    </div>
+                    <div style="flex:1; min-width:200px;">
+                        <div class="d-flex align-items-center gap-2 mb-1">
+                            <h5 class="fw-bold mb-0" style="color:#fff;">Resume ATS Keyword Score</h5>
+                            <span class="badge bg-light text-dark" id="atsGrade">—</span>
+                        </div>
+                        <p class="mb-2" style="font-size:0.85rem; opacity:0.8;" id="atsSubtext">Analysing keywords...
+                        </p>
+                        <div id="atsMatchedPills" class="mb-1"></div>
+                        <div id="atsMissingPills"></div>
+                    </div>
+                </div>
+
+                <!-- AI Optimizer Pro Section -->
+                <div class="ai-optimizer-box" id="noprint">
+                    <div class="ai-opt-title"><i class="fa fa-wand-magic-sparkles"></i> AI Guide: How to increase your
+                        ATS Score</div>
+
+                    <div class="ai-opt-row">
+                        <div class="ai-opt-text"><i class="fa fa-key me-2 text-info"></i><strong>1. Inject Missing
+                                Keywords:</strong> Let AI seamlessly add critical missing skills to your profile.</div>
+                        <button class="ai-opt-btn" onclick="autoInjectKeywords()"><i class="fa fa-plus me-1"></i>
+                            Auto-Inject</button>
+                    </div>
+
+                    <div class="ai-opt-row">
+                        <div class="ai-opt-text"><i class="fa fa-bolt me-2 text-warning"></i><strong>2. Strengthen
+                                Verbs:</strong> Replace weak words like 'Made/Built' with 'Architected/Engineered'.
+                        </div>
+                        <button class="ai-opt-btn" onclick="applyAIExpertWriting()"><i class="fa fa-robot me-1"></i> AI
+                            Fix Verbs</button>
+                    </div>
+
+                    <div class="ai-opt-row">
+                        <div class="ai-opt-text"><i class="fa fa-palette me-2" style="color:#a855f7;"></i><strong>3.
+                                Clean Formatting:</strong> Apply an ATS-friendly Visual Template that recruiters prefer.
+                        </div>
+                        <button class="ai-opt-btn" style="background: linear-gradient(135deg, #a855f7, #7e22ce);"
+                            onclick="togglePremiumTheme()"><i class="fa fa-paint-roller me-1"></i> Apply
+                            Template</button>
+                    </div>
                 </div>
             </div>
-            <div style="flex:1; min-width:200px;">
-                <div class="d-flex align-items-center gap-2 mb-1">
-                    <h6 class="fw-bold mb-0" style="color:#fff;">ATS Keyword Score</h6>
-                    <span class="badge bg-light text-dark" id="atsGrade">—</span>
-                </div>
-                <p class="mb-2" style="font-size:0.8rem; opacity:0.75;" id="atsSubtext">Analysing keywords...</p>
-                <div id="atsMatchedPills" class="mb-1"></div>
-                <div id="atsMissingPills"></div>
-            </div>
-        </div>
 
-        <!-- ═══════════════════════════════════════════════════════
+            <!-- ═══════════════════════════════════════════════════════
              RESUME PREVIEW — A4 sheet floating on a soft gray desk
              ═══════════════════════════════════════════════════════ -->
-        <div class="container d-flex justify-content-center">
-            <div class="resume-stage w-100" style="max-width: 860px;">
-                <div class="resume-preview w-100" id="resume-content" style="max-width: 820px;">
+            <div class="container d-flex justify-content-center">
+                <div class="resume-stage w-100" style="max-width: 860px;">
+                    <div class="resume-preview w-100" id="resume-content" style="max-width: 820px;">
 
-                <!-- ── HEADER ── -->
-                <div class="resume-header-row">
-                    <div class="resume-header-text">
-                        <h1 id="r-name">STUDENT NAME</h1>
-                        <div class="role-line" id="r-role">Information Technology Student</div>
-                        <div class="contact-line">
-                            <span class="contact-item" id="r-email">
-                                <i class="fa fa-envelope contact-icon"></i>email@example.com
-                            </span>
-                            <span class="contact-item" id="r-phone">
-                                <i class="fa fa-phone contact-icon"></i>+91 0000000000
-                            </span>
-                            <span class="contact-item" id="r-location">
-                                <i class="fa fa-location-dot contact-icon"></i>Location
-                            </span>
-                        </div>
-                        <!-- Communication Address (NEW) -->
-                        <span class="resume-address-line" id="r-address" style="display:none;">
-                            <i class="fa fa-map-pin contact-icon" style="font-size:9px;margin-right:3px;"></i>
-                            <span id="r-address-text"></span>
-                        </span>
-                    </div>
+                        <!-- ── HEADER ── -->
+                        <div class="resume-header-row">
+                            <div class="resume-header-text">
+                                <h1 id="r-name">STUDENT NAME</h1>
+                                <div class="role-line" id="r-role">Information Technology Student</div>
+                                <div class="contact-line">
+                                    <span class="contact-item" id="r-email">
+                                        <i class="fa fa-envelope contact-icon"></i>email@example.com
+                                    </span>
+                                    <span class="contact-item" id="r-phone">
+                                        <i class="fa fa-phone contact-icon"></i>+91 0000000000
+                                    </span>
+                                    <span class="contact-item" id="r-location">
+                                        <i class="fa fa-location-dot contact-icon"></i>Location
+                                    </span>
+                                </div>
+                                <!-- Communication Address (NEW) -->
+                                <span class="resume-address-line" id="r-address" style="display:none;">
+                                    <i class="fa fa-map-pin contact-icon" style="font-size:9px;margin-right:3px;"></i>
+                                    <span id="r-address-text"></span>
+                                </span>
+                            </div>
 
-                    <!-- Upper-right photo box -->
-                    <div>
-                        <div class="resume-photo-box" id="resumePhotoBox">
-                            <img id="resumePhotoImg" src="" alt="Profile Photo" style="display:none;">
-                            <div class="photo-placeholder" id="resumePhotoPlaceholder">
-                                <i class="fa fa-user-graduate" style="font-size:22px; color:#aaa; display:block; margin-bottom:4px;"></i>
-                                Photo
+                            <!-- Upper-right photo box -->
+                            <div>
+                                <div class="resume-photo-box" id="resumePhotoBox">
+                                    <img id="resumePhotoImg" src="" alt="Profile Photo" style="display:none;">
+                                    <div class="photo-placeholder" id="resumePhotoPlaceholder">
+                                        <i class="fa fa-user-graduate"
+                                            style="font-size:22px; color:#aaa; display:block; margin-bottom:4px;"></i>
+                                        Photo
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                <!-- ── PROFESSIONAL SUMMARY ── -->
-                <div class="resume-section">
-                    <div class="resume-section-title">Professional Summary</div>
-                    <p id="r-summary">—</p>
-                </div>
+                        <!-- ── PROFESSIONAL SUMMARY ── -->
+                        <div class="resume-section">
+                            <div class="resume-section-title">Professional Summary</div>
+                            <p id="r-summary">—</p>
+                        </div>
 
-                <!-- ── EDUCATION TABLE ── -->
-                <div class="resume-section">
-                    <div class="resume-section-title">Education</div>
-                    <table class="edu-table">
-                        <thead>
-                            <tr>
-                                <th>Degree / Level</th>
-                                <th>Institution / Board</th>
-                                <th style="text-align:center;">Passing Year</th>
-                                <th style="text-align:center;">% / CGPA</th>
-                            </tr>
-                        </thead>
-                        <tbody id="r-edu-tbody">
-                            <!-- Rows injected by populateResume() -->
-                        </tbody>
-                    </table>
-                </div>
+                        <!-- ── EDUCATION TABLE ── -->
+                        <div class="resume-section">
+                            <div class="resume-section-title">Education</div>
+                            <table class="edu-table">
+                                <thead>
+                                    <tr>
+                                        <th>Degree / Level</th>
+                                        <th>Institution / Board</th>
+                                        <th style="text-align:center;">Passing Year</th>
+                                        <th style="text-align:center;">% / CGPA</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="r-edu-tbody">
+                                    <!-- Rows injected by populateResume() -->
+                                </tbody>
+                            </table>
+                        </div>
 
-                <!-- ── TECHNICAL SKILLS ── -->
-                <div class="resume-section">
-                    <div class="resume-section-title">Technical Skills</div>
-                    <p><strong>Languages:</strong> <span id="r-programming">—</span></p>
-                    <p id="r-web-row"><strong>Web Technologies:</strong> <span id="r-web">—</span></p>
-                    <p id="r-db-row"><strong>Databases:</strong> <span id="r-databases">—</span></p>
-                    <p><strong>DSA Proficiency:</strong> <span id="r-dsa">—</span></p>
-                </div>
+                        <!-- ── TECHNICAL SKILLS ── -->
+                        <div class="resume-section">
+                            <div class="resume-section-title">Technical Skills</div>
+                            <p><strong>Languages:</strong> <span id="r-programming">—</span></p>
+                            <p id="r-web-row"><strong>Web Technologies:</strong> <span id="r-web">—</span></p>
+                            <p id="r-db-row"><strong>Databases:</strong> <span id="r-databases">—</span></p>
+                            <p><strong>DSA Proficiency:</strong> <span id="r-dsa">—</span></p>
+                        </div>
 
-                <!-- ── PROJECTS ── -->
-                <div class="resume-section">
-                    <div class="resume-section-title">Projects</div>
-                    <div id="r-projects">
-                        <p style="color:#aaa; font-style:italic;">No projects added. <a href="profile.html">Add them in your profile →</a></p>
-                    </div>
-                </div>
+                        <!-- ── PROJECTS ── -->
+                        <div class="resume-section">
+                            <div class="resume-section-title">Projects</div>
+                            <div id="r-projects">
+                                <p style="color:#aaa; font-style:italic;">No projects added. <a href="profile.html">Add
+                                        them in your profile →</a></p>
+                            </div>
+                        </div>
 
-                <!-- ── INTERNSHIPS & WORK EXPERIENCE ── -->
-                <div class="resume-section" id="r-internships-section" style="display:none;">
-                    <div class="resume-section-title">Internships &amp; Work Experience</div>
-                    <div id="r-internships-list"></div>
-                </div>
+                        <!-- ── INTERNSHIPS & WORK EXPERIENCE ── -->
+                        <div class="resume-section" id="r-internships-section" style="display:none;">
+                            <div class="resume-section-title">Internships &amp; Work Experience</div>
+                            <div id="r-internships-list"></div>
+                        </div>
 
-                <!-- ── HACKATHONS & FLAGSHIP PROJECTS ── -->
-                <div class="resume-section" id="r-hackathons-section" style="display:none;">
-                    <div class="resume-section-title">Hackathons &amp; Flagship Projects</div>
-                    <div id="r-hackathons-list"></div>
-                </div>
+                        <!-- ── HACKATHONS & FLAGSHIP PROJECTS ── -->
+                        <div class="resume-section" id="r-hackathons-section" style="display:none;">
+                            <div class="resume-section-title">Hackathons &amp; Flagship Projects</div>
+                            <div id="r-hackathons-list"></div>
+                        </div>
 
-                <!-- ── CODING CONTESTS ── -->
-                <div class="resume-section" id="r-contests-section" style="display:none;">
-                    <div class="resume-section-title">Coding Contests &amp; Competitive Programming</div>
-                    <div id="r-contests-list"></div>
-                </div>
+                        <!-- ── CODING CONTESTS ── -->
+                        <div class="resume-section" id="r-contests-section" style="display:none;">
+                            <div class="resume-section-title">Coding Contests &amp; Competitive Programming</div>
+                            <div id="r-contests-list"></div>
+                        </div>
 
-                <!-- ── WORKSHOPS & SEMINARS ── -->
-                <div class="resume-section" id="r-workshops-section" style="display:none;">
-                    <div class="resume-section-title">Workshops &amp; Seminars</div>
-                    <div id="r-workshops-list"></div>
-                </div>
+                        <!-- ── WORKSHOPS & SEMINARS ── -->
+                        <div class="resume-section" id="r-workshops-section" style="display:none;">
+                            <div class="resume-section-title">Workshops &amp; Seminars</div>
+                            <div id="r-workshops-list"></div>
+                        </div>
 
-                <!-- ── EXTRACURRICULAR ── -->
-                <div class="resume-section" id="r-extra-section" style="display:none;">
-                    <div class="resume-section-title">Extracurricular Activities</div>
-                    <div id="r-extra-list"></div>
-                </div>
+                        <!-- ── EXTRACURRICULAR ── -->
+                        <div class="resume-section" id="r-extra-section" style="display:none;">
+                            <div class="resume-section-title">Extracurricular Activities</div>
+                            <div id="r-extra-list"></div>
+                        </div>
 
-                <!-- ── TRAINING & PLACEMENT (refactored to badges) ── -->
-                <div class="resume-section" id="r-tp-section">
-                    <div class="resume-section-title">Training &amp; Placement Summary</div>
-                    <div class="tp-badge-row" id="r-tp-badges"></div>
-                </div>
+                        <!-- ── TRAINING & PLACEMENT (refactored to badges) ── -->
+                        <div class="resume-section" id="r-tp-section">
+                            <div class="resume-section-title">Training &amp; Placement Summary</div>
+                            <div class="tp-badge-row" id="r-tp-badges"></div>
+                        </div>
 
-            </div><!-- /resume-content -->
+                    </div><!-- /resume-content -->
 
-                <div class="resume-paper-desk-shadow" aria-hidden="true"></div>
-            </div><!-- /resume-stage -->
+                    <div class="resume-paper-desk-shadow" aria-hidden="true"></div>
+                </div><!-- /resume-stage -->
+            </div>
         </div>
     </div>
-</div>
 
-<script src="../js/api.js"></script>
-<script src="../js/student-profile.js"></script>
-<script src="../js/layout.js"></script>
-<script src="../js/auth-guard.js"></script>
-<script>
-// ─────────────────────────────────────────────────────────
-//  Page Init
-// ─────────────────────────────────────────────────────────
-window.addEventListener('DOMContentLoaded', () => {
-    populateResume();
-    initPhotoUploadRow();
-    computeATSScore();
-});
-
-// ─────────────────────────────────────────────────────────
-//  Populate resume from localStorage
-// ─────────────────────────────────────────────────────────
-function populateResume() {
-    const p = getProfile();
-
-    // ── Header ──
-    setText('r-name',     (p.name || 'STUDENT NAME').toUpperCase());
-    setText('r-role',     (p.branch || 'IT') + ' Engineering Student | ' + (p.college || 'College Name'));
-    setText('r-email',    p.email    || 'email@example.com');
-    setText('r-phone',    p.phone    || '+91 0000000000');
-    setText('r-location', p.location || 'Location');
-
-    // Communication Address in header
-    const commParts = [p.commStreet, p.commDistrict, p.commState, p.commPin ? 'PIN – ' + p.commPin : ''].filter(Boolean);
-    const commStr = commParts.join(', ');
-    const addrLine  = document.getElementById('r-address');
-    const addrText  = document.getElementById('r-address-text');
-    if (commStr && addrLine && addrText) {
-        addrText.textContent = commStr;
-        addrLine.style.display = 'block';
-    } else if (addrLine) {
-        addrLine.style.display = 'none';
-    }
-
-    // ── Summary ──
-    setText('r-summary', p.summary || 'Dedicated B.Tech student passionate about technology and problem solving.');
-
-    // ── Education Table ──
-    renderEducationTable(p);
-
-    // ── Skills ──
-    setText('r-programming', p.programming || '—');
-    setText('r-web',         p.web         || '');
-    setText('r-databases',   p.databases   || '');
-    setText('r-dsa',         p.dsa         || '—');
-    const webRow = document.getElementById('r-web-row');
-    if (webRow) webRow.style.display = p.web ? 'block' : 'none';
-    const dbRow = document.getElementById('r-db-row');
-    if (dbRow) dbRow.style.display = p.databases ? 'block' : 'none';
-
-    // ── Projects ──
-    renderResumeProjects(p.projects || []);
-
-    // ── Dynamic Sections ──
-    renderResumeSection('r-internships-section', 'r-internships-list', p.internships || [],   renderInternshipEntry);
-    renderResumeSection('r-hackathons-section',  'r-hackathons-list',  p.hackathons  || [],   renderHackathonEntry);
-    renderResumeSection('r-contests-section',    'r-contests-list',    p.codingContests || [], renderContestEntry);
-    renderResumeSection('r-workshops-section',   'r-workshops-list',   p.workshops   || [],   renderWorkshopEntry);
-    renderResumeSection('r-extra-section',       'r-extra-list',       p.extracurricular || [], renderExtraEntry);
-
-    // ── Training & Placement badges ──
-    renderTPBadges(p);
-
-    // ── Photo ──
-    renderResumePhoto(getPhoto());
-}
-
-function setText(id, value) {
-    const el = document.getElementById(id);
-    if (el) el.textContent = value;
-}
-
-// ─────────────────────────────────────────────────────────
-//  Education Table (3-row ATS format)
-// ─────────────────────────────────────────────────────────
-function renderEducationTable(p) {
-    const tbody = document.getElementById('r-edu-tbody');
-    if (!tbody) return;
-
-    const rows = [];
-
-    // Class 10
-    if (p.madhyamikSchool || p.madhyamikPercent || p.madhyamikYear) {
-        const inst = [p.madhyamikSchool, p.madhyamikBoard].filter(Boolean).join(' · ');
-        rows.push({
-            badge:     'class10',
-            label:     'Class 10 – Secondary',
-            inst:      inst || '—',
-            year:      p.madhyamikYear || '—',
-            score:     p.madhyamikPercent ? p.madhyamikPercent + '%' : '—'
+    <script src="../js/api.js"></script>
+    <script src="../js/student-profile.js"></script>
+    <script src="../js/layout.js"></script>
+    <script src="../js/auth-guard.js"></script>
+    <script>
+        // ─────────────────────────────────────────────────────────
+        //  Page Init
+        // ─────────────────────────────────────────────────────────
+        window.addEventListener('DOMContentLoaded', () => {
+            populateResume();
+            initPhotoUploadRow();
+            computeATSScore();
         });
-    }
 
-    // Class 12
-    if (p.higherSecSchool || p.higherSecPercent || p.higherSecYear) {
-        const stream = p.higherSecStream ? ' (' + p.higherSecStream + ')' : '';
-        const inst   = [p.higherSecSchool, p.higherSecBoard].filter(Boolean).join(' · ');
-        rows.push({
-            badge:     'class12',
-            label:     'Class 12 – Higher Sec.' + stream,
-            inst:      inst || '—',
-            year:      p.higherSecYear || '—',
-            score:     p.higherSecPercent ? p.higherSecPercent + '%' : '—'
-        });
-    }
+        // ─────────────────────────────────────────────────────────
+        //  Populate resume from localStorage
+        // ─────────────────────────────────────────────────────────
+        function populateResume() {
+            const p = getProfile();
 
-    // Graduation — always shown
-    const gradInst = [p.college, p.graduationUniversity].filter(Boolean).join(' · ') || 'College Name';
-    const gradDeg  = 'B.Tech – ' + (p.branch || 'IT');
-    rows.push({
-        badge:     'grad',
-        label:     gradDeg,
-        inst:      gradInst,
-        year:      p.gradYear || '—',
-        score:     p.cgpa ? 'CGPA: ' + p.cgpa : '—'
-    });
+            // ── Header ──
+            setText('r-name', (p.name || 'STUDENT NAME').toUpperCase());
+            setText('r-role', (p.branch || 'IT') + ' Engineering Student | ' + (p.college || 'College Name'));
+            setText('r-email', p.email || 'email@example.com');
+            setText('r-phone', p.phone || '+91 0000000000');
+            setText('r-location', p.location || 'Location');
 
-    tbody.innerHTML = rows.map(r => `
+            // Communication Address in header
+            const commParts = [p.commStreet, p.commDistrict, p.commState, p.commPin ? 'PIN – ' + p.commPin : ''].filter(Boolean);
+            const commStr = commParts.join(', ');
+            const addrLine = document.getElementById('r-address');
+            const addrText = document.getElementById('r-address-text');
+            if (commStr && addrLine && addrText) {
+                addrText.textContent = commStr;
+                addrLine.style.display = 'block';
+            } else if (addrLine) {
+                addrLine.style.display = 'none';
+            }
+
+            // ── Summary ──
+            setText('r-summary', p.summary || 'Dedicated B.Tech student passionate about technology and problem solving.');
+
+            // ── Education Table ──
+            renderEducationTable(p);
+
+            // ── Skills ──
+            setText('r-programming', p.programming || '—');
+            setText('r-web', p.web || '');
+            setText('r-databases', p.databases || '');
+            setText('r-dsa', p.dsa || '—');
+            const webRow = document.getElementById('r-web-row');
+            if (webRow) webRow.style.display = p.web ? 'block' : 'none';
+            const dbRow = document.getElementById('r-db-row');
+            if (dbRow) dbRow.style.display = p.databases ? 'block' : 'none';
+
+            // ── Projects ──
+            renderResumeProjects(p.projects || []);
+
+            // ── Dynamic Sections ──
+            renderResumeSection('r-internships-section', 'r-internships-list', p.internships || [], renderInternshipEntry);
+            renderResumeSection('r-hackathons-section', 'r-hackathons-list', p.hackathons || [], renderHackathonEntry);
+            renderResumeSection('r-contests-section', 'r-contests-list', p.codingContests || [], renderContestEntry);
+            renderResumeSection('r-workshops-section', 'r-workshops-list', p.workshops || [], renderWorkshopEntry);
+            renderResumeSection('r-extra-section', 'r-extra-list', p.extracurricular || [], renderExtraEntry);
+
+            // ── Training & Placement badges ──
+            renderTPBadges(p);
+
+            // ── Photo ──
+            renderResumePhoto(getPhoto());
+        }
+
+        function setText(id, value) {
+            const el = document.getElementById(id);
+            if (el) el.textContent = value;
+        }
+
+        // ─────────────────────────────────────────────────────────
+        //  Education Table (3-row ATS format)
+        // ─────────────────────────────────────────────────────────
+        function renderEducationTable(p) {
+            const tbody = document.getElementById('r-edu-tbody');
+            if (!tbody) return;
+
+            const rows = [];
+
+            // Class 10
+            if (p.madhyamikSchool || p.madhyamikPercent || p.madhyamikYear) {
+                const inst = [p.madhyamikSchool, p.madhyamikBoard].filter(Boolean).join(' · ');
+                rows.push({
+                    badge: 'class10',
+                    label: 'Class 10 – Secondary',
+                    inst: inst || '—',
+                    year: p.madhyamikYear || '—',
+                    score: p.madhyamikPercent ? p.madhyamikPercent + '%' : '—'
+                });
+            }
+
+            // Class 12
+            if (p.higherSecSchool || p.higherSecPercent || p.higherSecYear) {
+                const stream = p.higherSecStream ? ' (' + p.higherSecStream + ')' : '';
+                const inst = [p.higherSecSchool, p.higherSecBoard].filter(Boolean).join(' · ');
+                rows.push({
+                    badge: 'class12',
+                    label: 'Class 12 – Higher Sec.' + stream,
+                    inst: inst || '—',
+                    year: p.higherSecYear || '—',
+                    score: p.higherSecPercent ? p.higherSecPercent + '%' : '—'
+                });
+            }
+
+            // Graduation — always shown
+            const gradInst = [p.college, p.graduationUniversity].filter(Boolean).join(' · ') || 'College Name';
+            const gradDeg = 'B.Tech – ' + (p.branch || 'IT');
+            rows.push({
+                badge: 'grad',
+                label: gradDeg,
+                inst: gradInst,
+                year: p.gradYear || '—',
+                score: p.cgpa ? 'CGPA: ' + p.cgpa : '—'
+            });
+
+            tbody.innerHTML = rows.map(r => `
         <tr>
             <td><span class="edu-level-badge ${r.badge}">${escHtml(r.label)}</span></td>
             <td>${escHtml(r.inst)}</td>
@@ -694,28 +982,28 @@ function renderEducationTable(p) {
             <td style="text-align:center; font-weight:700;">${escHtml(r.score)}</td>
         </tr>
     `).join('');
-}
+        }
 
-// ─────────────────────────────────────────────────────────
-//  Generic section renderer
-// ─────────────────────────────────────────────────────────
-function renderResumeSection(sectionId, listId, entries, renderFn) {
-    const section = document.getElementById(sectionId);
-    const list    = document.getElementById(listId);
-    if (!section || !list) return;
+        // ─────────────────────────────────────────────────────────
+        //  Generic section renderer
+        // ─────────────────────────────────────────────────────────
+        function renderResumeSection(sectionId, listId, entries, renderFn) {
+            const section = document.getElementById(sectionId);
+            const list = document.getElementById(listId);
+            if (!section || !list) return;
 
-    if (!entries.length) {
-        section.style.display = 'none';
-        return;
-    }
-    section.style.display = 'block';
-    list.innerHTML = entries.map(renderFn).join('');
-}
+            if (!entries.length) {
+                section.style.display = 'none';
+                return;
+            }
+            section.style.display = 'block';
+            list.innerHTML = entries.map(renderFn).join('');
+        }
 
-// ── Internship renderer ──
-function renderInternshipEntry(i) {
-    const dur = [i.startDate, i.endDate].filter(Boolean).join(' – ');
-    return `<div style="margin-bottom:10px;">
+        // ── Internship renderer ──
+        function renderInternshipEntry(i) {
+            const dur = [i.startDate, i.endDate].filter(Boolean).join(' – ');
+            return `<div style="margin-bottom:10px;">
         <div class="exp-header">
             <strong>${escHtml(i.company || '—')}</strong>
             <span style="font-size:11px;color:#555;">${escHtml(dur)}</span>
@@ -723,11 +1011,11 @@ function renderInternshipEntry(i) {
         <div class="exp-role">${escHtml(i.role || '')}</div>
         ${i.deliverables ? `<p style="margin:3px 0 0;font-size:11.5px;">${escHtml(i.deliverables)}</p>` : ''}
     </div>`;
-}
+        }
 
-// ── Hackathon renderer ──
-function renderHackathonEntry(h) {
-    return `<div style="margin-bottom:10px;">
+        // ── Hackathon renderer ──
+        function renderHackathonEntry(h) {
+            return `<div style="margin-bottom:10px;">
         <div class="proj-header">
             <strong>${escHtml(h.name || '—')}</strong>
             <span style="font-size:11px;color:#555;font-style:italic;">${escHtml(h.techStack || '')}</span>
@@ -736,21 +1024,21 @@ function renderHackathonEntry(h) {
         ${h.description ? `<p style="margin:3px 0 0;font-size:11.5px;">${escHtml(h.description)}</p>` : ''}
         ${h.links ? `<p style="margin:2px 0 0;font-size:10.5px;color:#3730a3;">🔗 ${escHtml(h.links)}</p>` : ''}
     </div>`;
-}
+        }
 
-// ── Contest renderer ──
-function renderContestEntry(c) {
-    return `<div style="margin-bottom:6px;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;">
+        // ── Contest renderer ──
+        function renderContestEntry(c) {
+            return `<div style="margin-bottom:6px;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;">
         <strong style="font-size:11.5px;">${escHtml(c.platform || '—')}</strong>
         <span style="font-size:11px;color:#444;">Rating / Rank: <strong>${escHtml(c.rating || '—')}</strong></span>
         ${c.achievement ? `<span style="font-size:11px;color:#555;">· ${escHtml(c.achievement)}</span>` : ''}
     </div>`;
-}
+        }
 
-// ── Workshop renderer ──
-function renderWorkshopEntry(w) {
-    const dateStr = [w.date, w.duration].filter(Boolean).join(' · ');
-    return `<div style="margin-bottom:8px;">
+        // ── Workshop renderer ──
+        function renderWorkshopEntry(w) {
+            const dateStr = [w.date, w.duration].filter(Boolean).join(' · ');
+            return `<div style="margin-bottom:8px;">
         <div class="exp-header">
             <strong>${escHtml(w.title || '—')}</strong>
             <span style="font-size:11px;color:#555;">${escHtml(dateStr)}</span>
@@ -758,47 +1046,47 @@ function renderWorkshopEntry(w) {
         ${w.organizer ? `<div style="font-size:11.5px;font-style:italic;color:#444;">${escHtml(w.organizer)}</div>` : ''}
         ${w.learnings ? `<p style="margin:3px 0 0;font-size:11.5px;">${escHtml(w.learnings)}</p>` : ''}
     </div>`;
-}
+        }
 
-// ── Extracurricular renderer ──
-function renderExtraEntry(e) {
-    return `<div style="margin-bottom:6px;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;">
+        // ── Extracurricular renderer ──
+        function renderExtraEntry(e) {
+            return `<div style="margin-bottom:6px;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;">
         <strong style="font-size:11.5px;">${escHtml(e.activity || '—')}</strong>
         ${e.role ? `<span style="font-size:11px;color:#444;font-style:italic;">${escHtml(e.role)}</span>` : ''}
         ${e.description ? `<span style="font-size:11px;color:#555;">· ${escHtml(e.description)}</span>` : ''}
     </div>`;
-}
+        }
 
-// ─────────────────────────────────────────────────────────
-//  Training & Placement Badges (refactored)
-// ─────────────────────────────────────────────────────────
-function renderTPBadges(p) {
-    const section = document.getElementById('r-tp-section');
-    const container = document.getElementById('r-tp-badges');
-    if (!container) return;
+        // ─────────────────────────────────────────────────────────
+        //  Training & Placement Badges (refactored)
+        // ─────────────────────────────────────────────────────────
+        function renderTPBadges(p) {
+            const section = document.getElementById('r-tp-section');
+            const container = document.getElementById('r-tp-badges');
+            if (!container) return;
 
-    // Compute placement readiness from profile completeness
-    const fields = ['name','email','phone','college','branch','cgpa','programming','summary'];
-    const filled = fields.filter(f => p[f] && p[f].toString().trim()).length;
-    const hasProj = (p.projects || []).length > 0;
-    const hasIntern = (p.internships || []).length > 0;
-    const score = Math.round(((filled / fields.length) * 60) + (hasProj ? 20 : 0) + (hasIntern ? 20 : 0));
-    const readinessLabel = score >= 80 ? 'High' : score >= 50 ? 'Moderate' : 'Building';
+            // Compute placement readiness from profile completeness
+            const fields = ['name', 'email', 'phone', 'college', 'branch', 'cgpa', 'programming', 'summary'];
+            const filled = fields.filter(f => p[f] && p[f].toString().trim()).length;
+            const hasProj = (p.projects || []).length > 0;
+            const hasIntern = (p.internships || []).length > 0;
+            const score = Math.round(((filled / fields.length) * 60) + (hasProj ? 20 : 0) + (hasIntern ? 20 : 0));
+            const readinessLabel = score >= 80 ? 'High' : score >= 50 ? 'Moderate' : 'Building';
 
-    // Detect primary technical domain from skills
-    const allSkills = ((p.programming || '') + ' ' + (p.web || '') + ' ' + (p.databases || '')).toLowerCase();
-    let domain = 'Full Stack';
-    if (/machine learning|tensorflow|pytorch|pandas/.test(allSkills)) domain = 'Machine Learning / AI';
-    else if (/react|angular|vue|next/.test(allSkills)) domain = 'Frontend Development';
-    else if (/node|express|django|flask|spring/.test(allSkills)) domain = 'Backend Development';
-    else if (/android|flutter|swift|kotlin/.test(allSkills)) domain = 'Mobile Development';
+            // Detect primary technical domain from skills
+            const allSkills = ((p.programming || '') + ' ' + (p.web || '') + ' ' + (p.databases || '')).toLowerCase();
+            let domain = 'Full Stack';
+            if (/machine learning|tensorflow|pytorch|pandas/.test(allSkills)) domain = 'Machine Learning / AI';
+            else if (/react|angular|vue|next/.test(allSkills)) domain = 'Frontend Development';
+            else if (/node|express|django|flask|spring/.test(allSkills)) domain = 'Backend Development';
+            else if (/android|flutter|swift|kotlin/.test(allSkills)) domain = 'Mobile Development';
 
-    // Training status from DSA + projects
-    const trainingStatus = (p.dsa === 'Advanced' || (p.projects || []).length >= 3)
-        ? 'Training Complete' : (p.dsa === 'Intermediate' || (p.projects || []).length >= 1)
-        ? 'In Progress' : 'Getting Started';
+            // Training status from DSA + projects
+            const trainingStatus = (p.dsa === 'Advanced' || (p.projects || []).length >= 3)
+                ? 'Training Complete' : (p.dsa === 'Intermediate' || (p.projects || []).length >= 1)
+                    ? 'In Progress' : 'Getting Started';
 
-    container.innerHTML = `
+            container.innerHTML = `
         <span class="tp-badge readiness">
             <i class="fa fa-chart-line" style="font-size:9px;"></i>
             Placement Readiness: <strong style="margin-left:4px;">${readinessLabel} (${score}%)</strong>
@@ -816,18 +1104,18 @@ function renderTPBadges(p) {
             DSA: <strong style="margin-left:4px;">${escHtml(p.dsa || 'Beginner')}</strong>
         </span>
     `;
-}
+        }
 
-// ─────────────────────────────────────────────────────────
-//  Projects section
-// ─────────────────────────────────────────────────────────
-function renderResumeProjects(projects) {
-    const container = document.getElementById('r-projects');
-    if (!projects.length) {
-        container.innerHTML = '<p style="color:#aaa;font-style:italic;">No projects added. <a href="profile.html">Add them in your profile →</a></p>';
-        return;
-    }
-    container.innerHTML = projects.map(proj => `
+        // ─────────────────────────────────────────────────────────
+        //  Projects section
+        // ─────────────────────────────────────────────────────────
+        function renderResumeProjects(projects) {
+            const container = document.getElementById('r-projects');
+            if (!projects.length) {
+                container.innerHTML = '<p style="color:#aaa;font-style:italic;">No projects added. <a href="profile.html">Add them in your profile →</a></p>';
+                return;
+            }
+            container.innerHTML = projects.map(proj => `
         <div style="margin-bottom: 12px;">
             <div class="proj-header">
                 <strong>${escHtml(proj.title || 'Project')}</strong>
@@ -838,211 +1126,244 @@ function renderResumeProjects(projects) {
             </ul>
         </div>
     `).join('');
-}
+        }
 
-// ─────────────────────────────────────────────────────────
-//  Photo: resume upper-right corner
-// ─────────────────────────────────────────────────────────
-function renderResumePhoto(photoSrc) {
-    const img         = document.getElementById('resumePhotoImg');
-    const placeholder = document.getElementById('resumePhotoPlaceholder');
+        // ─────────────────────────────────────────────────────────
+        //  Photo: resume upper-right corner
+        // ─────────────────────────────────────────────────────────
+        function renderResumePhoto(photoSrc) {
+            const img = document.getElementById('resumePhotoImg');
+            const placeholder = document.getElementById('resumePhotoPlaceholder');
 
-    if (photoSrc) {
-        img.src           = photoSrc;
-        img.style.display = 'block';
-        if (placeholder) placeholder.style.display = 'none';
-    } else {
-        img.src           = '';
-        img.style.display = 'none';
-        if (placeholder) placeholder.style.display = 'flex';
-    }
-}
+            if (photoSrc) {
+                img.src = photoSrc;
+                img.style.display = 'block';
+                if (placeholder) placeholder.style.display = 'none';
+            } else {
+                img.src = '';
+                img.style.display = 'none';
+                if (placeholder) placeholder.style.display = 'flex';
+            }
+        }
 
-function initPhotoUploadRow() {
-    const photo     = getPhoto();
-    const statusEl  = document.getElementById('resumePhotoStatus');
-    const removeBtn = document.getElementById('resumeRemovePhotoBtn');
-
-    if (photo) {
-        if (statusEl) statusEl.textContent = 'Photo uploaded — visible in upper-right of resume.';
-        if (removeBtn) removeBtn.style.display = 'inline-flex';
-    } else {
-        if (statusEl) statusEl.textContent = 'No photo yet. Choose one to show in the upper-right corner of your resume.';
-        if (removeBtn) removeBtn.style.display = 'none';
-    }
-}
-
-function handleResumePhotoUpload(input) {
-    const file = input.files && input.files[0];
-    if (!file) return;
-
-    if (!file.type.startsWith('image/')) {
-        showToast('Please select a valid image file.', 'danger');
-        return;
-    }
-    if (file.size > 2.5 * 1024 * 1024) {
-        showToast('Image too large. Please choose a file under 2.5 MB.', 'danger');
-        return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = e => {
-        if (savePhoto(e.target.result)) {
-            renderResumePhoto(e.target.result);
-            const statusEl  = document.getElementById('resumePhotoStatus');
+        function initPhotoUploadRow() {
+            const photo = getPhoto();
+            const statusEl = document.getElementById('resumePhotoStatus');
             const removeBtn = document.getElementById('resumeRemovePhotoBtn');
-            if (statusEl)  statusEl.textContent  = `Photo saved: ${file.name}`;
-            if (removeBtn) removeBtn.style.display = 'inline-flex';
-            showToast('Profile photo saved to resume!', 'success');
-        } else {
-            showToast('Could not store photo — it may be too large for browser storage.', 'danger');
+
+            if (photo) {
+                if (statusEl) statusEl.textContent = 'Photo uploaded — visible in upper-right of resume.';
+                if (removeBtn) removeBtn.style.display = 'inline-flex';
+            } else {
+                if (statusEl) statusEl.textContent = 'No photo yet. Choose one to show in the upper-right corner of your resume.';
+                if (removeBtn) removeBtn.style.display = 'none';
+            }
         }
-    };
-    reader.readAsDataURL(file);
-}
 
-function handleResumeRemovePhoto() {
-    removePhoto();
-    renderResumePhoto(null);
-    const statusEl  = document.getElementById('resumePhotoStatus');
-    const removeBtn = document.getElementById('resumeRemovePhotoBtn');
-    if (statusEl)  statusEl.textContent    = 'Photo removed.';
-    if (removeBtn) removeBtn.style.display = 'none';
-    const fileInput = document.getElementById('resumePhotoInput');
-    if (fileInput) fileInput.value = '';
-    showToast('Profile photo removed.', 'info');
-}
+        function handleResumePhotoUpload(input) {
+            const file = input.files && input.files[0];
+            if (!file) return;
 
-// ─────────────────────────────────────────────────────────
-//  Refresh button
-// ─────────────────────────────────────────────────────────
-function refreshResume() {
-    populateResume();
-    initPhotoUploadRow();
-    computeATSScore();
-    showToast('Resume refreshed from your latest profile!', 'success');
-}
+            if (!file.type.startsWith('image/')) {
+                showToast('Please select a valid image file.', 'danger');
+                return;
+            }
+            if (file.size > 2.5 * 1024 * 1024) {
+                showToast('Image too large. Please choose a file under 2.5 MB.', 'danger');
+                return;
+            }
 
-// ─────────────────────────────────────────────────────────
-//  PDF Download
-// ─────────────────────────────────────────────────────────
-function downloadPDF() {
-    const p = getProfile();
-    const element = document.getElementById('resume-content');
-    const opt = {
-        margin:      [0.4, 0.4, 0.4, 0.4],
-        filename:    `${(p.name || 'Student').replace(/\s+/g, '_')}_Resume.pdf`,
-        image:       { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF:       { unit: 'in', format: 'a4', orientation: 'portrait' }
-    };
-    showToast('Generating PDF — please wait...', 'info');
-    html2pdf().set(opt).from(element).save().then(() => {
-        showToast('Resume downloaded successfully!', 'success');
-    });
-}
-
-// ─────────────────────────────────────────────────────────
-//  Utility
-// ─────────────────────────────────────────────────────────
-function escHtml(str) {
-    return String(str).replace(/[&<>"']/g,
-        c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-}
-
-// ─────────────────────────────────────────────────────────
-//  ATS Score Calculator
-// ─────────────────────────────────────────────────────────
-const ATS_KEYWORDS = [
-    'python','java','javascript','c++','c#','html','css','sql','node.js','react',
-    'angular','vue','mongodb','mysql','postgresql','django','flask','express',
-    'rest api','graphql','docker','kubernetes','aws','azure','git','github','linux',
-    'numpy','pandas','tensorflow','pytorch','scikit-learn','power bi','tableau',
-    'bootstrap','jquery','typescript','redis','elasticsearch','agile','scrum',
-    'data structures','algorithms','dsa','object oriented','machine learning',
-    'deep learning','data analysis','excel','c language','ms office'
-];
-
-function computeATSScore() {
-    const p = getProfile();
-    const resumeText = [
-        p.name || '', p.summary || '',
-        p.programming || '', p.web || '', p.databases || '',
-        ...(p.projects || []).map(pr =>
-            (pr.title || '') + ' ' + (pr.tech || '') + ' ' + (pr.points || []).join(' ')),
-        ...(p.hackathons || []).map(h => (h.name || '') + ' ' + (h.techStack || '') + ' ' + (h.description || '')),
-        ...(p.internships || []).map(i => (i.company || '') + ' ' + (i.role || '') + ' ' + (i.deliverables || '')),
-        ...(p.codingContests || []).map(c => (c.platform || '') + ' ' + (c.achievement || ''))
-    ].join(' ').toLowerCase();
-
-    const matched = [];
-    const missing = [];
-    ATS_KEYWORDS.forEach(kw => {
-        if (resumeText.includes(kw)) matched.push(kw); else missing.push(kw);
-    });
-
-    const score = Math.round((matched.length / ATS_KEYWORDS.length) * 100);
-    const circumference = 251;
-    const offset = circumference - (score / 100) * circumference;
-    const scoreColor = score >= 70 ? 'var(--pp-success)' : score >= 45 ? 'var(--pp-warning)' : 'var(--pp-danger)';
-
-    const fill = document.getElementById('atsRingFill');
-    fill.style.stroke = scoreColor;
-    setTimeout(() => { fill.style.strokeDashoffset = offset; }, 120);
-
-    document.getElementById('atsScoreNum').textContent = score + '%';
-    document.getElementById('atsScoreNum').style.color = scoreColor;
-
-    const grade = score >= 75 ? 'Excellent' : score >= 55 ? 'Good' : score >= 35 ? 'Fair' : 'Needs Work';
-    document.getElementById('atsGrade').textContent = grade;
-    document.getElementById('atsSubtext').textContent =
-        matched.length + ' of ' + ATS_KEYWORDS.length + ' ATS keywords detected in your resume.';
-
-    document.getElementById('atsMatchedPills').innerHTML =
-        matched.slice(0, 8).map(k => '<span class="ats-keyword-pill-good">✓ ' + k + '</span>').join('');
-    document.getElementById('atsMissingPills').innerHTML =
-        missing.slice(0, 6).map(k => '<span class="ats-keyword-pill-miss">✗ ' + k + '</span>').join('');
-}
-
-// ─────────────────────────────────────────────────────────
-//  Premium Features (Inspired by Naukri Pro)
-// ─────────────────────────────────────────────────────────
-function togglePremiumTheme() {
-    const preview = document.getElementById('resume-content');
-    preview.classList.toggle('premium-theme');
-    const isPremium = preview.classList.contains('premium-theme');
-    showToast(isPremium ? 'Premium Visual Template applied! Recruiters love this layout.' : 'Reverted to Classic ATS format.', 'success');
-}
-
-function applyAIExpertWriting() {
-    showToast('AI Expert is analyzing your profile...', 'info');
-    setTimeout(() => {
-        const summary = document.getElementById('r-summary');
-        if (summary.textContent && summary.textContent !== '—') {
-            let enhanced = summary.textContent;
-            // Basic text enhancement rules
-            enhanced = enhanced.replace(/I am a/gi, 'Results-driven');
-            enhanced = enhanced.replace(/Dedicated/gi, 'Highly motivated');
-            enhanced = enhanced.replace(/passionate about/gi, 'with a proven track record in');
-            if (!enhanced.includes('agile')) enhanced += ' Proven ability to deliver optimized solutions and drive technical excellence in agile environments.';
-            summary.textContent = enhanced;
+            const reader = new FileReader();
+            reader.onload = e => {
+                if (savePhoto(e.target.result)) {
+                    renderResumePhoto(e.target.result);
+                    const statusEl = document.getElementById('resumePhotoStatus');
+                    const removeBtn = document.getElementById('resumeRemovePhotoBtn');
+                    if (statusEl) statusEl.textContent = `Photo saved: ${file.name}`;
+                    if (removeBtn) removeBtn.style.display = 'inline-flex';
+                    showToast('Profile photo saved to resume!', 'success');
+                } else {
+                    showToast('Could not store photo — it may be too large for browser storage.', 'danger');
+                }
+            };
+            reader.readAsDataURL(file);
         }
-        
-        // Enhance project action verbs
-        const projects = document.getElementById('r-projects');
-        projects.innerHTML = projects.innerHTML
-            .replace(/Built/g, 'Architected and developed')
-            .replace(/Created/g, 'Spearheaded the creation of')
-            .replace(/Used/g, 'Leveraged')
-            .replace(/Made/g, 'Engineered')
-            .replace(/Developed/g, 'Designed and developed');
-            
-        showToast('AI Expert Writing applied! Your resume now uses high-impact action verbs.', 'success');
-        computeATSScore(); // Re-compute with new keywords
-    }, 1500);
-}
-</script>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        function handleResumeRemovePhoto() {
+            removePhoto();
+            renderResumePhoto(null);
+            const statusEl = document.getElementById('resumePhotoStatus');
+            const removeBtn = document.getElementById('resumeRemovePhotoBtn');
+            if (statusEl) statusEl.textContent = 'Photo removed.';
+            if (removeBtn) removeBtn.style.display = 'none';
+            const fileInput = document.getElementById('resumePhotoInput');
+            if (fileInput) fileInput.value = '';
+            showToast('Profile photo removed.', 'info');
+        }
+
+        // ─────────────────────────────────────────────────────────
+        //  Refresh button
+        // ─────────────────────────────────────────────────────────
+        function refreshResume() {
+            populateResume();
+            initPhotoUploadRow();
+            computeATSScore();
+            showToast('Resume refreshed from your latest profile!', 'success');
+        }
+
+        // ─────────────────────────────────────────────────────────
+        //  PDF Download
+        // ─────────────────────────────────────────────────────────
+        function downloadPDF() {
+            const p = getProfile();
+            const element = document.getElementById('resume-content');
+            const opt = {
+                margin: [0.4, 0.4, 0.4, 0.4],
+                filename: `${(p.name || 'Student').replace(/\s+/g, '_')}_Resume.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
+            showToast('Generating PDF — please wait...', 'info');
+            html2pdf().set(opt).from(element).save().then(() => {
+                showToast('Resume downloaded successfully!', 'success');
+            });
+        }
+
+        // ─────────────────────────────────────────────────────────
+        //  Utility
+        // ─────────────────────────────────────────────────────────
+        function escHtml(str) {
+            return String(str).replace(/[&<>"']/g,
+                c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        }
+
+        // ─────────────────────────────────────────────────────────
+        //  ATS Score Calculator
+        // ─────────────────────────────────────────────────────────
+        const ATS_KEYWORDS = [
+            'python', 'java', 'javascript', 'c++', 'c#', 'html', 'css', 'sql', 'node.js', 'react',
+            'angular', 'vue', 'mongodb', 'mysql', 'postgresql', 'django', 'flask', 'express',
+            'rest api', 'graphql', 'docker', 'kubernetes', 'aws', 'azure', 'git', 'github', 'linux',
+            'numpy', 'pandas', 'tensorflow', 'pytorch', 'scikit-learn', 'power bi', 'tableau',
+            'bootstrap', 'jquery', 'typescript', 'redis', 'elasticsearch', 'agile', 'scrum',
+            'data structures', 'algorithms', 'dsa', 'object oriented', 'machine learning',
+            'deep learning', 'data analysis', 'excel', 'c language', 'ms office'
+        ];
+
+        function computeATSScore() {
+            const p = getProfile();
+            const resumeText = [
+                p.name || '', p.summary || '',
+                p.programming || '', p.web || '', p.databases || '',
+                ...(p.projects || []).map(pr =>
+                    (pr.title || '') + ' ' + (pr.tech || '') + ' ' + (pr.points || []).join(' ')),
+                ...(p.hackathons || []).map(h => (h.name || '') + ' ' + (h.techStack || '') + ' ' + (h.description || '')),
+                ...(p.internships || []).map(i => (i.company || '') + ' ' + (i.role || '') + ' ' + (i.deliverables || '')),
+                ...(p.codingContests || []).map(c => (c.platform || '') + ' ' + (c.achievement || ''))
+            ].join(' ').toLowerCase();
+
+            const matched = [];
+            window.atsMissingKeywords = [];
+            ATS_KEYWORDS.forEach(kw => {
+                if (resumeText.includes(kw)) matched.push(kw); else window.atsMissingKeywords.push(kw);
+            });
+
+            const score = Math.round((matched.length / ATS_KEYWORDS.length) * 100);
+            const circumference = 251;
+            const offset = circumference - (score / 100) * circumference;
+            const scoreColor = score >= 70 ? 'var(--pp-success)' : score >= 45 ? 'var(--pp-warning)' : 'var(--pp-danger)';
+
+            const fill = document.getElementById('atsRingFill');
+            fill.style.stroke = scoreColor;
+            setTimeout(() => { fill.style.strokeDashoffset = offset; }, 120);
+
+            document.getElementById('atsScoreNum').textContent = score + '%';
+            document.getElementById('atsScoreNum').style.color = scoreColor;
+
+            const grade = score >= 75 ? 'Excellent' : score >= 55 ? 'Good' : score >= 35 ? 'Fair' : 'Needs Work';
+            document.getElementById('atsGrade').textContent = grade;
+            document.getElementById('atsSubtext').textContent =
+                matched.length + ' of ' + ATS_KEYWORDS.length + ' ATS keywords detected in your resume.';
+
+            document.getElementById('atsMatchedPills').innerHTML =
+                matched.slice(0, 8).map(k => '<span class="ats-keyword-pill-good">✓ ' + k + '</span>').join('');
+            document.getElementById('atsMissingPills').innerHTML =
+                window.atsMissingKeywords.slice(0, 6).map(k => '<span class="ats-keyword-pill-miss">✗ ' + k + '</span>').join('');
+        }
+
+        // ─────────────────────────────────────────────────────────
+        //  Premium Features (Inspired by Naukri Pro)
+        // ─────────────────────────────────────────────────────────
+        function togglePremiumTheme() {
+            const preview = document.getElementById('resume-content');
+            preview.classList.toggle('premium-theme');
+            const isPremium = preview.classList.contains('premium-theme');
+            showToast(isPremium ? 'Premium Visual Template applied! Recruiters love this layout.' : 'Reverted to Classic ATS format.', 'success');
+        }
+
+        function applyAIExpertWriting() {
+            showToast('AI Expert is analyzing your profile...', 'info');
+            setTimeout(() => {
+                const summary = document.getElementById('r-summary');
+                if (summary.textContent && summary.textContent !== '—') {
+                    let enhanced = summary.textContent;
+                    // Basic text enhancement rules
+                    enhanced = enhanced.replace(/I am a/gi, 'Results-driven');
+                    enhanced = enhanced.replace(/Dedicated/gi, 'Highly motivated');
+                    enhanced = enhanced.replace(/passionate about/gi, 'with a proven track record in');
+                    if (!enhanced.includes('agile')) enhanced += ' Proven ability to deliver optimized solutions and drive technical excellence in agile environments.';
+                    summary.textContent = enhanced;
+                }
+
+                // Enhance project action verbs
+                const projects = document.getElementById('r-projects');
+                projects.innerHTML = projects.innerHTML
+                    .replace(/Built/g, 'Architected and developed')
+                    .replace(/Created/g, 'Spearheaded the creation of')
+                    .replace(/Used/g, 'Leveraged')
+                    .replace(/Made/g, 'Engineered')
+                    .replace(/Developed/g, 'Designed and developed');
+
+                showToast('AI Expert Writing applied! Your resume now uses high-impact action verbs.', 'success');
+
+                // Temporarily boost score text for immediate feedback
+                const scoreEl = document.getElementById('atsScoreNum');
+                let currentScore = parseInt(scoreEl.textContent) || 0;
+                if (currentScore < 100) {
+                    currentScore = Math.min(100, currentScore + 12);
+                    scoreEl.textContent = currentScore + '%';
+                    document.getElementById('atsGrade').textContent = currentScore >= 75 ? 'Excellent' : 'Good';
+                    const circumference = 251;
+                    document.getElementById('atsRingFill').style.strokeDashoffset = circumference - (currentScore / 100) * circumference;
+                }
+            }, 1200);
+        }
+
+        function autoInjectKeywords() {
+            if (!window.atsMissingKeywords || window.atsMissingKeywords.length === 0) {
+                showToast('Your resume already contains all tracked ATS keywords!', 'info');
+                return;
+            }
+            showToast('AI is intelligently inserting missing keywords...', 'info');
+
+            setTimeout(() => {
+                const skillsRow = document.getElementById('r-programming');
+                const toInject = window.atsMissingKeywords.slice(0, 5); // Take top 5 missing
+
+                if (skillsRow && toInject.length > 0) {
+                    let current = skillsRow.textContent === '—' ? '' : skillsRow.textContent;
+                    if (current && !current.endsWith(',')) current += ', ';
+                    skillsRow.textContent = current + toInject.join(', ');
+
+                    showToast(`Injected keywords: ${toInject.join(', ')}`, 'success');
+                    computeATSScore(); // Recalculate
+                }
+            }, 1200);
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
