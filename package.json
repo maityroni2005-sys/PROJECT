@@ -1,0 +1,16 @@
+{
+  "name": "placement-guidance-system",
+  "version": "1.0.0",
+  "description": "Full-stack ML Placement Guidance System",
+  "scripts": {
+    "start": "npm run dev",
+    "backend": "cd Backend && node server.js",
+    "ml": "python -u ML/api/ml_api.py",
+    "frontend": "live-server Frontend --port=3006 --cors",
+    "dev": "concurrently \"npm run backend\" \"npm run ml\" \"npm run frontend\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "live-server": "^1.2.2"
+  }
+}

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Roles - PlacementPro AI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        .role-row {
+            display: flex; align-items: center; gap: 14px;
+            background: linear-gradient(150deg, #f3f4fd 0%, var(--pp-surface) 48%, #e6e9f8 100%);
+            border-radius: 20px; padding: 14px 18px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(255, 255, 255, .85);
+            box-shadow: var(--pp-clay);
+            transition: transform .2s var(--pp-ease), box-shadow .2s var(--pp-ease);
+            cursor: pointer;
+        }
+        .role-row:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--pp-clay-hover), var(--pp-shadow-glow);
+        }
+        .role-rank {
+            font-size: 1.3rem; font-weight: 800; color: var(--pp-border-strong);
+            width: 40px; height: 40px;
+            display: inline-flex; align-items: center; justify-content: center;
+            border-radius: 13px;
+            background: linear-gradient(150deg, #e9ebfa, #eef0fb);
+            box-shadow: var(--pp-clay-inset);
+            flex-shrink: 0;
+        }
+        .role-rank.top {
+            color: #fff;
+            background: linear-gradient(135deg, #f59e0b, #fbbf24);
+            box-shadow: inset 0 -2px 4px rgba(0,0,0,.18), inset 0 2px 2px rgba(255,255,255,.4), 0 6px 14px -4px rgba(217, 119, 6, .55);
+        }
+        .role-bar-track {
+            flex: 1; height: 8px; background: var(--pp-border);
+            box-shadow: var(--pp-clay-inset);
+            border-radius: 99px; overflow: hidden;
+        }
+        .role-bar-fill {
+            height: 100%; border-radius: 99px; width: 0;
+            box-shadow: 0 2px 6px rgba(49, 46, 129, .35), inset 0 1px 1px rgba(255,255,255,.4);
+            transition: width 1s cubic-bezier(.4,0,.2,1);
+        }
+        .role-score-badge {
+            font-weight: 800; font-size: 1rem;
+            min-width: 56px; text-align: right; flex-shrink: 0;
+        }
+    </style>
+</head>
+<body>
+<div class="d-flex">
+    <div class="pp-aurora-b" aria-hidden="true"></div>
+    <!-- Sidebar -->
+    <div class="sidebar p-3 d-flex flex-column" id="ppSidebar" style="width:250px;min-height:100vh;">
+        <h4 class="fw-bold text-primary mb-4 px-2">PlacementPro</h4>
+        <ul class="nav flex-column mb-auto">
+            <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="fa fa-gauge me-2"></i>Dashboard</a></li>
+            <li class="nav-item"><a href="profile.html" class="nav-link"><i class="fa fa-user me-2"></i>My Profile</a></li>
+            <li class="nav-item"><a href="analysis.html" class="nav-link"><i class="fa fa-chart-bar me-2"></i>My Analysis</a></li>
+            <li class="nav-item"><a href="companies.html" class="nav-link"><i class="fa fa-building me-2"></i>Companies</a></li>
+            <li class="nav-item"><a href="roles.html" class="nav-link active"><i class="fa fa-briefcase me-2"></i>Career Roles</a></li>
+            <li class="nav-item"><a href="skill-gap.html" class="nav-link"><i class="fa fa-triangle-exclamation me-2"></i>Skill Gap</a></li>
+            <li class="nav-item"><a href="resume.html" class="nav-link"><i class="fa fa-file-lines me-2"></i>Resume Generator</a></li>
+        </ul>
+        <a href="#" onclick="handleLogout(); return false;" class="nav-link text-danger mt-4"><i class="fa fa-right-from-bracket me-2"></i>Logout</a>
+    </div>
+    <div class="pp-backdrop" aria-hidden="true"></div>
+
+    <!-- Main Content -->
+    <div class="flex-grow-1 p-4 bg-light">
+        <!-- Mobile topbar (hidden ≥992px) -->
+        <div class="pp-topbar">
+            <button class="pp-burger" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="ppSidebar">
+                <i class="fa fa-bars"></i>
+            </button>
+            <span class="pp-topbar-brand"><i class="fa fa-robot me-2"></i>PlacementPro</span>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <div>
+                <h2 class="fw-bold mb-0">Career Role Compatibility</h2>
+                <small class="text-muted">Ranked by skill match against each role's requirements</small>
+            </div>
+            <button class="btn btn-outline-primary rounded-pill" onclick="loadRoles()">
+                <i class="fa fa-arrows-rotate me-2"></i>Re-run
+            </button>
+        </div>
+
+        <!-- Skeleton -->
+        <div id="skeletonLoader">
+            <div class="skeleton mb-3" style="height:60px;"></div>
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+                <div class="skeleton mb-3" style="height:20px;width:40%;"></div>
+                <div class="skeleton mb-2" style="height:50px;"></div>
+                <div class="skeleton mb-2" style="height:50px;"></div>
+                <div class="skeleton mb-2" style="height:50px;"></div>
+                <div class="skeleton mb-2" style="height:50px;"></div>
+                <div class="skeleton" style="height:50px;"></div>
+            </div>
+        </div>
+
+        <!-- Roles Content -->
+        <div id="rolesContent" style="display:none;">
+            <div class="alert d-flex align-items-center gap-3 mb-4" id="topRoleBanner"
+                 style="background:linear-gradient(90deg, var(--pp-primary), var(--pp-teal-bright));color:#fff;border:none;border-radius:12px;box-shadow: var(--pp-shadow-glow);">
+                <i class="fa fa-trophy fs-4"></i>
+                <div>
+                    <strong>Your Best-Fit Role: <span id="topRoleName">—</span></strong>
+                    <div style="font-size:0.82rem;opacity:0.85;" id="topRoleHint">Based on your current skill set</div>
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4 p-4">
+                <h5 class="fw-bold text-primary mb-4"><i class="fa fa-ranking-star me-2"></i>Ranked Suitability Scores</h5>
+                <div id="rolesList"></div>
+                <div class="text-center mt-4">
+                    <a href="skill-gap.html" class="btn btn-primary fw-bold px-4 py-2 rounded-pill" id="analyzeBtn">
+                        <i class="fa fa-arrow-right me-2"></i>Analyze Skills for Top Role
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../js/api.js"></script>
+<script src="../js/student-profile.js"></script>
+<script src="../js/layout.js"></script>
+<script src="../js/auth-guard.js"></script>
+<script>
+// ---- Client-side role scoring fallback ----
+const ROLE_REQS = {
+    'Backend Developer':    ['Node.js','Express','Python','Java','SQL','MongoDB'],
+    'Frontend Developer':   ['HTML','CSS','JavaScript','React','Bootstrap'],
+    'Full Stack Developer': ['JavaScript','Node.js','React','MongoDB','SQL','HTML','CSS'],
+    'Data Analyst':         ['Python','SQL','Pandas','NumPy','Excel','Tableau'],
+    'ML Engineer':          ['Python','TensorFlow','PyTorch','Scikit-Learn','SQL'],
+    'DevOps Engineer':      ['Docker','Kubernetes','AWS','Linux','Git']
+};
+
+function clientSideRoles(p) {
+    const allSkills = [
+        ...(p.programming || '').split(','),
+        ...(p.web || '').split(','),
+        ...(p.databases || '').split(',')
+    ].map(s => s.trim().toLowerCase()).filter(Boolean);
+
+    return Object.entries(ROLE_REQS).map(([role, req]) => {
+        const reqLow = req.map(r => r.toLowerCase());
+        const matched = reqLow.filter(r => allSkills.some(s => s.includes(r) || r.includes(s)));
+        const score   = Math.round(40 + (matched.length / reqLow.length) * 60);
+        return { role, score: Math.min(score, 99) };
+    }).sort((a, b) => b.score - a.score);
+}
+
+function barColor(score) {
+    if (score >= 70) return 'linear-gradient(90deg, var(--pp-success), #2dd4bf)';
+    if (score >= 50) return 'linear-gradient(90deg, var(--pp-primary), var(--pp-teal-bright))';
+    return 'linear-gradient(90deg, var(--pp-muted), #94a3b8)';
+}
+
+function renderRoles(roles) {
+    document.getElementById('topRoleName').textContent = roles[0]?.role || '—';
+    document.getElementById('analyzeBtn').textContent  = `Analyze Skills for ${roles[0]?.role || 'Top Role'}`;
+    localStorage.setItem('placementpro_target_role', roles[0]?.role || 'Backend Developer');
+
+    document.getElementById('rolesList').innerHTML = roles.map((r, i) => `
+        <div class="role-row" onclick="selectRole('${r.role}')">
+            <span class="role-rank ${i === 0 ? 'top' : ''}">${i === 0 ? '🏆' : '#' + (i + 1)}</span>
+            <span style="min-width:160px;font-weight:600;">${r.role}</span>
+            <div class="role-bar-track">
+                <div class="role-bar-fill" data-width="${r.score}"
+                     style="background:${barColor(r.score)};"></div>
+            </div>
+            <span class="role-score-badge" style="color:${r.score>=70?'var(--pp-success)':r.score>=50?'var(--pp-primary)':'var(--pp-muted)'}">
+                ${r.score}%
+            </span>
+        </div>
+    `).join('');
+
+    document.getElementById('rolesList').classList.add('pp-stagger');
+
+    // Animate bars
+    setTimeout(() => {
+        document.querySelectorAll('.role-bar-fill').forEach(bar => {
+            bar.style.width = (bar.dataset.width || 0) + '%';
+        });
+    }, 100);
+
+    document.getElementById('skeletonLoader').style.display = 'none';
+    const contentEl = document.getElementById('rolesContent');
+    contentEl.style.display   = 'block';
+    contentEl.classList.remove('reveal-on-show');
+    void contentEl.offsetWidth;             // restart entrance animation on every load
+    contentEl.classList.add('reveal-on-show');
+}
+
+function selectRole(role) {
+    localStorage.setItem('placementpro_target_role', role);
+    window.location.href = 'skill-gap.html';
+}
+
+async function loadRoles() {
+    document.getElementById('skeletonLoader').style.display = 'block';
+    document.getElementById('rolesContent').style.display   = 'none';
+
+    const p = getProfile();
+
+    try {
+        const payload = buildBackendPayload(p);
+        const result  = await apiCall('/analysis/roles', 'POST', { student: payload });
+        renderRoles(result.roles || clientSideRoles(p));
+    } catch (e) {
+        // Graceful silent fallback — client-side calculated scores, no UI noise
+        renderRoles(clientSideRoles(p));
+    }
+}
+
+window.addEventListener('DOMContentLoaded', loadRoles);
+</script>
+</body>
+</html>

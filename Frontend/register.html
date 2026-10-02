@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - PlacementPro AI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* Premium clay canvas for auth pages */
+        body {
+            background:
+                radial-gradient(1100px 620px at 82% -12%, #eceefe 0%, transparent 55%),
+                radial-gradient(900px 540px at -10% 108%, rgba(45, 212, 191, .22), transparent 60%),
+                linear-gradient(160deg, #e3e6fb 0%, #dfe4f7 34%, #dde3f6 55%, #e4def4 78%, #e8e1f3 100%);
+            min-height: 100vh;
+        }
+        body::before { content: none; }
+
+        .auth-card {
+            background: linear-gradient(150deg, #f6f7fe 0%, var(--pp-surface) 48%, #e6e9f8 100%);
+            border: 1px solid rgba(255, 255, 255, .95);
+            border-radius: 34px;
+            padding: 46px 42px;
+            width: 100%; max-width: 480px;
+            box-shadow: var(--pp-clay-hover);
+            position: relative;
+        }
+        /* Soft top rim-light — signature clay highlight */
+        .auth-card::before {
+            content: '';
+            position: absolute;
+            top: 10px; left: 30px; right: 30px;
+            height: 2px;
+            border-radius: 99px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,.95), transparent);
+            pointer-events: none;
+        }
+        .auth-card .form-control {
+            color: var(--pp-ink);
+        }
+        .auth-card label { color: var(--pp-muted); font-weight: 600; font-size: 0.85rem; }
+        .btn-register {
+            background: linear-gradient(135deg, #4338ca 0%, #6366f1 55%, #14b8a6 120%);
+            border: 1px solid rgba(255, 255, 255, .25);
+            color: #fff; font-weight: 700;
+            padding: 13px; border-radius: 50px;
+            box-shadow: var(--pp-clay-cta);
+            transition: transform 0.18s var(--pp-ease-spring, ease), box-shadow 0.2s, filter 0.2s;
+        }
+        .btn-register:hover {
+            color: #fff; transform: translateY(-2px);
+            box-shadow: var(--pp-clay-cta-hover);
+        }
+        .btn-register:active { transform: translateY(1px) scale(.98); }
+        .error-box {
+            background: var(--pp-danger-soft);
+            border: 1px solid rgba(224, 69, 92, .35);
+            color: #9f2042;
+            border-radius: 14px;
+            padding: 10px 14px;
+            font-size: 0.85rem; font-weight: 600;
+            display: none; margin-bottom: 14px;
+            box-shadow: var(--pp-clay-inset);
+        }
+        .auth-link { color: var(--pp-primary); font-weight: 700; text-decoration: none; }
+        .auth-link:hover { color: var(--pp-primary-dark); text-decoration: underline; }
+        .brand-pill {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: linear-gradient(150deg, #e9ebfa, #eef0fb);
+            box-shadow: var(--pp-clay-sm);
+            color: var(--pp-primary);
+            border-radius: 50px;
+            padding: 8px 18px; font-size: 0.82rem;
+            font-weight: 700; margin-bottom: 24px;
+        }
+        .auth-sub { color: var(--pp-muted); font-size: 0.9rem; }
+        .auth-foot { font-size: 0.9rem; color: var(--pp-muted); }
+    </style>
+</head>
+<body class="d-flex justify-content-center align-items-center py-5" style="min-height:100vh;">
+    <div class="auth-card">
+        <div class="text-center mb-4">
+            <div class="brand-pill"><i class="fa fa-user-plus"></i> PlacementPro AI</div>
+            <h4 class="fw-bold mb-1">Create your account</h4>
+            <p class="auth-sub">Start your placement journey today</p>
+        </div>
+
+        <div class="error-box" id="registerError"></div>
+
+        <form id="registerForm" onsubmit="handleRegister(event)">
+            <div class="mb-3">
+                <label for="name">Full Name</label>
+                <input type="text" class="form-control mt-1" id="name"
+                       placeholder="e.g. Roni Maity" autocomplete="name" required>
+            </div>
+            <div class="mb-3">
+                <label for="email">Email address</label>
+                <input type="email" class="form-control mt-1" id="email"
+                       placeholder="name@college.edu" autocomplete="email" required>
+            </div>
+            <div class="mb-3">
+                <label for="password">Password</label>
+                <input type="password" class="form-control mt-1" id="password"
+                       placeholder="Minimum 6 characters" autocomplete="new-password" required>
+            </div>
+            <div class="mb-4">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" class="form-control mt-1" id="confirmPassword"
+                       placeholder="Repeat your password" autocomplete="new-password" required>
+            </div>
+            <button type="submit" class="btn btn-register w-100" id="registerBtn">
+                <i class="fa fa-rocket me-2"></i>Create Account
+            </button>
+        </form>
+
+        <div class="text-center mt-4 auth-foot">
+            Already have an account?
+            <a href="login.html" class="auth-link ms-1">Sign in →</a>
+        </div>
+    </div>
+
+    <script>
+    function showError(msg) {
+        const el = document.getElementById('registerError');
+        el.textContent = msg;
+        el.style.display = 'block';
+    }
+
+    function handleRegister(e) {
+        if (e) e.preventDefault();
+        const name     = document.getElementById('name').value.trim();
+        const email    = document.getElementById('email').value.trim().toLowerCase();
+        const password = document.getElementById('password').value;
+        const confirm  = document.getElementById('confirmPassword').value;
+
+        // Inline validation — no alert() used anywhere
+        if (!name)                    { showError('Please enter your full name.'); return; }
+        if (!email)                   { showError('Please enter your email address.'); return; }
+        if (password.length < 6)      { showError('Password must be at least 6 characters.'); return; }
+        if (password !== confirm)     { showError('Passwords do not match. Please try again.'); return; }
+
+        const btn = document.getElementById('registerBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa fa-spinner fa-spin me-2"></i>Creating account...';
+
+        setTimeout(() => {
+            // 1. Save session
+            localStorage.setItem('placementpro_session', JSON.stringify({ email, name }));
+
+            // 2. Seed a fresh, isolated profile for this email (blank — no shared defaults)
+            //    Key: 'placementpro_profile_<email>' — same scheme as student-profile.js
+            const profileKey = 'placementpro_profile_' + email;
+            if (!localStorage.getItem(profileKey)) {
+                localStorage.setItem(profileKey, JSON.stringify({
+                    name, email,
+                    phone: '', location: '', college: '', branch: 'Other',
+                    cgpa: '', backlogs: '0',
+                    gradYear: String(new Date().getFullYear() + 1),
+                    programming: '', web: '', databases: '',
+                    dsa: 'Beginner', summary: '',
+                    madhyamikSchool: '', madhyamikPercent: '', madhyamikYear: '',
+                    madhyamikBoard: '', higherSecSchool: '', higherSecPercent: '',
+                    higherSecYear: '', higherSecStream: 'Science',
+                    projects: []
+                }));
+            }
+
+            // 3. Navigate to profile to fill in details
+            window.location.href = 'student/profile.html';
+        }, 600);
+    }
+    </script>
+</body>
+</html>

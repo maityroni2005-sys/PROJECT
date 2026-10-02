@@ -1,0 +1,1608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - PlacementPro AI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* ---------- Profile photo area ---------- */
+        .profile-photo-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+        .profile-photo-ring {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            border: 4px solid rgba(255, 255, 255, .95);
+            overflow: hidden;
+            background: linear-gradient(150deg, #e9ebfa, #eef0fb);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: var(--pp-border-strong);
+            box-shadow: var(--pp-clay-icon), 0 0 0 3px rgba(67, 56, 202, .25);
+            transition: box-shadow 0.25s var(--pp-ease), transform 0.25s var(--pp-ease);
+        }
+        .profile-photo-ring img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .profile-photo-ring:hover {
+            box-shadow: var(--pp-clay-hover), 0 0 0 3px rgba(67, 56, 202, .35);
+            transform: scale(1.04);
+        }
+
+        /* ---------- View mode: display spans ---------- */
+        .view-value {
+            display: block;
+            padding: 8px 12px;
+            background: linear-gradient(150deg, #e9ebfa 0%, #eef0fb 55%, #e3e6f6 100%);
+            border: 1px solid transparent;
+            border-radius: 12px;
+            color: var(--pp-ink);
+            font-size: 0.95rem;
+            min-height: 38px;
+            box-shadow: var(--pp-clay-inset);
+            transition: box-shadow 0.2s;
+        }
+        .view-value:hover { box-shadow: var(--pp-clay-inset), 0 0 0 1px rgba(67, 56, 202, .18); }
+        .view-value:empty::before {
+            content: '— not set —';
+            color: #94a3b8;
+            font-style: italic;
+        }
+
+        /* ---------- Edit/Save button ---------- */
+        #editToggleBtn {
+            transition: all 0.25s var(--pp-ease);
+        }
+        #editToggleBtn.is-editing {
+            background-color: var(--pp-success);
+            border-color: var(--pp-success);
+        }
+
+        /* ---------- Dynamic entry cards ---------- */
+        .entry-card {
+            border: 1px solid rgba(255, 255, 255, .85);
+            border-radius: 18px;
+            padding: 16px;
+            background: linear-gradient(150deg, #f3f4fd 0%, var(--pp-surface) 48%, #e6e9f8 100%);
+            box-shadow: var(--pp-clay-sm);
+            position: relative;
+            transition: box-shadow 0.22s var(--pp-ease), transform 0.22s var(--pp-ease);
+            margin-bottom: 12px;
+        }
+        .entry-card:hover {
+            box-shadow: var(--pp-clay);
+            transform: translateY(-2px);
+        }
+        .entry-card textarea { resize: vertical; min-height: 70px; }
+
+        /* ---------- Project cards ---------- */
+        .project-card {
+            border: 1px solid rgba(255, 255, 255, .85);
+            border-radius: 18px;
+            padding: 16px;
+            background: linear-gradient(150deg, #f3f4fd 0%, var(--pp-surface) 48%, #e6e9f8 100%);
+            box-shadow: var(--pp-clay-sm);
+            position: relative;
+            transition: box-shadow 0.22s var(--pp-ease), transform 0.22s var(--pp-ease);
+        }
+        .project-card:hover {
+            box-shadow: var(--pp-clay);
+            transform: translateY(-2px);
+        }
+        .project-card textarea { resize: vertical; min-height: 70px; }
+
+        /* ---------- Compact view-mode badge rows ---------- */
+        .view-badge-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        .view-entry-card {
+            background: linear-gradient(150deg, #f3f4fd 0%, var(--pp-surface) 48%, #e6e9f8 100%);
+            border: 1px solid rgba(255, 255, 255, .85);
+            border-radius: 16px;
+            padding: 10px 14px;
+            min-width: 200px;
+            flex: 1 1 220px;
+            box-shadow: var(--pp-clay-sm);
+            transition: box-shadow .22s var(--pp-ease), transform .22s var(--pp-ease);
+        }
+        .view-entry-card:hover {
+            box-shadow: var(--pp-clay);
+            transform: translateY(-2px);
+        }
+        .view-entry-card .entry-title {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #212529;
+            margin-bottom: 3px;
+        }
+        .view-entry-card .entry-meta {
+            font-size: 0.8rem;
+            color: var(--pp-muted);
+        }
+        .view-entry-card .entry-badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 50px;
+            background: linear-gradient(135deg, #e5e4ff, #ecebff);
+            color: var(--pp-primary);
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-right: 4px;
+            margin-bottom: 2px;
+            box-shadow: var(--pp-clay-sm);
+        }
+
+        /* ---------- Academic History Table ---------- */
+        .academic-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+        }
+        .academic-table th {
+            background: linear-gradient(135deg, #e5e4ff 0%, #eceefe 100%);
+            color: var(--pp-primary-dark);
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.72rem;
+            letter-spacing: 0.6px;
+            padding: 10px 12px;
+            border: 1px solid rgba(255, 255, 255, .9);
+            white-space: nowrap;
+        }
+        .academic-table td {
+            padding: 8px 12px;
+            border: 1px solid rgba(255, 255, 255, .8);
+            vertical-align: middle;
+        }
+        .academic-table tr:nth-child(even) td { background: rgba(255,255,255,.35); }
+        .academic-table td input,
+        .academic-table td select {
+            border: none;
+            background: transparent;
+            padding: 2px 4px;
+            width: 100%;
+            font-size: 0.88rem;
+            outline: none;
+        }
+        body.edit-mode .academic-table td {
+            background: #fff;
+        }
+        body.edit-mode .academic-table td input,
+        body.edit-mode .academic-table td select {
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            padding: 4px 8px;
+            background: #fff;
+        }
+        .level-badge {
+            display: inline-block;
+            padding: 4px 11px;
+            border-radius: 50px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            border: 1px solid rgba(255,255,255,.7);
+            box-shadow: var(--pp-clay-sm);
+        }
+        .level-badge.class10  { background: linear-gradient(135deg, #fdeecb, #fbe9c0); color: #856404; }
+        .level-badge.class12  { background: linear-gradient(135deg, #c9f3ec, #c2efe6); color: #0c5460; }
+        .level-badge.grad     { background: linear-gradient(135deg, #d3f4e5, #c9f0df); color: #155724; }
+
+        /* ---------- Unsaved indicator dot ---------- */
+        #unsavedDot {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            background: var(--pp-warning);
+            display: none;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50%       { opacity: 0.25; }
+        }
+
+        /* ---------- Edit mode highlight ---------- */
+        body.edit-mode .view-value { display: none !important; }
+        body:not(.edit-mode) .form-control,
+        body:not(.edit-mode) .form-select,
+        body:not(.edit-mode) .edit-only { display: none !important; }
+        body.edit-mode .view-value { display: none; }
+
+        /* Form controls inside edit mode — scoped to profile content only */
+        .profile-main-content .form-control,
+        .profile-main-content .form-select { display: none; }
+        body.edit-mode .profile-main-content .form-control,
+        body.edit-mode .profile-main-content .form-select { display: block; }
+        body.edit-mode .edit-only { display: flex !important; }
+
+        /* Academic table inputs always shown via table-specific rules */
+        body:not(.edit-mode) .academic-table td input,
+        body:not(.edit-mode) .academic-table td select { display: block !important; }
+        body:not(.edit-mode) .academic-table td input { border: none !important; background: transparent !important; pointer-events: none; }
+        body:not(.edit-mode) .academic-table td select { border: none !important; background: transparent !important; pointer-events: none; -webkit-appearance: none; }
+
+        /* Section header action */
+        .section-actions { display: flex; gap: 10px; align-items: center; }
+
+        /* Profile completion bar */
+        .completion-bar { height: 8px; border-radius: 99px; background: var(--pp-border); box-shadow: var(--pp-clay-inset); margin-top: 6px; }
+        .completion-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #4338ca, #6366f1, #14b8a6); box-shadow: 0 2px 6px rgba(49, 46, 129, .35), inset 0 1px 1px rgba(255,255,255,.4); transition: width 0.6s var(--pp-ease); }
+
+        /* Section add-more button */
+        .section-add-btn {
+            border: 2px dashed rgba(67, 56, 202, .45);
+            border-radius: 16px;
+            padding: 10px;
+            width: 100%;
+            text-align: center;
+            color: var(--pp-primary);
+            font-weight: 700;
+            font-size: 0.85rem;
+            cursor: pointer;
+            background: rgba(255, 255, 255, .35);
+            transition: background 0.2s, border-color 0.2s, transform 0.2s var(--pp-ease);
+            margin-top: 8px;
+        }
+        .section-add-btn:hover {
+            background: #e9e7ff;
+            border-color: var(--pp-primary);
+            transform: translateY(-1px);
+        }
+        .section-add-btn { display: none; }
+        body.edit-mode .section-add-btn { display: block; }
+
+        /* Dynamic entry view cards — hidden in edit mode */
+        body.edit-mode .view-badge-row { display: none !important; }
+        body.edit-mode .no-entries-msg { display: none !important; }
+        body:not(.edit-mode) .edit-entries-container { display: none !important; }
+
+        /* ---------- Floating-label form fields ----------
+           Applied to the fixed personal-details fields (.pp-float).
+           The label visually sits inside the input and floats up on
+           focus or when the field has a value. */
+        .pp-float { position: relative; }
+        .pp-float .form-control {
+            padding: 1.35rem 0.95rem 0.5rem;
+        }
+        .pp-float .float-label {
+            position: absolute;
+            left: 0.95rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--pp-muted);
+            font-size: 0.92rem;
+            pointer-events: none;
+            transition: all .18s var(--pp-ease);
+            max-width: calc(100% - 2rem);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .pp-float .form-control:focus + .float-label,
+        .pp-float .form-control:not(:placeholder-shown) + .float-label {
+            top: 0.85rem;
+            transform: translateY(0);
+            font-size: 0.66rem;
+            font-weight: 700;
+            letter-spacing: .06em;
+            text-transform: uppercase;
+            color: var(--pp-primary);
+        }
+
+        /* ---------- Save success animation ---------- */
+        @keyframes ppBtnPop {
+            0%   { transform: scale(1); }
+            40%  { transform: scale(1.06); }
+            100% { transform: scale(1); }
+        }
+        .pp-save-success { animation: ppBtnPop .5s var(--pp-ease-spring, cubic-bezier(.34,1.56,.64,1)) 1; }
+        @keyframes ppSavedCheck {
+            0%   { transform: scale(0); opacity: 0; }
+            60%  { transform: scale(1.25); opacity: 1; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .pp-saved-flash {
+            position: fixed;
+            top: 84px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            background: linear-gradient(135deg, #0aa06e, #34d399);
+            color: #fff;
+            font-weight: 700;
+            font-size: .92rem;
+            padding: 11px 24px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, .3);
+            box-shadow: var(--pp-clay-cta);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            pointer-events: none;
+        }
+        .pp-saved-flash i { animation: ppSavedCheck .45s var(--pp-ease-spring, cubic-bezier(.34,1.56,.64,1)) both; }
+    </style>
+</head>
+<body>
+    <div class="d-flex">
+        <div class="pp-aurora-b" aria-hidden="true"></div>
+        <!-- Sidebar -->
+        <div class="sidebar p-3 d-flex flex-column" id="ppSidebar" style="width: 250px; min-height: 100vh;">
+            <h4 class="fw-bold text-primary mb-4 px-2">PlacementPro</h4>
+            <ul class="nav flex-column mb-auto">
+                <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="fa fa-gauge me-2"></i>Dashboard</a></li>
+                <li class="nav-item"><a href="profile.html" class="nav-link active"><i class="fa fa-user me-2"></i>My Profile</a></li>
+                <li class="nav-item"><a href="analysis.html" class="nav-link"><i class="fa fa-chart-bar me-2"></i>My Analysis</a></li>
+                <li class="nav-item"><a href="companies.html" class="nav-link"><i class="fa fa-building me-2"></i>Companies</a></li>
+                <li class="nav-item"><a href="roles.html" class="nav-link"><i class="fa fa-briefcase me-2"></i>Career Roles</a></li>
+                <li class="nav-item"><a href="skill-gap.html" class="nav-link"><i class="fa fa-triangle-exclamation me-2"></i>Skill Gap</a></li>
+                <li class="nav-item"><a href="resume.html" class="nav-link"><i class="fa fa-file-lines me-2"></i>Resume Generator</a></li>
+            </ul>
+            <a href="#" onclick="handleLogout(); return false;" class="nav-link text-danger mt-4"><i class="fa fa-right-from-bracket me-2"></i>Logout</a>
+        </div>
+        <div class="pp-backdrop" aria-hidden="true"></div>
+
+        <!-- Main Content -->
+        <div class="flex-grow-1 p-4 bg-light profile-main-content">
+
+            <!-- Mobile topbar (hidden ≥992px) -->
+            <div class="pp-topbar">
+                <button class="pp-burger" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="ppSidebar">
+                    <i class="fa fa-bars"></i>
+                </button>
+                <span class="pp-topbar-brand"><i class="fa fa-robot me-2"></i>PlacementPro</span>
+            </div>
+
+            <!-- Page Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                <div>
+                    <h2 class="fw-bold mb-0">My Profile</h2>
+                    <small class="text-muted">Your academic &amp; technical details for placement analysis</small>
+                </div>
+                <div class="section-actions">
+                    <div id="unsavedDot" title="Unsaved changes"></div>
+                    <button id="editToggleBtn" class="btn btn-primary fw-bold px-4 rounded-pill"
+                            onclick="toggleEditMode()">
+                        <i class="fa fa-pen me-2" id="editIcon"></i><span id="editBtnText">Edit Profile</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Profile Photo Card -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                <div class="profile-photo-wrapper">
+                    <div class="profile-photo-ring" id="photoRing">
+                        <i class="fa fa-user" id="photoIconFallback"></i>
+                        <img id="profilePhotoImg" src="" alt="Profile Photo" style="display:none;">
+                    </div>
+                    <div class="text-center">
+                        <h5 class="fw-bold mb-0" id="displayName">—</h5>
+                        <small class="text-muted" id="displayBranch">—</small>
+                    </div>
+                    <!-- Completion bar -->
+                    <div style="width:200px; text-align:center;">
+                        <small class="text-muted">Profile Completion: <strong id="completionPct">0%</strong></small>
+                        <div class="completion-bar mt-1">
+                            <div class="completion-fill" id="completionFill" style="width:0%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══════════════════════════════════════════════════ -->
+            <!--  PERSONAL DETAILS                                   -->
+            <!-- ═══════════════════════════════════════════════════ -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                <h5 class="fw-bold text-primary mb-3"><i class="fa fa-user-tag me-2"></i>Personal Details</h5>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold small text-muted text-uppercase">Full Name</label>
+                        <span class="view-value" id="view-name"></span>
+                        <div class="pp-float">
+                            <input type="text" class="form-control" id="name" placeholder="Full Name">
+                            <label class="float-label" for="name">Full Name</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold small text-muted text-uppercase">Email</label>
+                        <span class="view-value" id="view-email"></span>
+                        <div class="pp-float">
+                            <input type="email" class="form-control" id="email" placeholder="Email address">
+                            <label class="float-label" for="email">Email address</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold small text-muted text-uppercase">Phone Number</label>
+                        <span class="view-value" id="view-phone"></span>
+                        <div class="pp-float">
+                            <input type="text" class="form-control" id="phone" placeholder="Phone number">
+                            <label class="float-label" for="phone">Phone number</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold small text-muted text-uppercase">Location</label>
+                        <span class="view-value" id="view-location"></span>
+                        <div class="pp-float">
+                            <input type="text" class="form-control" id="location" placeholder="City, State">
+                            <label class="float-label" for="location">City, State</label>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label fw-bold small text-muted text-uppercase">College / University</label>
+                        <span class="view-value" id="view-college"></span>
+                        <div class="pp-float">
+                            <input type="text" class="form-control" id="college" placeholder="College / University">
+                            <label class="float-label" for="college">College / University</label>
+                        </div>
+                    </div>
+
+                    <!-- Communication Address (NEW) -->
+                    <div class="col-12">
+                        <label class="form-label fw-bold small text-muted text-uppercase">
+                            <i class="fa fa-location-dot me-1 text-primary"></i>Communication Address
+                        </label>
+                        <span class="view-value" id="view-commAddress"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label small text-muted">Street / Town</label>
+                        <div class="pp-float">
+                            <input type="text" class="form-control" id="commStreet" placeholder="Street / Town">
+                            <label class="float-label" for="commStreet">Street / Town</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label small text-muted">District</label>
+                        <div class="pp-float">
+                            <input type="text" class="form-control" id="commDistrict" placeholder="District">
+                            <label class="float-label" for="commDistrict">District</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label small text-muted">State</label>
+                        <div class="pp-float">
+                            <input type="text" class="form-control" id="commState" placeholder="State">
+                            <label class="float-label" for="commState">State</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label small text-muted">PIN Code</label>
+                        <div class="pp-float">
+                            <input type="text" class="form-control" id="commPin" placeholder="PIN Code" maxlength="6">
+                            <label class="float-label" for="commPin">PIN Code</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══════════════════════════════════════════════════ -->
+            <!--  ACADEMIC DETAILS (Table Layout)                    -->
+            <!-- ═══════════════════════════════════════════════════ -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                <h5 class="fw-bold text-primary mb-1"><i class="fa fa-graduation-cap me-2"></i>Academic Details</h5>
+                <p class="text-muted small mb-3">Complete academic history from Class 10 to Graduation.</p>
+
+                <!-- Structured Academic Table -->
+                <div class="table-responsive mb-4">
+                    <table class="academic-table">
+                        <thead>
+                            <tr>
+                                <th style="min-width:130px;">Level</th>
+                                <th style="min-width:180px;">Institution / School</th>
+                                <th style="min-width:170px;">Board / University</th>
+                                <th style="min-width:130px;">Degree / Stream</th>
+                                <th style="min-width:90px;">Year</th>
+                                <th style="min-width:90px;">% / CGPA</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Class 10 Row -->
+                            <tr>
+                                <td><span class="level-badge class10">Class 10</span><div class="text-muted" style="font-size:0.7rem;margin-top:2px;">Secondary</div></td>
+                                <td>
+                                    <span class="view-value" id="view-madhyamikSchool" style="border:none;background:transparent;padding:2px 4px;min-height:auto;"></span>
+                                    <input type="text" id="madhyamikSchool" placeholder="School name">
+                                </td>
+                                <td>
+                                    <span class="view-value" id="view-madhyamikBoard" style="border:none;background:transparent;padding:2px 4px;min-height:auto;"></span>
+                                    <input type="text" id="madhyamikBoard" placeholder="e.g. WBBSE">
+                                </td>
+                                <td>
+                                    <span style="font-size:0.82rem;color:var(--pp-muted);">General</span>
+                                </td>
+                                <td>
+                                    <span class="view-value" id="view-madhyamikYear" style="border:none;background:transparent;padding:2px 4px;min-height:auto;"></span>
+                                    <input type="number" id="madhyamikYear" min="1990" max="2030" placeholder="2021">
+                                </td>
+                                <td>
+                                    <span class="view-value" id="view-madhyamikPercent" style="border:none;background:transparent;padding:2px 4px;min-height:auto;"></span>
+                                    <input type="number" id="madhyamikPercent" step="0.1" min="0" max="100" placeholder="82.5">
+                                </td>
+                            </tr>
+                            <!-- Class 12 Row -->
+                            <tr>
+                                <td><span class="level-badge class12">Class 12</span><div class="text-muted" style="font-size:0.7rem;margin-top:2px;">Higher Secondary</div></td>
+                                <td>
+                                    <span class="view-value" id="view-higherSecSchool" style="border:none;background:transparent;padding:2px 4px;min-height:auto;"></span>
+                                    <input type="text" id="higherSecSchool" placeholder="School/College name">
+                                </td>
+                                <td>
+                                    <span class="view-value" id="view-higherSecBoard" style="border:none;background:transparent;padding:2px 4px;min-height:auto;"></span>
+                                    <input type="text" id="higherSecBoard" placeholder="e.g. WBCHSE">
+                                </td>
+                                <td>
+                                    <span class="view-value" id="view-higherSecStream" style="border:none;background:transparent;padding:2px 4px;min-height:auto;"></span>
+                                    <input type="text" id="higherSecStream" placeholder="Science / Commerce">
+                                </td>
+                                <td>
+                                    <span class="view-value" id="view-higherSecYear" style="border:none;background:transparent;padding:2px 4px;min-height:auto;"></span>
+                                    <input type="number" id="higherSecYear" min="1990" max="2030" placeholder="2023">
+                                </td>
+                                <td>
+                                    <span class="view-value" id="view-higherSecPercent" style="border:none;background:transparent;padding:2px 4px;min-height:auto;"></span>
+                                    <input type="number" id="higherSecPercent" step="0.1" min="0" max="100" placeholder="79.0">
+                                </td>
+                            </tr>
+                            <!-- Graduation Row -->
+                            <tr>
+                                <td><span class="level-badge grad">Graduation</span><div class="text-muted" style="font-size:0.7rem;margin-top:2px;">B.Tech / UG</div></td>
+                                <td>
+                                    <span class="view-value" id="view-college-tbl" style="border:none;background:transparent;padding:2px 4px;min-height:auto;"></span>
+                                    <input type="text" id="college-tbl" placeholder="College name">
+                                </td>
+                                <td>
+                                    <span class="view-value" id="view-graduationUniversity" style="border:none;background:transparent;padding:2px 4px;min-height:auto;"></span>
+                                    <input type="text" id="graduationUniversity" placeholder="e.g. MAKAUT / WBUT">
+                                </td>
+                                <td>
+                                    <span class="view-value" id="view-branch" style="border:none;background:transparent;padding:2px 4px;min-height:auto;"></span>
+                                    <select id="branch">
+                                        <option value="CS">B.Tech CSE</option>
+                                        <option value="IT">B.Tech IT</option>
+                                        <option value="TT">B.Tech TT</option>
+                                        <option value="APM">B.Tech APM</option>
+                                        <option value="ECE">B.Tech ECE</option>
+                                        <option value="EE">B.Tech EE</option>
+                                        <option value="ME">B.Tech ME</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <span class="view-value" id="view-gradYear" style="border:none;background:transparent;padding:2px 4px;min-height:auto;"></span>
+                                    <input type="number" id="gradYear" placeholder="2026">
+                                </td>
+                                <td>
+                                    <span class="view-value" id="view-cgpa" style="border:none;background:transparent;padding:2px 4px;min-height:auto;"></span>
+                                    <input type="number" id="cgpa" step="0.01" min="0" max="10" placeholder="8.5">
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Additional Academic Fields -->
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold small text-muted text-uppercase">Active Backlogs</label>
+                        <span class="view-value" id="view-backlogs"></span>
+                        <input type="number" min="0" class="form-control" id="backlogs" placeholder="0">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold small text-muted text-uppercase">DSA Proficiency</label>
+                        <span class="view-value" id="view-dsa"></span>
+                        <select class="form-select" id="dsa">
+                            <option value="Beginner">Beginner</option>
+                            <option value="Intermediate">Intermediate</option>
+                            <option value="Advanced">Advanced</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold small text-muted text-uppercase">Professional Summary</label>
+                        <span class="view-value" id="view-summary" style="white-space:pre-wrap;"></span>
+                        <textarea class="form-control" id="summary" rows="3" placeholder="Brief professional bio for your resume..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══════════════════════════════════════════════════ -->
+            <!--  TECHNICAL SKILLS                                   -->
+            <!-- ═══════════════════════════════════════════════════ -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                <h5 class="fw-bold text-primary mb-3"><i class="fa fa-code me-2"></i>Technical Skills</h5>
+                <div class="row g-3">
+                    <div class="col-md-12">
+                        <label class="form-label fw-bold small text-muted text-uppercase">Programming Languages <small>(comma-separated)</small></label>
+                        <span class="view-value" id="view-programming"></span>
+                        <div class="pp-float">
+                            <input type="text" class="form-control" id="programming" placeholder="Programming languages">
+                            <label class="float-label" for="programming">Programming languages</label>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label fw-bold small text-muted text-uppercase">Web Technologies <small>(comma-separated)</small></label>
+                        <span class="view-value" id="view-web"></span>
+                        <div class="pp-float">
+                            <input type="text" class="form-control" id="web" placeholder="Web technologies">
+                            <label class="float-label" for="web">Web technologies</label>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold small text-muted text-uppercase">Databases <small>(comma-separated)</small></label>
+                        <span class="view-value" id="view-databases"></span>
+                        <div class="pp-float">
+                            <input type="text" class="form-control" id="databases" placeholder="Databases">
+                            <label class="float-label" for="databases">Databases</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ═══════════════════════════════════════════════════ -->
+            <!--  PROFILE PHOTO UPLOAD (edit mode only)             -->
+            <!-- ═══════════════════════════════════════════════════ -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4 edit-only" id="photoUploadCard" style="display:none!important;">
+                <h5 class="fw-bold text-primary mb-3"><i class="fa fa-camera me-2"></i>Profile Photo</h5>
+                <p class="text-muted small mb-3">Your photo will appear on your resume in the upper-right corner. Square images look best. Max 2.5 MB.</p>
+                <div class="d-flex align-items-center gap-3 flex-wrap">
+                    <label for="photoFileInput" class="btn btn-outline-primary rounded-pill mb-0">
+                        <i class="fa fa-upload me-2"></i>Choose Photo
+                    </label>
+                    <input type="file" id="photoFileInput" accept="image/*" style="display:none;" onchange="handlePhotoUpload(this)">
+                    <button type="button" class="btn btn-outline-danger rounded-pill" onclick="handleRemovePhoto()" id="removePhotoBtn" style="display:none;">
+                        <i class="fa fa-trash me-2"></i>Remove Photo
+                    </button>
+                    <small class="text-muted" id="photoFileName">No photo selected</small>
+                </div>
+            </div>
+
+            <!-- ═══════════════════════════════════════════════════ -->
+            <!--  PROJECTS                                           -->
+            <!-- ═══════════════════════════════════════════════════ -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold text-primary mb-0"><i class="fa fa-diagram-project me-2"></i>Projects</h5>
+                    <button type="button" class="btn btn-sm btn-outline-primary rounded-pill edit-only" style="display:none!important;"
+                            onclick="addProjectCard()">
+                        <i class="fa fa-plus me-1"></i>Add Project
+                    </button>
+                </div>
+                <div id="projectsContainer"></div>
+            </div>
+
+            <!-- ═══════════════════════════════════════════════════ -->
+            <!--  4. HACKATHONS & FLAGSHIP PROJECTS                 -->
+            <!-- ═══════════════════════════════════════════════════ -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <h5 class="fw-bold text-primary mb-0"><i class="fa fa-trophy me-2"></i>Hackathons &amp; Flagship Projects</h5>
+                        <small class="text-muted">Competition wins, hackathon participations, and major independent projects.</small>
+                    </div>
+                </div>
+                <!-- View mode -->
+                <div id="hackathons-view">
+                    <p class="text-muted fst-italic no-entries-msg" id="hackathons-empty">No hackathons added yet. Click "Edit Profile" to add.</p>
+                    <div class="view-badge-row" id="hackathons-view-cards"></div>
+                </div>
+                <!-- Edit mode -->
+                <div class="edit-entries-container" id="hackathons-edit">
+                    <div id="hackathonsContainer"></div>
+                    <button type="button" class="section-add-btn" onclick="addHackathonEntry()">
+                        <i class="fa fa-plus me-1"></i> Add Hackathon / Project
+                    </button>
+                </div>
+            </div>
+
+            <!-- ═══════════════════════════════════════════════════ -->
+            <!--  5. CODING CONTESTS                                -->
+            <!-- ═══════════════════════════════════════════════════ -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <h5 class="fw-bold text-primary mb-0"><i class="fa fa-laptop-code me-2"></i>Coding Contests &amp; Competitive Programming</h5>
+                        <small class="text-muted">Platforms, ratings, and notable contest achievements.</small>
+                    </div>
+                </div>
+                <div id="contests-view">
+                    <p class="text-muted fst-italic no-entries-msg" id="contests-empty">No contest profiles added yet. Click "Edit Profile" to add.</p>
+                    <div class="view-badge-row" id="contests-view-cards"></div>
+                </div>
+                <div class="edit-entries-container" id="contests-edit">
+                    <div id="contestsContainer"></div>
+                    <button type="button" class="section-add-btn" onclick="addContestEntry()">
+                        <i class="fa fa-plus me-1"></i> Add Contest Profile
+                    </button>
+                </div>
+            </div>
+
+            <!-- ═══════════════════════════════════════════════════ -->
+            <!--  6. INTERNSHIPS & WORK EXPERIENCE                  -->
+            <!-- ═══════════════════════════════════════════════════ -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <h5 class="fw-bold text-primary mb-0"><i class="fa fa-briefcase me-2"></i>Internships &amp; Work Experience</h5>
+                        <small class="text-muted">Company, role, duration, and key deliverables.</small>
+                    </div>
+                </div>
+                <div id="internships-view">
+                    <p class="text-muted fst-italic no-entries-msg" id="internships-empty">No internships added yet. Click "Edit Profile" to add.</p>
+                    <div class="view-badge-row" id="internships-view-cards"></div>
+                </div>
+                <div class="edit-entries-container" id="internships-edit">
+                    <div id="internshipsContainer"></div>
+                    <button type="button" class="section-add-btn" onclick="addInternshipEntry()">
+                        <i class="fa fa-plus me-1"></i> Add Internship / Work Experience
+                    </button>
+                </div>
+            </div>
+
+            <!-- ═══════════════════════════════════════════════════ -->
+            <!--  7. WORKSHOPS & SEMINARS                           -->
+            <!-- ═══════════════════════════════════════════════════ -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <h5 class="fw-bold text-primary mb-0"><i class="fa fa-chalkboard-user me-2"></i>Workshops &amp; Seminars Attended</h5>
+                        <small class="text-muted">Workshop title, organizer, date/duration, and key learnings.</small>
+                    </div>
+                </div>
+                <div id="workshops-view">
+                    <p class="text-muted fst-italic no-entries-msg" id="workshops-empty">No workshops added yet. Click "Edit Profile" to add.</p>
+                    <div class="view-badge-row" id="workshops-view-cards"></div>
+                </div>
+                <div class="edit-entries-container" id="workshops-edit">
+                    <div id="workshopsContainer"></div>
+                    <button type="button" class="section-add-btn" onclick="addWorkshopEntry()">
+                        <i class="fa fa-plus me-1"></i> Add Workshop / Seminar
+                    </button>
+                </div>
+            </div>
+
+            <!-- ═══════════════════════════════════════════════════ -->
+            <!--  8. EXTRACURRICULAR ACTIVITIES                     -->
+            <!-- ═══════════════════════════════════════════════════ -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <h5 class="fw-bold text-primary mb-0"><i class="fa fa-star me-2"></i>Extracurricular Activities</h5>
+                        <small class="text-muted">Leadership, clubs, sports, cultural, and community contributions.</small>
+                    </div>
+                </div>
+                <div id="extra-view">
+                    <p class="text-muted fst-italic no-entries-msg" id="extra-empty">No activities added yet. Click "Edit Profile" to add.</p>
+                    <div class="view-badge-row" id="extra-view-cards"></div>
+                </div>
+                <div class="edit-entries-container" id="extra-edit">
+                    <div id="extraContainer"></div>
+                    <button type="button" class="section-add-btn" onclick="addExtraEntry()">
+                        <i class="fa fa-plus me-1"></i> Add Activity
+                    </button>
+                </div>
+            </div>
+
+            <!-- Save Actions (visible in edit mode) -->
+            <div class="d-flex gap-3 mb-5 edit-only" id="saveActions" style="display:none!important;">
+                <button type="button" class="btn btn-success fw-bold px-5 rounded-pill shadow-sm" onclick="saveAndClose()">
+                    <i class="fa fa-floppy-disk me-2"></i>Save All Changes
+                </button>
+                <button type="button" class="btn btn-outline-secondary rounded-pill" onclick="cancelEdit()">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+<script src="../js/api.js"></script>
+<script src="../js/student-profile.js"></script>
+<script src="../js/layout.js"></script>
+<script src="../js/auth-guard.js"></script>
+    <script>
+    // ─────────────────────────────────────────────────────────
+    //  State
+    // ─────────────────────────────────────────────────────────
+    let isEditing = false;
+    let originalData = null; // snapshot for cancel
+
+    // ─────────────────────────────────────────────────────────
+    //  Page Init
+    // ─────────────────────────────────────────────────────────
+    window.addEventListener('DOMContentLoaded', () => {
+        renderProfile();
+    });
+
+    // ─────────────────────────────────────────────────────────
+    //  Render all saved data into view-mode spans
+    // ─────────────────────────────────────────────────────────
+    function renderProfile() {
+        const p = getProfile();
+        const photo = getPhoto();
+
+        // Personal
+        setView('name',     p.name);
+        setView('email',    p.email);
+        setView('phone',    p.phone);
+        setView('location', p.location);
+        setView('college',  p.college);
+
+        // Communication Address
+        const commParts = [p.commStreet, p.commDistrict, p.commState, p.commPin ? 'PIN: ' + p.commPin : ''].filter(Boolean);
+        setView('commAddress', commParts.join(', '));
+
+        // Academic table — view cells
+        setView('madhyamikSchool',   p.madhyamikSchool);
+        setView('madhyamikBoard',    p.madhyamikBoard);
+        setView('madhyamikYear',     p.madhyamikYear);
+        setView('madhyamikPercent',  p.madhyamikPercent ? p.madhyamikPercent + '%' : '');
+        setView('higherSecSchool',   p.higherSecSchool);
+        setView('higherSecBoard',    p.higherSecBoard);
+        setView('higherSecStream',   p.higherSecStream);
+        setView('higherSecYear',     p.higherSecYear);
+        setView('higherSecPercent',  p.higherSecPercent ? p.higherSecPercent + '%' : '');
+        setView('college-tbl',       p.college);
+        setView('graduationUniversity', p.graduationUniversity);
+        setView('branch',            p.branch);
+        setView('gradYear',          p.gradYear);
+        setView('cgpa',              p.cgpa);
+
+        // Academic extras
+        setView('backlogs', p.backlogs || '0');
+        setView('dsa',      p.dsa);
+        setView('summary',  p.summary);
+
+        // Skills
+        setView('programming', p.programming);
+        setView('web',         p.web);
+        setView('databases',   p.databases);
+
+        // Photo
+        updatePhotoDisplay(photo);
+
+        // Summary header
+        document.getElementById('displayName').textContent   = p.name   || '—';
+        document.getElementById('displayBranch').textContent = (p.branch || '—') + (p.cgpa ? ' · CGPA ' + p.cgpa : '');
+
+        // Projects
+        renderProjectsViewMode(p.projects || []);
+
+        // Dynamic sections — view mode
+        renderSectionViewMode('hackathons',    p.hackathons    || [], renderHackathonCard);
+        renderSectionViewMode('contests',      p.codingContests|| [], renderContestCard);
+        renderSectionViewMode('internships',   p.internships   || [], renderInternshipCard);
+        renderSectionViewMode('workshops',     p.workshops     || [], renderWorkshopCard);
+        renderSectionViewMode('extra',         p.extracurricular || [], renderExtraCard);
+
+        // Completion
+        updateCompletionBar(p);
+    }
+
+    function setView(field, value) {
+        const el = document.getElementById('view-' + field);
+        if (el) el.textContent = value || '';
+    }
+
+    // ─────────────────────────────────────────────────────────
+    //  Generic section view renderer
+    // ─────────────────────────────────────────────────────────
+    function renderSectionViewMode(sectionId, entries, cardFn) {
+        const empty   = document.getElementById(sectionId + '-empty');
+        const cards   = document.getElementById(sectionId + '-view-cards');
+        if (!cards) return;
+
+        if (!entries.length) {
+            if (empty) empty.style.display = 'block';
+            cards.innerHTML = '';
+        } else {
+            if (empty) empty.style.display = 'none';
+            cards.innerHTML = entries.map(cardFn).join('');
+        }
+    }
+
+    function renderHackathonCard(h) {
+        return `<div class="view-entry-card">
+            <div class="entry-title">${escHtml(h.name||'—')}</div>
+            <div class="entry-meta"><span class="entry-badge">${escHtml(h.role||'Participant')}</span></div>
+            ${h.techStack ? `<div class="entry-meta" style="font-size:0.75rem;">🛠 ${escHtml(h.techStack)}</div>` : ''}
+            ${h.description ? `<div class="entry-meta mt-1">${escHtml(h.description)}</div>` : ''}
+            ${h.links ? `<div class="entry-meta"><a href="${escHtml(h.links)}" target="_blank" rel="noopener" style="font-size:0.78rem;">🔗 Link</a></div>` : ''}
+        </div>`;
+    }
+
+    function renderContestCard(c) {
+        return `<div class="view-entry-card">
+            <div class="entry-title">${escHtml(c.platform||'—')}</div>
+            <div class="entry-meta"><span class="entry-badge">Rating: ${escHtml(c.rating||'—')}</span></div>
+            ${c.achievement ? `<div class="entry-meta mt-1">${escHtml(c.achievement)}</div>` : ''}
+        </div>`;
+    }
+
+    function renderInternshipCard(i) {
+        const dur = [i.startDate, i.endDate].filter(Boolean).join(' – ');
+        return `<div class="view-entry-card">
+            <div class="entry-title">${escHtml(i.company||'—')}</div>
+            <div class="entry-meta"><span class="entry-badge">${escHtml(i.role||'Intern')}</span>${dur ? `<span class="entry-meta ms-1">${escHtml(dur)}</span>` : ''}</div>
+            ${i.deliverables ? `<div class="entry-meta mt-1">${escHtml(i.deliverables)}</div>` : ''}
+        </div>`;
+    }
+
+    function renderWorkshopCard(w) {
+        return `<div class="view-entry-card">
+            <div class="entry-title">${escHtml(w.title||'—')}</div>
+            <div class="entry-meta"><span class="entry-badge">${escHtml(w.organizer||'Organizer')}</span> ${escHtml(w.date||'')} ${w.duration ? '· ' + escHtml(w.duration) : ''}</div>
+            ${w.learnings ? `<div class="entry-meta mt-1">${escHtml(w.learnings)}</div>` : ''}
+        </div>`;
+    }
+
+    function renderExtraCard(e) {
+        return `<div class="view-entry-card">
+            <div class="entry-title">${escHtml(e.activity||'—')}</div>
+            <div class="entry-meta"><span class="entry-badge">${escHtml(e.role||'Member')}</span></div>
+            ${e.description ? `<div class="entry-meta mt-1">${escHtml(e.description)}</div>` : ''}
+        </div>`;
+    }
+
+    // ─────────────────────────────────────────────────────────
+    //  Toggle Edit / View Mode
+    // ─────────────────────────────────────────────────────────
+    function toggleEditMode() {
+        if (!isEditing) {
+            startEditing();
+        } else {
+            saveAndClose();
+        }
+    }
+
+    function startEditing() {
+        isEditing = true;
+        originalData = getProfile(); // snapshot for cancel
+
+        // Populate inputs from saved data
+        const p = getProfile();
+        const setInput = (id, val) => {
+            const el = document.getElementById(id);
+            if (el) el.value = val || '';
+        };
+        setInput('name',        p.name);
+        setInput('email',       p.email);
+        setInput('phone',       p.phone);
+        setInput('location',    p.location);
+        setInput('college',     p.college);
+
+        // Communication Address
+        setInput('commStreet',   p.commStreet);
+        setInput('commDistrict', p.commDistrict);
+        setInput('commState',    p.commState);
+        setInput('commPin',      p.commPin);
+
+        // Academic Table
+        setInput('madhyamikSchool',   p.madhyamikSchool);
+        setInput('madhyamikBoard',    p.madhyamikBoard);
+        setInput('madhyamikYear',     p.madhyamikYear);
+        setInput('madhyamikPercent',  p.madhyamikPercent);
+        setInput('higherSecSchool',   p.higherSecSchool);
+        setInput('higherSecBoard',    p.higherSecBoard);
+        setInput('higherSecStream',   p.higherSecStream);
+        setInput('higherSecYear',     p.higherSecYear);
+        setInput('higherSecPercent',  p.higherSecPercent);
+        setInput('college-tbl',       p.college);
+        setInput('graduationUniversity', p.graduationUniversity);
+        setInput('branch',            p.branch);
+        setInput('gradYear',          p.gradYear);
+        setInput('cgpa',              p.cgpa);
+
+        // Academic extras
+        setInput('backlogs',    p.backlogs);
+        setInput('dsa',         p.dsa);
+        setInput('summary',     p.summary);
+        setInput('programming', p.programming);
+        setInput('web',         p.web);
+        setInput('databases',   p.databases);
+
+        // Render projects as editable cards
+        renderProjectsEditMode(p.projects || []);
+
+        // Render dynamic sections
+        renderSectionEditMode('hackathonsContainer', p.hackathons || [],    hackathonEntryHTML,    'hackathon');
+        renderSectionEditMode('contestsContainer',   p.codingContests || [],contestEntryHTML,      'contest');
+        renderSectionEditMode('internshipsContainer',p.internships || [],   internshipEntryHTML,   'internship');
+        renderSectionEditMode('workshopsContainer',  p.workshops || [],     workshopEntryHTML,     'workshop');
+        renderSectionEditMode('extraContainer',      p.extracurricular || [],extraEntryHTML,       'extra');
+
+        // Check remove photo button
+        const photo = getPhoto();
+        const removeBtn = document.getElementById('removePhotoBtn');
+        if (removeBtn) removeBtn.style.display = photo ? 'inline-flex' : 'none';
+        const fileName = document.getElementById('photoFileName');
+        if (fileName) fileName.textContent = photo ? 'Photo already uploaded.' : 'No photo selected';
+
+        // Switch DOM to edit mode
+        document.body.classList.add('edit-mode');
+
+        // Update button
+        document.getElementById('editBtnText').textContent = 'Save Profile';
+        document.getElementById('editIcon').className = 'fa fa-floppy-disk me-2';
+        document.getElementById('editToggleBtn').classList.add('is-editing');
+
+        // Show unsaved dot
+        document.getElementById('unsavedDot').style.display = 'block';
+
+        // Watch for any changes to inputs to mark as dirty
+        document.querySelectorAll('.profile-main-content input, .profile-main-content select, .profile-main-content textarea').forEach(el => {
+            el.addEventListener('input', markDirty, { once: false });
+        });
+    }
+
+    // ─────────────────────────────────────────────────────────
+    //  Generic dynamic section edit renderer
+    // ─────────────────────────────────────────────────────────
+    function renderSectionEditMode(containerId, entries, htmlFn, type) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        container.innerHTML = '';
+        const list = entries.length ? entries : [null];
+        list.forEach((entry, idx) => {
+            const div = document.createElement('div');
+            div.className = 'entry-card';
+            div.dataset.entryType = type;
+            div.dataset.entryIndex = idx;
+            div.innerHTML = htmlFn(entry || {}, idx);
+            container.appendChild(div);
+        });
+    }
+
+    // ── Hackathon ──────────────────────────────────────────────
+    function hackathonEntryHTML(h, i) {
+        return `
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="fw-bold text-muted small">HACKATHON / PROJECT ${i+1}</span>
+            <button type="button" class="btn btn-sm btn-outline-danger rounded-pill" onclick="removeEntry(this)"${i===0?' style="visibility:hidden"':''}>
+                <i class="fa fa-trash me-1"></i>Remove
+            </button>
+        </div>
+        <div class="row g-2">
+            <div class="col-md-6">
+                <input type="text" class="form-control h-name" placeholder="Event / Project Name" value="${escHtml(h.name||'')}">
+            </div>
+            <div class="col-md-6">
+                <input type="text" class="form-control h-role" placeholder="Your Role (e.g. Team Lead, Developer)" value="${escHtml(h.role||'')}">
+            </div>
+            <div class="col-md-6">
+                <input type="text" class="form-control h-tech" placeholder="Tech Stack (e.g. Python, React, Firebase)" value="${escHtml(h.techStack||'')}">
+            </div>
+            <div class="col-md-6">
+                <input type="text" class="form-control h-links" placeholder="Links / Outcomes (GitHub, Demo URL, Prize)" value="${escHtml(h.links||'')}">
+            </div>
+            <div class="col-12">
+                <textarea class="form-control h-desc" rows="2" placeholder="Brief project description or hackathon outcome...">${escHtml(h.description||'')}</textarea>
+            </div>
+        </div>`;
+    }
+
+    // ── Contest ────────────────────────────────────────────────
+    function contestEntryHTML(c, i) {
+        return `
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="fw-bold text-muted small">CONTEST PROFILE ${i+1}</span>
+            <button type="button" class="btn btn-sm btn-outline-danger rounded-pill" onclick="removeEntry(this)"${i===0?' style="visibility:hidden"':''}>
+                <i class="fa fa-trash me-1"></i>Remove
+            </button>
+        </div>
+        <div class="row g-2">
+            <div class="col-md-4">
+                <label class="form-label small text-muted">Platform</label>
+                <input type="text" class="form-control c-platform" placeholder="LeetCode / Codeforces / HackerRank" value="${escHtml(c.platform||'')}">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label small text-muted">Rating / Rank</label>
+                <input type="text" class="form-control c-rating" placeholder="e.g. 1850 / Top 5%" value="${escHtml(c.rating||'')}">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label small text-muted">Notable Achievement</label>
+                <input type="text" class="form-control c-achievement" placeholder="e.g. Global Rank 450 in Round X" value="${escHtml(c.achievement||'')}">
+            </div>
+        </div>`;
+    }
+
+    // ── Internship ─────────────────────────────────────────────
+    function internshipEntryHTML(inp, i) {
+        return `
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="fw-bold text-muted small">INTERNSHIP / WORK ${i+1}</span>
+            <button type="button" class="btn btn-sm btn-outline-danger rounded-pill" onclick="removeEntry(this)"${i===0?' style="visibility:hidden"':''}>
+                <i class="fa fa-trash me-1"></i>Remove
+            </button>
+        </div>
+        <div class="row g-2">
+            <div class="col-md-6">
+                <label class="form-label small text-muted">Company / Organization</label>
+                <input type="text" class="form-control i-company" placeholder="e.g. TCS, Google, Startup XYZ" value="${escHtml(inp.company||'')}">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label small text-muted">Role / Designation</label>
+                <input type="text" class="form-control i-role" placeholder="e.g. Software Engineering Intern" value="${escHtml(inp.role||'')}">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small text-muted">Start Date</label>
+                <input type="text" class="form-control i-start" placeholder="e.g. Jun 2024" value="${escHtml(inp.startDate||'')}">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small text-muted">End Date</label>
+                <input type="text" class="form-control i-end" placeholder="e.g. Aug 2024 / Present" value="${escHtml(inp.endDate||'')}">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label small text-muted">Key Deliverables / Technologies</label>
+                <textarea class="form-control i-deliverables" rows="2" placeholder="Built payment module using Node.js &amp; Stripe...">${escHtml(inp.deliverables||'')}</textarea>
+            </div>
+        </div>`;
+    }
+
+    // ── Workshop ───────────────────────────────────────────────
+    function workshopEntryHTML(w, i) {
+        return `
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="fw-bold text-muted small">WORKSHOP / SEMINAR ${i+1}</span>
+            <button type="button" class="btn btn-sm btn-outline-danger rounded-pill" onclick="removeEntry(this)"${i===0?' style="visibility:hidden"':''}>
+                <i class="fa fa-trash me-1"></i>Remove
+            </button>
+        </div>
+        <div class="row g-2">
+            <div class="col-md-6">
+                <label class="form-label small text-muted">Workshop / Seminar Title</label>
+                <input type="text" class="form-control w-title" placeholder="e.g. Machine Learning Bootcamp" value="${escHtml(w.title||'')}">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label small text-muted">Organizing Body / Institution</label>
+                <input type="text" class="form-control w-organizer" placeholder="e.g. IIT Kharagpur / Coursera" value="${escHtml(w.organizer||'')}">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small text-muted">Date</label>
+                <input type="text" class="form-control w-date" placeholder="e.g. March 2024" value="${escHtml(w.date||'')}">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small text-muted">Duration</label>
+                <input type="text" class="form-control w-duration" placeholder="e.g. 2 Days / 40 Hrs" value="${escHtml(w.duration||'')}">
+            </div>
+            <div class="col-md-6">
+                <label class="form-label small text-muted">Key Learnings / Certifications</label>
+                <textarea class="form-control w-learnings" rows="2" placeholder="Learned CNN, RNN, Transfer Learning. Received certificate.">${escHtml(w.learnings||'')}</textarea>
+            </div>
+        </div>`;
+    }
+
+    // ── Extracurricular ────────────────────────────────────────
+    function extraEntryHTML(e, i) {
+        return `
+        <div class="d-flex justify-content-between align-items-center mb-2">
+            <span class="fw-bold text-muted small">ACTIVITY ${i+1}</span>
+            <button type="button" class="btn btn-sm btn-outline-danger rounded-pill" onclick="removeEntry(this)"${i===0?' style="visibility:hidden"':''}>
+                <i class="fa fa-trash me-1"></i>Remove
+            </button>
+        </div>
+        <div class="row g-2">
+            <div class="col-md-5">
+                <label class="form-label small text-muted">Activity Name</label>
+                <input type="text" class="form-control e-activity" placeholder="e.g. NSS, Football, Debate Club" value="${escHtml(e.activity||'')}">
+            </div>
+            <div class="col-md-4">
+                <label class="form-label small text-muted">Role / Leadership Position</label>
+                <input type="text" class="form-control e-role" placeholder="e.g. Club Captain / Volunteer" value="${escHtml(e.role||'')}">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small text-muted">Brief Description</label>
+                <input type="text" class="form-control e-desc" placeholder="Key contributions..." value="${escHtml(e.description||'')}">
+            </div>
+        </div>`;
+    }
+
+    // ── Add / Remove generic entry ─────────────────────────────
+    function addHackathonEntry() {
+        const c = document.getElementById('hackathonsContainer');
+        const idx = c.querySelectorAll('.entry-card').length;
+        const div = document.createElement('div');
+        div.className = 'entry-card';
+        div.innerHTML = hackathonEntryHTML({}, idx);
+        c.appendChild(div);
+    }
+    function addContestEntry() {
+        const c = document.getElementById('contestsContainer');
+        const idx = c.querySelectorAll('.entry-card').length;
+        const div = document.createElement('div');
+        div.className = 'entry-card';
+        div.innerHTML = contestEntryHTML({}, idx);
+        c.appendChild(div);
+    }
+    function addInternshipEntry() {
+        const c = document.getElementById('internshipsContainer');
+        const idx = c.querySelectorAll('.entry-card').length;
+        const div = document.createElement('div');
+        div.className = 'entry-card';
+        div.innerHTML = internshipEntryHTML({}, idx);
+        c.appendChild(div);
+    }
+    function addWorkshopEntry() {
+        const c = document.getElementById('workshopsContainer');
+        const idx = c.querySelectorAll('.entry-card').length;
+        const div = document.createElement('div');
+        div.className = 'entry-card';
+        div.innerHTML = workshopEntryHTML({}, idx);
+        c.appendChild(div);
+    }
+    function addExtraEntry() {
+        const c = document.getElementById('extraContainer');
+        const idx = c.querySelectorAll('.entry-card').length;
+        const div = document.createElement('div');
+        div.className = 'entry-card';
+        div.innerHTML = extraEntryHTML({}, idx);
+        c.appendChild(div);
+    }
+    function removeEntry(btn) {
+        btn.closest('.entry-card').remove();
+    }
+
+    // ── Collect functions ──────────────────────────────────────
+    function collectHackathons() {
+        const out = [];
+        document.querySelectorAll('#hackathonsContainer .entry-card').forEach(card => {
+            const name = card.querySelector('.h-name')?.value.trim() || '';
+            const role = card.querySelector('.h-role')?.value.trim() || '';
+            const techStack = card.querySelector('.h-tech')?.value.trim() || '';
+            const links = card.querySelector('.h-links')?.value.trim() || '';
+            const description = card.querySelector('.h-desc')?.value.trim() || '';
+            if (name || techStack) out.push({ name, role, techStack, links, description });
+        });
+        return out;
+    }
+    function collectContests() {
+        const out = [];
+        document.querySelectorAll('#contestsContainer .entry-card').forEach(card => {
+            const platform = card.querySelector('.c-platform')?.value.trim() || '';
+            const rating = card.querySelector('.c-rating')?.value.trim() || '';
+            const achievement = card.querySelector('.c-achievement')?.value.trim() || '';
+            if (platform) out.push({ platform, rating, achievement });
+        });
+        return out;
+    }
+    function collectInternships() {
+        const out = [];
+        document.querySelectorAll('#internshipsContainer .entry-card').forEach(card => {
+            const company = card.querySelector('.i-company')?.value.trim() || '';
+            const role = card.querySelector('.i-role')?.value.trim() || '';
+            const startDate = card.querySelector('.i-start')?.value.trim() || '';
+            const endDate = card.querySelector('.i-end')?.value.trim() || '';
+            const deliverables = card.querySelector('.i-deliverables')?.value.trim() || '';
+            if (company || role) out.push({ company, role, startDate, endDate, deliverables });
+        });
+        return out;
+    }
+    function collectWorkshops() {
+        const out = [];
+        document.querySelectorAll('#workshopsContainer .entry-card').forEach(card => {
+            const title = card.querySelector('.w-title')?.value.trim() || '';
+            const organizer = card.querySelector('.w-organizer')?.value.trim() || '';
+            const date = card.querySelector('.w-date')?.value.trim() || '';
+            const duration = card.querySelector('.w-duration')?.value.trim() || '';
+            const learnings = card.querySelector('.w-learnings')?.value.trim() || '';
+            if (title) out.push({ title, organizer, date, duration, learnings });
+        });
+        return out;
+    }
+    function collectExtra() {
+        const out = [];
+        document.querySelectorAll('#extraContainer .entry-card').forEach(card => {
+            const activity = card.querySelector('.e-activity')?.value.trim() || '';
+            const role = card.querySelector('.e-role')?.value.trim() || '';
+            const description = card.querySelector('.e-desc')?.value.trim() || '';
+            if (activity) out.push({ activity, role, description });
+        });
+        return out;
+    }
+
+    function markDirty() {
+        document.getElementById('unsavedDot').style.display = 'block';
+    }
+
+    async function saveAndClose() {
+        // Collect data from inputs
+        const collegeTbl = document.getElementById('college-tbl');
+        const p = {
+            name:        val('name'),
+            email:       val('email'),
+            phone:       val('phone'),
+            location:    val('location'),
+            college:     collegeTbl ? collegeTbl.value.trim() : val('college'),
+
+            // Communication address
+            commStreet:   val('commStreet'),
+            commDistrict: val('commDistrict'),
+            commState:    val('commState'),
+            commPin:      val('commPin'),
+
+            // Academic table
+            madhyamikSchool:      val('madhyamikSchool'),
+            madhyamikBoard:       val('madhyamikBoard'),
+            madhyamikYear:        val('madhyamikYear'),
+            madhyamikPercent:     val('madhyamikPercent'),
+            higherSecSchool:      val('higherSecSchool'),
+            higherSecBoard:       val('higherSecBoard'),
+            higherSecStream:      val('higherSecStream'),
+            higherSecYear:        val('higherSecYear'),
+            higherSecPercent:     val('higherSecPercent'),
+            graduationUniversity: val('graduationUniversity'),
+            branch:               val('branch'),
+            cgpa:                 val('cgpa'),
+            gradYear:             val('gradYear'),
+
+            // Academic extras
+            backlogs:    val('backlogs'),
+            dsa:         val('dsa'),
+            summary:     val('summary'),
+
+            // Skills
+            programming: val('programming'),
+            web:         val('web'),
+            databases:   val('databases'),
+
+            // Dynamic sections
+            projects:         collectProjects(),
+            hackathons:       collectHackathons(),
+            codingContests:   collectContests(),
+            internships:      collectInternships(),
+            workshops:        collectWorkshops(),
+            extracurricular:  collectExtra()
+        };
+
+        // Sync college to college-tbl for consistency
+        p.college = p.college || val('college');
+
+        // Basic validation
+        if (!p.name.trim() || !p.email.trim()) {
+            showToast('Please enter your full name and email.', 'danger');
+            document.getElementById('name').focus();
+            return;
+        }
+
+        const btn = document.getElementById('editToggleBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa fa-spinner fa-spin me-2"></i>Saving...';
+
+        try {
+            await saveProfile(p);
+            showToast('Profile saved successfully! ✨', 'success');
+
+            // Save success animation: pop the button + flash a check pill
+            btn.classList.add('pp-save-success');
+            setTimeout(() => btn.classList.remove('pp-save-success'), 600);
+            const flash = document.createElement('div');
+            flash.className = 'pp-saved-flash';
+            flash.innerHTML = '<i class="fa fa-circle-check"></i> Saved!';
+            document.body.appendChild(flash);
+            setTimeout(() => {
+                flash.style.transition = 'opacity .4s ease, transform .4s ease';
+                flash.style.opacity = '0';
+                flash.style.transform = 'translateX(-50%) translateY(-10px)';
+                setTimeout(() => flash.remove(), 400);
+            }, 1600);
+
+            // Exit edit mode
+            exitEditMode();
+            renderProfile();
+        } catch (error) {
+            showToast('Error saving profile. Please try again.', 'danger');
+        } finally {
+            btn.disabled = false;
+        }
+    }
+
+    function cancelEdit() {
+        // Restore original snapshot
+        if (originalData) saveProfile(originalData);
+        exitEditMode();
+        renderProfile();
+        showToast('Changes discarded.', 'info');
+    }
+
+    function exitEditMode() {
+        isEditing = false;
+        document.body.classList.remove('edit-mode');
+        document.getElementById('editBtnText').textContent = 'Edit Profile';
+        document.getElementById('editIcon').className = 'fa fa-pen me-2';
+        document.getElementById('editToggleBtn').classList.remove('is-editing');
+        document.getElementById('unsavedDot').style.display = 'none';
+    }
+
+    function val(id) {
+        const el = document.getElementById(id);
+        return el ? el.value.trim() : '';
+    }
+
+    // ─────────────────────────────────────────────────────────
+    //  Projects — View Mode
+    // ─────────────────────────────────────────────────────────
+    function renderProjectsViewMode(projects) {
+        const container = document.getElementById('projectsContainer');
+        if (!projects.length) {
+            container.innerHTML = '<p class="text-muted fst-italic">No projects added yet. Click "Edit Profile" to add your projects.</p>';
+            return;
+        }
+        container.innerHTML = projects.map((proj, i) => `
+            <div class="project-card mb-3">
+                <div class="d-flex justify-content-between align-items-start mb-1">
+                    <h6 class="fw-bold mb-0">${escHtml(proj.title || 'Project ' + (i + 1))}</h6>
+                    <small class="text-muted">${escHtml(proj.tech || '')}</small>
+                </div>
+                <ul class="mb-0 ps-3">
+                    ${(proj.points || []).map(pt => `<li class="text-muted small">${escHtml(pt)}</li>`).join('')}
+                </ul>
+            </div>
+        `).join('');
+    }
+
+    // ─────────────────────────────────────────────────────────
+    //  Projects — Edit Mode
+    // ─────────────────────────────────────────────────────────
+    function renderProjectsEditMode(projects) {
+        const container = document.getElementById('projectsContainer');
+        container.innerHTML = '';
+        (projects.length ? projects : [{ title: '', tech: '', points: ['', ''] }])
+            .forEach((proj, i) => appendProjectCard(proj, i));
+    }
+
+    function appendProjectCard(proj, i) {
+        const container = document.getElementById('projectsContainer');
+        const div = document.createElement('div');
+        div.className = 'project-card mb-3';
+        div.dataset.projIndex = i;
+        div.innerHTML = `
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="fw-bold text-muted small">PROJECT ${i + 1}</span>
+                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill"
+                        onclick="removeProjectCard(this)" ${i === 0 ? 'style="visibility:hidden"' : ''}>
+                    <i class="fa fa-trash me-1"></i>Remove
+                </button>
+            </div>
+            <div class="row g-2 mb-2">
+                <div class="col-md-6">
+                    <input type="text" class="form-control proj-title" placeholder="Project Title" value="${escHtml(proj.title || '')}">
+                </div>
+                <div class="col-md-6">
+                    <input type="text" class="form-control proj-tech" placeholder="Technologies (e.g. Python, React, Node.js)" value="${escHtml(proj.tech || '')}">
+                </div>
+            </div>
+            <label class="form-label small text-muted fw-bold">Key Points (one per line)</label>
+            <textarea class="form-control proj-points" rows="3" placeholder="• Built a REST API for user management...&#10;• Deployed on AWS EC2 with Docker...">${(proj.points || []).join('\n')}</textarea>
+        `;
+        container.appendChild(div);
+    }
+
+    function addProjectCard() {
+        const container = document.getElementById('projectsContainer');
+        const idx = container.querySelectorAll('.project-card').length;
+        appendProjectCard({ title: '', tech: '', points: [] }, idx);
+    }
+
+    function removeProjectCard(btn) {
+        const card = btn.closest('.project-card');
+        if (card) card.remove();
+        // Re-index labels
+        document.querySelectorAll('#projectsContainer .project-card').forEach((c, i) => {
+            const label = c.querySelector('.fw-bold.text-muted.small');
+            if (label) label.textContent = `PROJECT ${i + 1}`;
+        });
+    }
+
+    function collectProjects() {
+        const projects = [];
+        document.querySelectorAll('#projectsContainer .project-card').forEach(card => {
+            const title  = card.querySelector('.proj-title')?.value.trim()  || '';
+            const tech   = card.querySelector('.proj-tech')?.value.trim()   || '';
+            const raw    = card.querySelector('.proj-points')?.value        || '';
+            const points = raw.split('\n').map(s => s.trim()).filter(Boolean);
+            if (title || tech || points.length) {
+                projects.push({ title, tech, points });
+            }
+        });
+        return projects;
+    }
+
+    // ─────────────────────────────────────────────────────────
+    //  Photo Handlers
+    // ─────────────────────────────────────────────────────────
+    function handlePhotoUpload(input) {
+        const file = input.files && input.files[0];
+        if (!file) return;
+
+        if (!file.type.startsWith('image/')) {
+            showToast('Please select a valid image file (JPG, PNG, WEBP).', 'danger');
+            return;
+        }
+        if (file.size > 2.5 * 1024 * 1024) {
+            showToast('Photo is too large. Please choose a file under 2.5 MB.', 'danger');
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = e => {
+            if (savePhoto(e.target.result)) {
+                updatePhotoDisplay(e.target.result);
+                document.getElementById('photoFileName').textContent = file.name;
+                document.getElementById('removePhotoBtn').style.display = 'inline-flex';
+                showToast('Photo uploaded and saved!', 'success');
+            } else {
+                showToast('Could not save photo — image might be too large for your browser storage.', 'danger');
+            }
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function handleRemovePhoto() {
+        removePhoto();
+        updatePhotoDisplay(null);
+        document.getElementById('photoFileName').textContent = 'No photo selected';
+        document.getElementById('removePhotoBtn').style.display = 'none';
+        const fileInput = document.getElementById('photoFileInput');
+        if (fileInput) fileInput.value = '';
+        showToast('Profile photo removed.', 'info');
+    }
+
+    function updatePhotoDisplay(photoSrc) {
+        const img     = document.getElementById('profilePhotoImg');
+        const icon    = document.getElementById('photoIconFallback');
+        if (photoSrc) {
+            img.src           = photoSrc;
+            img.style.display = 'block';
+            if (icon) icon.style.display = 'none';
+        } else {
+            img.src           = '';
+            img.style.display = 'none';
+            if (icon) icon.style.display = 'block';
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────
+    //  Profile Completion Score
+    // ─────────────────────────────────────────────────────────
+    function updateCompletionBar(p) {
+        const fields = ['name','email','phone','location','college','branch','cgpa','programming','web','databases','summary'];
+        const filled = fields.filter(f => p[f] && p[f].toString().trim().length > 0).length;
+        const hasProjects      = (p.projects || []).length > 0;
+        const hasPhoto         = !!getPhoto();
+        const hasAddress       = !!(p.commStreet || p.commState);
+        const hasHackathons    = (p.hackathons || []).length > 0;
+        const hasInternships   = (p.internships || []).length > 0;
+
+        const total   = fields.length + 5;
+        const score   = filled + (hasProjects ? 1 : 0) + (hasPhoto ? 1 : 0) +
+                        (hasAddress ? 1 : 0) + (hasHackathons ? 1 : 0) + (hasInternships ? 1 : 0);
+        const pct     = Math.round((score / total) * 100);
+
+        document.getElementById('completionPct').textContent  = pct + '%';
+        document.getElementById('completionFill').style.width = pct + '%';
+    }
+
+    // ─────────────────────────────────────────────────────────
+    //  Utility
+    // ─────────────────────────────────────────────────────────
+    function escHtml(str) {
+        return String(str).replace(/[&<>"']/g,
+            c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

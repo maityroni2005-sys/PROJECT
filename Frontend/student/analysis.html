@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Analysis - PlacementPro AI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* ---- Score Ring ---- */
+        .score-ring-wrap {
+            position: relative; display: flex; align-items: center;
+            justify-content: center; width: 120px; height: 120px;
+        }
+        .score-ring-wrap svg { position: absolute; top: 0; left: 0; transform: rotate(-90deg); }
+        .score-ring-wrap .ring-track { fill: none; stroke: var(--pp-border); stroke-width: 10; }
+        .score-ring-wrap .ring-fill  { fill: none; stroke-width: 10; stroke-linecap: round;
+            stroke-dasharray: 314; stroke-dashoffset: 314; transition: stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1); }
+        .score-ring-text {
+            position: relative; text-align: center;
+            font-size: 1.7rem; font-weight: 800; color: var(--pp-ink); line-height: 1;
+        }
+        .score-ring-text small { display: block; font-size: 0.65rem; font-weight: 500; color: var(--pp-muted); }
+
+        /* ---- Eligibility chips — squishy clay pills ---- */
+        .elig-chip {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 10px 18px; border-radius: 50px;
+            font-size: 0.85rem; font-weight: 700; border: 1px solid rgba(255,255,255,.7);
+            box-shadow: var(--pp-clay-sm);
+            transition: transform .2s var(--pp-ease), box-shadow .2s;
+        }
+        .elig-chip:hover { transform: translateY(-2px); box-shadow: var(--pp-clay); }
+        .elig-pass { background: linear-gradient(135deg, #d3f4e5, #c9f0df); color: #065f46; }
+        .elig-fail { background: linear-gradient(135deg, #fbdce1, #f8d3da); color: #9f2042; }
+
+        /* ---- Skill progress bars ---- */
+        .skill-progress-label {
+            display: flex; justify-content: space-between;
+            font-size: 0.82rem; font-weight: 600; margin-bottom: 3px;
+        }
+        .skill-bar-track {
+            height: 8px; border-radius: 99px; background: var(--pp-border);
+            box-shadow: var(--pp-clay-inset); overflow: hidden;
+        }
+        .skill-bar-fill {
+            height: 100%; border-radius: 99px;
+            background: linear-gradient(90deg, #4338ca, #6366f1, #14b8a6);
+            box-shadow: 0 2px 6px rgba(49, 46, 129, .35), inset 0 1px 1px rgba(255,255,255,.4);
+            width: 0; transition: width 1s ease;
+        }
+
+        /* ---- Company card — clay slab with tinted spine ---- */
+        .company-analysis-card {
+            border: 1px solid rgba(255, 255, 255, .85);
+            border-left: 5px solid var(--pp-primary);
+            background: linear-gradient(150deg, #f3f4fd 0%, var(--pp-surface) 48%, #e6e9f8 100%);
+            border-radius: 18px; padding: 18px 20px;
+            box-shadow: var(--pp-clay);
+            transition: transform .22s var(--pp-ease), box-shadow .22s;
+            cursor: pointer; text-decoration: none; display: block; color: inherit;
+        }
+        .company-analysis-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--pp-clay-hover);
+        }
+        .company-analysis-card.product { border-left-color: var(--pp-success); }
+
+        @media (max-width: 767px) { .score-ring-wrap { width: 90px; height: 90px; } }
+    </style>
+</head>
+<body>
+<div class="d-flex">
+    <div class="pp-aurora-b" aria-hidden="true"></div>
+    <!-- Sidebar -->
+    <div class="sidebar p-3 d-flex flex-column" id="ppSidebar" style="width:250px;min-height:100vh;">
+        <h4 class="fw-bold text-primary mb-4 px-2">PlacementPro</h4>
+        <ul class="nav flex-column mb-auto">
+            <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="fa fa-gauge me-2"></i>Dashboard</a></li>
+            <li class="nav-item"><a href="profile.html" class="nav-link"><i class="fa fa-user me-2"></i>My Profile</a></li>
+            <li class="nav-item"><a href="analysis.html" class="nav-link active"><i class="fa fa-chart-bar me-2"></i>My Analysis</a></li>
+            <li class="nav-item"><a href="companies.html" class="nav-link"><i class="fa fa-building me-2"></i>Companies</a></li>
+            <li class="nav-item"><a href="roles.html" class="nav-link"><i class="fa fa-briefcase me-2"></i>Career Roles</a></li>
+            <li class="nav-item"><a href="skill-gap.html" class="nav-link"><i class="fa fa-triangle-exclamation me-2"></i>Skill Gap</a></li>
+            <li class="nav-item"><a href="resume.html" class="nav-link"><i class="fa fa-file-lines me-2"></i>Resume Generator</a></li>
+        </ul>
+        <a href="#" onclick="handleLogout(); return false;" class="nav-link text-danger mt-4"><i class="fa fa-right-from-bracket me-2"></i>Logout</a>
+    </div>
+    <div class="pp-backdrop" aria-hidden="true"></div>
+
+    <!-- Main Content -->
+    <div class="flex-grow-1 p-4 bg-light">
+        <!-- Mobile topbar (hidden ≥992px) -->
+        <div class="pp-topbar">
+            <button class="pp-burger" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="ppSidebar">
+                <i class="fa fa-bars"></i>
+            </button>
+            <span class="pp-topbar-brand"><i class="fa fa-robot me-2"></i>PlacementPro</span>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <div>
+                <h2 class="fw-bold mb-0">Company Suitability Analysis</h2>
+                <small class="text-muted">Profile Match Score computed from your CGPA, backlogs & skills</small>
+            </div>
+            <button id="refreshBtn" class="btn btn-outline-primary rounded-pill"
+                    onclick="loadAnalysis()">
+                <i class="fa fa-arrows-rotate me-2"></i>Re-run Analysis
+            </button>
+        </div>
+
+        <!-- Skeleton Loader -->
+        <div id="skeletonLoader">
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                <div class="d-flex gap-4 align-items-center flex-wrap">
+                    <div class="skeleton" style="width:120px;height:120px;border-radius:50%;"></div>
+                    <div style="flex:1;">
+                        <div class="skeleton mb-2" style="height:24px;width:60%;"></div>
+                        <div class="skeleton mb-2" style="height:16px;width:40%;"></div>
+                        <div class="skeleton" style="height:16px;width:30%;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row g-3">
+                <div class="col-md-6"><div class="skeleton rounded-4" style="height:80px;"></div></div>
+                <div class="col-md-6"><div class="skeleton rounded-4" style="height:80px;"></div></div>
+                <div class="col-12"><div class="skeleton rounded-4" style="height:120px;"></div></div>
+            </div>
+        </div>
+
+        <!-- Error -->
+        <div id="errorMsg" class="alert alert-danger align-items-center gap-2" style="display:none;">
+            <i class="fa fa-circle-exclamation me-2"></i><span id="errorText"></span>
+        </div>
+
+        <!-- Analysis Content -->
+        <div id="analysisContent" style="display:none;">
+            <!-- Score Card -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                <div class="d-flex flex-wrap gap-4 align-items-center">
+                    <!-- Ring -->
+                    <div class="score-ring-wrap" id="scoreRingWrap">
+                        <svg width="120" height="120" viewBox="0 0 120 120">
+                            <circle class="ring-track" cx="60" cy="60" r="50"/>
+                            <circle class="ring-fill" id="ringFill" cx="60" cy="60" r="50"/>
+                        </svg>
+                        <div class="score-ring-text">
+                            <span id="scoreNum">—</span>
+                            <small>Profile Match</small>
+                        </div>
+                    </div>
+                    <!-- Details -->
+                    <div style="flex:1;">
+                        <h4 class="fw-bold mb-1" id="analysisCo">—</h4>
+                        <span class="badge bg-primary mb-2" id="coTypeBadge">Service-Based</span>
+                        <p class="text-muted small mb-3" id="analysisSubtitle">
+                            Score computed from your CGPA, backlogs, and technical skills.
+                        </p>
+                        <div class="d-flex flex-wrap gap-2" id="eligChips">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Skill Coverage Bars -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4" id="skillBarsCard">
+                <h5 class="fw-bold mb-3"><i class="fa fa-code me-2 text-primary"></i>Your Skill Coverage</h5>
+                <div id="skillBarsContainer"></div>
+            </div>
+
+            <!-- All Company Cards -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                <h5 class="fw-bold mb-3"><i class="fa fa-building me-2 text-primary"></i>Profile Fit Across Companies</h5>
+                <div class="row g-3" id="allCompanyCards"></div>
+            </div>
+
+            <a href="skill-gap.html" class="btn btn-outline-primary fw-bold rounded-pill">
+                <i class="fa fa-arrow-right me-2"></i>View Skill Gap Breakdown
+            </a>
+        </div>
+    </div>
+</div>
+
+<script src="../js/api.js"></script>
+<script src="../js/student-profile.js"></script>
+<script src="../js/layout.js"></script>
+<script src="../js/auth-guard.js"></script>
+<script>
+const COMPANY_SKILLS = {
+    'TCS':       { type: 'service', required: ['Python','Java','C++','SQL','Communication'] },
+    'Infosys':   { type: 'service', required: ['Java','Python','SQL','JavaScript','HTML'] },
+    'Cognizant': { type: 'service', required: ['Java','C#','SQL','HTML','CSS'] },
+    'Wipro':     { type: 'service', required: ['Python','Java','SQL','JavaScript'] },
+    'Flipkart':  { type: 'product', required: ['Python','JavaScript','React','SQL','DSA'] },
+    'Amazon':    { type: 'product', required: ['DSA','Python','Java','SQL','System Design'] },
+    'Google':    { type: 'product', required: ['DSA','Algorithms','Python','Java','Go'] }
+};
+
+function getRingColor(score) {
+    if (score >= 75) return 'var(--pp-success)';
+    if (score >= 50) return 'var(--pp-warning)';
+    return 'var(--pp-danger)';
+}
+
+function animateRing(score) {
+    const circumference = 314;
+    const offset = circumference - (score / 100) * circumference;
+    const fill = document.getElementById('ringFill');
+    const color = getRingColor(score);
+    fill.style.stroke = color;
+    setTimeout(() => { fill.style.strokeDashoffset = offset; }, 100);
+    document.getElementById('scoreNum').textContent = score + '%';
+    document.getElementById('scoreNum').style.color = color;
+}
+
+function buildEligChips(p) {
+    const cgpa = parseFloat(p.cgpa || 0);
+    const backlogs = parseInt(p.backlogs || 0);
+    const chips = [
+        { label: `CGPA: ${cgpa}`, pass: cgpa >= 6.5, note: cgpa >= 6.5 ? 'Above cut-off' : 'Below 6.5 cut-off' },
+        { label: `Backlogs: ${backlogs}`, pass: backlogs === 0, note: backlogs === 0 ? 'No active backlogs' : `${backlogs} active backlog(s)` }
+    ];
+    return chips.map(c => `
+        <span class="elig-chip ${c.pass ? 'elig-pass' : 'elig-fail'}">
+            <i class="fa fa-${c.pass ? 'check-circle' : 'times-circle'}"></i>
+            ${c.label} — ${c.note}
+        </span>
+    `).join('');
+}
+
+function buildSkillBars(p) {
+    const allSkills = [
+        ...(p.programming || '').split(',').map(s => s.trim()).filter(Boolean),
+        ...(p.web || '').split(',').map(s => s.trim()).filter(Boolean),
+        ...(p.databases || '').split(',').map(s => s.trim()).filter(Boolean)
+    ];
+    const allSkillsLower = allSkills.map(s => s.toLowerCase());
+
+    return Object.entries(COMPANY_SKILLS).map(([name, info]) => {
+        const reqLower = info.required.map(s => s.toLowerCase());
+        const matched = reqLower.filter(r => allSkillsLower.some(s => s.includes(r) || r.includes(s)));
+        const pct = Math.round((matched.length / reqLower.length) * 100);
+        return `
+            <div class="mb-3">
+                <div class="skill-progress-label">
+                    <span>${name} <span class="badge ${info.type === 'product' ? 'bg-success' : 'bg-primary'} ms-1">${info.type}</span></span>
+                    <span>${pct}%</span>
+                </div>
+                <div class="skill-bar-track">
+                    <div class="skill-bar-fill" data-width="${pct}"></div>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function buildCompanyCards(p) {
+    const allSkills = [
+        ...(p.programming || '').split(',').map(s => s.trim()).filter(Boolean),
+        ...(p.web || '').split(',').map(s => s.trim()).filter(Boolean),
+        ...(p.databases || '').split(',').map(s => s.trim()).filter(Boolean)
+    ];
+    const allSkillsLower = allSkills.map(s => s.toLowerCase());
+    const cgpa = parseFloat(p.cgpa || 7);
+    const backlogs = parseInt(p.backlogs || 0);
+
+    return Object.entries(COMPANY_SKILLS).map(([name, info]) => {
+        const reqLower = info.required.map(s => s.toLowerCase());
+        const matched = reqLower.filter(r => allSkillsLower.some(s => s.includes(r) || r.includes(s)));
+        const skillPct = Math.round((matched.length / reqLower.length) * 100);
+        // Blend: 60% skill + 40% academic
+        const acadPct = Math.max(0, Math.min(100, cgpa * 10 - backlogs * 5));
+        const score = Math.round(skillPct * 0.6 + acadPct * 0.4);
+        const color = getRingColor(score);
+        const isProduct = info.type === 'product';
+        return `
+            <div class="col-md-6 col-lg-4">
+                <div class="company-analysis-card ${isProduct ? 'product' : ''}">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div>
+                            <h6 class="fw-bold mb-0">${name}</h6>
+                            <small class="${isProduct ? 'text-success' : 'text-primary'} fw-semibold">${info.type === 'product' ? 'Product-Based' : 'Service-Based'}</small>
+                        </div>
+                        <span class="fw-bold fs-5" style="color:${color};">${score}%</span>
+                    </div>
+                    <div class="skill-bar-track mt-2">
+                        <div class="skill-bar-fill" data-width="${score}" style="background:${color};"></div>
+                    </div>
+                    <small class="text-muted d-block mt-1">${matched.length}/${reqLower.length} key skills matched</small>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function showError(msg) {
+    const el = document.getElementById('errorMsg');
+    const txt = document.getElementById('errorText');
+    if (el && txt) {
+        txt.textContent = msg;
+        el.style.display = 'flex';
+    }
+}
+
+async function loadAnalysis() {
+    const p = getProfile();
+    document.getElementById('skeletonLoader').style.display = 'block';
+    document.getElementById('analysisContent').style.display = 'none';
+    document.getElementById('errorMsg').style.display = 'none';
+    document.getElementById('refreshBtn').disabled = true;
+
+    const allSkills = [
+        ...(p.programming || '').split(',').map(s => s.trim()).filter(Boolean),
+        ...(p.web || '').split(',').map(s => s.trim()).filter(Boolean),
+        ...(p.databases || '').split(',').map(s => s.trim()).filter(Boolean)
+    ];
+
+    // Try ML backend; fallback to client-side calculation
+    let primaryScore;
+    try {
+        const payload = buildBackendPayload(p);
+        const result = await apiCall('/analysis/company', 'POST', { student: payload });
+        primaryScore = result.score || result.mlScore || null;
+    } catch(e) {
+        // Silent fallback — client-side score below takes over with no UI noise
+        primaryScore = null;
+    }
+
+    // Always compute client-side as baseline
+    const cgpa = parseFloat(p.cgpa || 7);
+    const backlogs = parseInt(p.backlogs || 0);
+    const acadPct = Math.max(0, Math.min(100, cgpa * 10 - backlogs * 5));
+    const tcsReq = ['Python','Java','C++','SQL','Communication'];
+    const tcsLower = tcsReq.map(s => s.toLowerCase());
+    const allLower = allSkills.map(s => s.toLowerCase());
+    const matched = tcsLower.filter(r => allLower.some(s => s.includes(r) || r.includes(s)));
+    const skillPct = Math.round((matched.length / tcsReq.length) * 100);
+    const clientScore = Math.round(skillPct * 0.6 + acadPct * 0.4);
+
+    const displayScore = primaryScore !== null ? primaryScore : clientScore;
+
+    // Render
+    document.getElementById('skeletonLoader').style.display = 'none';
+    const contentEl = document.getElementById('analysisContent');
+    contentEl.style.display = 'block';
+    contentEl.classList.remove('reveal-on-show');
+    void contentEl.offsetWidth;             // restart entrance animation on every load
+    contentEl.classList.add('reveal-on-show');
+    document.getElementById('allCompanyCards').classList.add('pp-stagger');
+
+    document.getElementById('analysisCo').textContent = 'TCS (Primary Match)';
+    document.getElementById('eligChips').innerHTML = buildEligChips(p);
+    document.getElementById('analysisSubtitle').textContent =
+        `Profile synced. ${allSkills.length} technical skill(s) detected across Programming, Web, and Databases.`;
+
+    document.getElementById('skillBarsContainer').innerHTML = buildSkillBars(p);
+    document.getElementById('allCompanyCards').innerHTML = buildCompanyCards(p);
+
+    animateRing(displayScore);
+
+    // Animate all progress bars after render
+    setTimeout(() => {
+        document.querySelectorAll('.skill-bar-fill').forEach(bar => {
+            bar.style.width = (bar.dataset.width || 0) + '%';
+        });
+    }, 150);
+
+    document.getElementById('refreshBtn').disabled = false;
+}
+
+window.addEventListener('DOMContentLoaded', loadAnalysis);
+</script>
+</body>
+</html>

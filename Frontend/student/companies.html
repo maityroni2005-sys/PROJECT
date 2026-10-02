@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Companies - PlacementPro AI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* ---- Company Card — extruded clay slab ---- */
+        .company-card {
+            background: linear-gradient(150deg, #f3f4fd 0%, var(--pp-surface) 48%, #e6e9f8 100%);
+            border-radius: 22px;
+            border: 1px solid rgba(255, 255, 255, .85);
+            box-shadow: var(--pp-clay);
+            padding: 22px 20px;
+            transition: transform .24s var(--pp-ease), box-shadow .24s var(--pp-ease);
+            position: relative; overflow: hidden;
+            text-decoration: none; display: block; color: inherit;
+        }
+        .company-card::before {
+            content: ''; position: absolute; top: 0; left: 0;
+            width: 100%; height: 4px;
+            transform: scaleX(0); transform-origin: left;
+            transition: transform .3s var(--pp-ease);
+        }
+        .company-card.service::before { background: linear-gradient(90deg, #4338ca, #22d3ee); }
+        .company-card.product::before { background: linear-gradient(90deg, #0aa06e, #2dd4bf); }
+        .company-card.startup::before { background: linear-gradient(90deg, #d97706, #f97316); }
+        .company-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--pp-clay-hover), var(--pp-shadow-glow);
+        }
+        .company-card:hover::before { transform: scaleX(1); }
+
+        /* ---- Match bar ---- */
+        .match-bar-track {
+            height: 8px; border-radius: 99px;
+            background: var(--pp-border);
+            box-shadow: var(--pp-clay-inset);
+            overflow: hidden; margin-top: 4px;
+        }
+        .match-bar-fill {
+            height: 100%; border-radius: 99px; width: 0;
+            box-shadow: 0 2px 6px rgba(49, 46, 129, .35), inset 0 1px 1px rgba(255,255,255,.4);
+            transition: width 1.1s cubic-bezier(.4,0,.2,1);
+        }
+
+        .section-divider {
+            display: flex; align-items: center; gap: 12px; margin: 28px 0 18px;
+        }
+        .section-divider hr {
+            flex: 1; margin: 0; opacity: 1;
+            border: none; height: 3px; border-radius: 99px;
+            background: linear-gradient(150deg, #e3e6f6, #eef0fb);
+            box-shadow: var(--pp-clay-inset);
+        }
+        .section-divider span {
+            font-weight: 800; font-size: 0.85rem; letter-spacing: 1.2px;
+            text-transform: uppercase; white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+<div class="d-flex">
+    <div class="pp-aurora-b" aria-hidden="true"></div>
+    <!-- Sidebar -->
+    <div class="sidebar p-3 d-flex flex-column" id="ppSidebar" style="width:250px;min-height:100vh;">
+        <h4 class="fw-bold text-primary mb-4 px-2">PlacementPro</h4>
+        <ul class="nav flex-column mb-auto">
+            <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="fa fa-gauge me-2"></i>Dashboard</a></li>
+            <li class="nav-item"><a href="profile.html" class="nav-link"><i class="fa fa-user me-2"></i>My Profile</a></li>
+            <li class="nav-item"><a href="analysis.html" class="nav-link"><i class="fa fa-chart-bar me-2"></i>My Analysis</a></li>
+            <li class="nav-item"><a href="companies.html" class="nav-link active"><i class="fa fa-building me-2"></i>Companies</a></li>
+            <li class="nav-item"><a href="roles.html" class="nav-link"><i class="fa fa-briefcase me-2"></i>Career Roles</a></li>
+            <li class="nav-item"><a href="skill-gap.html" class="nav-link"><i class="fa fa-triangle-exclamation me-2"></i>Skill Gap</a></li>
+            <li class="nav-item"><a href="resume.html" class="nav-link"><i class="fa fa-file-lines me-2"></i>Resume Generator</a></li>
+        </ul>
+        <a href="#" onclick="handleLogout(); return false;" class="nav-link text-danger mt-4"><i class="fa fa-right-from-bracket me-2"></i>Logout</a>
+    </div>
+    <div class="pp-backdrop" aria-hidden="true"></div>
+
+    <!-- Main Content -->
+    <div class="flex-grow-1 p-4 bg-light">
+        <!-- Mobile topbar (hidden ≥992px) -->
+        <div class="pp-topbar">
+            <button class="pp-burger" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="ppSidebar">
+                <i class="fa fa-bars"></i>
+            </button>
+            <span class="pp-topbar-brand"><i class="fa fa-robot me-2"></i>PlacementPro</span>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <div>
+                <h2 class="fw-bold mb-0">Recommended Companies</h2>
+                <small class="text-muted">Ranked by Profile Match Score based on your skills & academics</small>
+            </div>
+            <button class="btn btn-outline-primary rounded-pill" onclick="loadCompanies()">
+                <i class="fa fa-arrows-rotate me-2"></i>Refresh
+            </button>
+        </div>
+
+        <!-- Skeleton -->
+        <div id="skeletonLoader">
+            <div class="section-divider"><hr><span class="text-primary">Service-Based</span><hr></div>
+            <div class="row g-4 mb-2">
+                <div class="col-md-4"><div class="skeleton" style="height:130px;"></div></div>
+                <div class="col-md-4"><div class="skeleton" style="height:130px;"></div></div>
+                <div class="col-md-4"><div class="skeleton" style="height:130px;"></div></div>
+            </div>
+            <div class="section-divider"><hr><span class="text-success">Product-Based</span><hr></div>
+            <div class="row g-4">
+                <div class="col-md-4"><div class="skeleton" style="height:130px;"></div></div>
+                <div class="col-md-4"><div class="skeleton" style="height:130px;"></div></div>
+                <div class="col-md-4"><div class="skeleton" style="height:130px;"></div></div>
+            </div>
+        </div>
+
+        <!-- Error -->
+        <div id="errorMsg" class="alert alert-danger align-items-center gap-2" style="display:none;">
+            <i class="fa fa-circle-exclamation me-2"></i><span id="errorText"></span>
+        </div>
+
+        <!-- Company Content -->
+        <div id="companyContent" style="display:none;">
+            <div class="section-divider">
+                <hr><span class="text-primary"><i class="fa fa-server me-1"></i>Service-Based</span><hr>
+            </div>
+            <div class="row g-4 mb-2" id="serviceBasedGrid"></div>
+
+            <div class="section-divider">
+                <hr><span class="text-success"><i class="fa fa-microchip me-1"></i>Product-Based</span><hr>
+            </div>
+            <div class="row g-4 mb-2" id="productBasedGrid"></div>
+
+            <div class="section-divider">
+                <hr><span class="text-warning"><i class="fa fa-rocket me-1"></i>Startups</span><hr>
+            </div>
+            <div class="row g-4" id="startupGrid"></div>
+        </div>
+    </div>
+</div>
+
+<script src="../js/api.js"></script>
+<script src="../js/student-profile.js"></script>
+<script src="../js/layout.js"></script>
+<script src="../js/auth-guard.js"></script>
+<script>
+function showError(msg) {
+    const el = document.getElementById('errorMsg');
+    const txt = document.getElementById('errorText');
+    if (el && txt) { txt.textContent = msg; el.style.display = 'flex'; }
+}
+
+const COMPANIES = {
+    service: [
+        { name: 'TCS',        logo: '🏢', required: ['Python','Java','C++','SQL','Communication'] },
+        { name: 'Infosys',    logo: '🏛️', required: ['Java','Python','SQL','JavaScript','HTML'] },
+        { name: 'Cognizant',  logo: '🏗️', required: ['Java','C#','SQL','HTML','CSS'] },
+        { name: 'Wipro',      logo: '🌐', required: ['Python','Java','SQL','JavaScript'] },
+        { name: 'HCL',        logo: '💡', required: ['C++','Java','SQL','Linux','Python'] },
+        { name: 'Tech Mahindra', logo: '⚙️', required: ['Java','Python','MySQL','HTML','JavaScript'] }
+    ],
+    product: [
+        { name: 'Flipkart',  logo: '🛒', required: ['Python','JavaScript','React','SQL','DSA'] },
+        { name: 'Amazon',    logo: '📦', required: ['DSA','Python','Java','SQL','System Design'] },
+        { name: 'Microsoft', logo: '🪟', required: ['C++','Java','Python','DSA','Azure'] },
+        { name: 'Google',    logo: '🔍', required: ['DSA','Algorithms','Python','Java','Go'] },
+        { name: 'Zoho',      logo: '🔧', required: ['Java','SQL','JavaScript','HTML','CSS'] }
+    ],
+    startup: [
+        { name: 'Razorpay',   logo: '💳', required: ['JavaScript','Node.js','React','MySQL'] },
+        { name: 'CRED',       logo: '💎', required: ['Python','React','PostgreSQL','AWS'] },
+        { name: 'PhonePe',    logo: '📱', required: ['Java','Kotlin','SQL','JavaScript'] },
+        { name: 'Groww',      logo: '📈', required: ['Python','React','Node.js','MongoDB'] }
+    ]
+};
+
+function calcScore(p, required) {
+    const allSkills = [
+        ...(p.programming || '').split(',').map(s => s.trim()),
+        ...(p.web || '').split(',').map(s => s.trim()),
+        ...(p.databases || '').split(',').map(s => s.trim())
+    ].filter(Boolean);
+    const allLower = allSkills.map(s => s.toLowerCase());
+    const reqLower = required.map(s => s.toLowerCase());
+    const matched  = reqLower.filter(r => allLower.some(s => s.includes(r) || r.includes(s)));
+    const skillPct = Math.round((matched.length / reqLower.length) * 100);
+    const cgpa     = parseFloat(p.cgpa || 7);
+    const backlogs = parseInt(p.backlogs || 0);
+    const acadPct  = Math.max(0, Math.min(100, cgpa * 10 - backlogs * 5));
+    return { score: Math.round(skillPct * 0.6 + acadPct * 0.4), matched: matched.length, total: reqLower.length };
+}
+
+function scoreColor(score) {
+    return score >= 70 ? 'var(--pp-success)' : score >= 45 ? 'var(--pp-warning)' : 'var(--pp-danger)';
+}
+function barGradient(type) {
+    if (type === 'service') return 'linear-gradient(90deg, var(--pp-primary), #22d3ee)';
+    if (type === 'product') return 'linear-gradient(90deg, var(--pp-success), #2dd4bf)';
+    return 'linear-gradient(90deg, var(--pp-warning), #f97316)';
+}
+
+function renderCard(co, type, p) {
+    const { score, matched, total } = calcScore(p, co.required);
+    const color = scoreColor(score);
+    return `
+        <div class="col-md-6 col-lg-4">
+            <a href="analysis.html" class="company-card ${type}">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div>
+                        <span class="fs-3 me-2">${co.logo}</span>
+                        <span class="fw-bold fs-6">${co.name}</span>
+                    </div>
+                    <span class="fw-bold fs-5" style="color:${color};">${score}%</span>
+                </div>
+                <div class="match-bar-track">
+                    <div class="match-bar-fill" data-width="${score}"
+                         style="background:${barGradient(type)};"></div>
+                </div>
+                <div class="d-flex justify-content-between mt-2">
+                    <small class="text-muted">${matched}/${total} skills matched</small>
+                    <small class="fw-semibold" style="color:${color};">
+                        ${score >= 70 ? '✅ Good Fit' : score >= 45 ? '⚠️ Needs Work' : '❌ Skill Gap'}
+                    </small>
+                </div>
+            </a>
+        </div>
+    `;
+}
+
+async function loadCompanies() {
+    document.getElementById('skeletonLoader').style.display = 'block';
+    document.getElementById('companyContent').style.display = 'none';
+    document.getElementById('errorMsg').style.display = 'none';
+
+    const p = getProfile();
+
+    // Try ML backend; always render client-side as fallback
+    try {
+        const payload = buildBackendPayload(p);
+        await apiCall('/companies/recommendations', 'POST', payload);
+    } catch(e) {
+        // Silent fallback — client-side scores below render with no UI noise
+        console.info('Using client-side company scores.');
+    }
+
+    // Sort each category by score desc
+    const sorted = (arr, type) =>
+        [...arr]
+            .map(co => ({ ...co, ...calcScore(p, co.required) }))
+            .sort((a, b) => b.score - a.score);
+
+    document.getElementById('serviceBasedGrid').innerHTML =
+        sorted(COMPANIES.service, 'service').map(co => renderCard(co, 'service', p)).join('');
+    document.getElementById('productBasedGrid').innerHTML =
+        sorted(COMPANIES.product, 'product').map(co => renderCard(co, 'product', p)).join('');
+    document.getElementById('startupGrid').innerHTML =
+        sorted(COMPANIES.startup, 'startup').map(co => renderCard(co, 'startup', p)).join('');
+
+    document.getElementById('skeletonLoader').style.display = 'none';
+    const content = document.getElementById('companyContent');
+    content.style.display = 'block';
+    content.classList.remove('reveal-on-show');
+    void content.offsetWidth;               // restart entrance animation on every load
+    content.classList.add('reveal-on-show');
+    document.getElementById('serviceBasedGrid').classList.add('pp-stagger');
+    document.getElementById('productBasedGrid').classList.add('pp-stagger');
+    document.getElementById('startupGrid').classList.add('pp-stagger');
+
+    // Animate bars
+    setTimeout(() => {
+        document.querySelectorAll('.match-bar-fill').forEach(bar => {
+            bar.style.width = (bar.dataset.width || 0) + '%';
+        });
+    }, 100);
+}
+
+window.addEventListener('DOMContentLoaded', loadCompanies);
+</script>
+</body>
+</html>

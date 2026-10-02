@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - PlacementPro AI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* Premium clay canvas for auth pages */
+        body {
+            background:
+                radial-gradient(1100px 620px at 82% -12%, #eceefe 0%, transparent 55%),
+                radial-gradient(900px 540px at -10% 108%, rgba(45, 212, 191, .22), transparent 60%),
+                linear-gradient(160deg, #e3e6fb 0%, #dfe4f7 34%, #dde3f6 55%, #e4def4 78%, #e8e1f3 100%);
+            min-height: 100vh;
+        }
+        body::before { content: none; }
+
+        .auth-card {
+            background: linear-gradient(150deg, #f6f7fe 0%, var(--pp-surface) 48%, #e6e9f8 100%);
+            border: 1px solid rgba(255, 255, 255, .95);
+            border-radius: 34px;
+            padding: 46px 42px;
+            width: 100%; max-width: 460px;
+            box-shadow: var(--pp-clay-hover);
+            position: relative;
+        }
+        /* Soft top rim-light — signature clay highlight */
+        .auth-card::before {
+            content: '';
+            position: absolute;
+            top: 10px; left: 30px; right: 30px;
+            height: 2px;
+            border-radius: 99px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,.95), transparent);
+            pointer-events: none;
+        }
+        .auth-card .form-control {
+            color: var(--pp-ink);
+        }
+        .auth-card label { color: var(--pp-muted); font-weight: 600; font-size: 0.85rem; }
+        .btn-login {
+            background: linear-gradient(135deg, #4338ca 0%, #6366f1 55%, #14b8a6 120%);
+            border: 1px solid rgba(255, 255, 255, .25);
+            color: #fff; font-weight: 700;
+            padding: 13px; border-radius: 50px;
+            box-shadow: var(--pp-clay-cta);
+            transition: transform 0.18s var(--pp-ease-spring, ease), box-shadow 0.2s, filter 0.2s;
+        }
+        .btn-login:hover {
+            color: #fff; transform: translateY(-2px);
+            box-shadow: var(--pp-clay-cta-hover);
+        }
+        .btn-login:active { transform: translateY(1px) scale(.98); }
+        .error-box {
+            background: var(--pp-danger-soft);
+            border: 1px solid rgba(224, 69, 92, .35);
+            color: #9f2042;
+            border-radius: 14px;
+            padding: 10px 14px;
+            font-size: 0.85rem; font-weight: 600;
+            display: none; margin-bottom: 14px;
+            box-shadow: var(--pp-clay-inset);
+        }
+        .auth-link { color: var(--pp-primary); font-weight: 700; text-decoration: none; }
+        .auth-link:hover { color: var(--pp-primary-dark); text-decoration: underline; }
+        .brand-pill {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: linear-gradient(150deg, #e9ebfa, #eef0fb);
+            box-shadow: var(--pp-clay-sm);
+            color: var(--pp-primary);
+            border-radius: 50px;
+            padding: 8px 18px; font-size: 0.82rem;
+            font-weight: 700; margin-bottom: 24px;
+        }
+        .auth-sub { color: var(--pp-muted); font-size: 0.9rem; }
+        .auth-foot { font-size: 0.9rem; color: var(--pp-muted); }
+    </style>
+</head>
+<body class="d-flex justify-content-center align-items-center" style="min-height:100vh;">
+    <div class="auth-card">
+        <div class="text-center mb-4">
+            <div class="brand-pill"><i class="fa fa-robot"></i> PlacementPro AI</div>
+            <h4 class="fw-bold mb-1">Welcome Back</h4>
+            <p class="auth-sub">Sign in to your placement account</p>
+        </div>
+
+        <div class="error-box" id="loginError"></div>
+
+        <form id="loginForm" onsubmit="handleLogin(event)">
+            <div class="mb-3">
+                <label for="email">Email address</label>
+                <input type="email" class="form-control mt-1" id="email"
+                       placeholder="name@college.edu" autocomplete="email" required>
+            </div>
+            <div class="mb-4">
+                <label for="password">Password</label>
+                <input type="password" class="form-control mt-1" id="password"
+                       placeholder="Enter your password" autocomplete="current-password" required>
+            </div>
+            <button type="submit" class="btn btn-login w-100" id="loginBtn">
+                <i class="fa fa-arrow-right-to-bracket me-2"></i>Login
+            </button>
+        </form>
+
+        <div class="text-center mt-4 auth-foot">
+            Don't have an account?
+            <a href="register.html" class="auth-link ms-1">Create one →</a>
+        </div>
+    </div>
+
+    <script>
+    function showError(msg) {
+        const el = document.getElementById('loginError');
+        el.textContent = msg;
+        el.style.display = 'block';
+    }
+
+    function handleLogin(e) {
+        if (e) e.preventDefault();
+        const email    = document.getElementById('email').value.trim().toLowerCase();
+        const password = document.getElementById('password').value;
+
+        if (!email) { showError('Please enter your email address.'); return; }
+        if (!password) { showError('Please enter your password.'); return; }
+
+        // Simple client-side credential check (demo: any password accepted)
+        // In production this would be a backend auth call.
+        const btn = document.getElementById('loginBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa fa-spinner fa-spin me-2"></i>Signing in...';
+
+        setTimeout(() => {
+            // Derive display name from email prefix
+            const name = email.split('@')[0].replace(/[._]/g, ' ')
+                .replace(/\b\w/g, c => c.toUpperCase());
+
+            // Persist the session — per-email isolation is handled in student-profile.js
+            localStorage.setItem('placementpro_session', JSON.stringify({ email, name }));
+
+            // Pre-create an empty profile for this email if one doesn't already exist
+            const profileKey = 'placementpro_profile_' + email;
+            if (!localStorage.getItem(profileKey)) {
+                // Store minimal seed so getProfile() picks up the session email/name
+                localStorage.setItem(profileKey, JSON.stringify({ email, name }));
+            }
+
+            window.location.href = 'student/dashboard.html';
+        }, 600);
+    }
+    </script>
+</body>
+</html>

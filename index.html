@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Roni Maity – Information Technology student, developer, and aspiring software engineer from Contai, West Bengal.">
+    <title>Roni Maity | Portfolio</title>
+
+    <!-- Google Fonts: Inter — a classic, highly readable web font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* =====================================================
+           CSS VARIABLES — easy to tweak in one place
+        ===================================================== */
+        :root {
+            --blue-dark:    #003f88;
+            --blue-main:    #00509e;
+            --blue-light:   #2b7fc1;
+            --text-strong:  #1a2b3c;
+            --text-body:    #334155;
+            --text-muted:   #64748b;
+            --glass-bg:     rgba(255, 255, 255, 0.82);
+            --glass-hover:  rgba(255, 255, 255, 0.96);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --shadow:       0 8px 32px rgba(0, 50, 120, 0.12);
+            --radius-lg:    18px;
+            --radius-md:    12px;
+            --radius-sm:    8px;
+        }
+
+        /* =====================================================
+           BASE RESET
+        ===================================================== */
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: none; /* replaced by custom pointer below */
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 1rem;
+            line-height: 1.75;
+            color: var(--text-body);
+            overflow-x: hidden;
+            /* Realistic coastal background from Unsplash */
+            background:
+                linear-gradient(to bottom, rgba(245,252,255,0.35), rgba(210,240,255,0.25)),
+                url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=2073&q=80')
+                no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        /* =====================================================
+           ORGANIC CUSTOM CURSOR
+        ===================================================== */
+        #cursor-dot {
+            position: fixed;
+            top: 0; left: 0;
+            width: 7px;
+            height: 7px;
+            background: var(--blue-main);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.15s ease;
+        }
+
+        #cursor-ring {
+            position: fixed;
+            top: 0; left: 0;
+            width: 32px;
+            height: 32px;
+            border: 1.5px solid rgba(0, 80, 158, 0.45);
+            background: rgba(0, 80, 158, 0.04);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+            z-index: 9998;
+            transition: width 0.3s ease, height 0.3s ease, background 0.3s ease, border-color 0.3s ease;
+        }
+
+        /* =====================================================
+           LAYOUT
+        ===================================================== */
+        .wrapper {
+            max-width: 960px;
+            margin: 3.5rem auto 4rem;
+            padding: 0 1.5rem;
+        }
+
+        /* The main "card" that wraps everything */
+        .page-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            padding: 3rem 3.5rem;
+        }
+
+        /* =====================================================
+           HEADER / HERO
+        ===================================================== */
+        .hero {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            padding-bottom: 2.5rem;
+            border-bottom: 1px solid rgba(0, 80, 158, 0.12);
+            margin-bottom: 3rem;
+        }
+
+        .hero-photo {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            object-position: top;
+            border: 5px solid #fff;
+            box-shadow: 0 6px 24px rgba(0, 60, 140, 0.18);
+            flex-shrink: 0;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .hero-photo:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 14px 36px rgba(0, 60, 140, 0.24);
+        }
+
+        .hero-text h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: var(--blue-dark);
+            letter-spacing: -0.5px;
+            line-height: 1.15;
+            margin-bottom: 0.4rem;
+        }
+
+        .hero-text .tagline {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--blue-light);
+            margin-bottom: 1.2rem;
+        }
+
+        .contact-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem 2rem;
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .contact-row a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .contact-row a:hover {
+            color: var(--blue-main);
+        }
+
+        .contact-row i {
+            color: var(--blue-light);
+            margin-right: 0.35rem;
+            width: 16px;
+            text-align: center;
+        }
+
+        /* =====================================================
+           SECTION STRUCTURE
+        ===================================================== */
+        .section {
+            margin-bottom: 3rem;
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--blue-dark);
+            margin-bottom: 1.4rem;
+            padding-bottom: 0.6rem;
+            border-bottom: 2px solid rgba(0, 80, 158, 0.1);
+        }
+
+        .section-title i {
+            color: var(--blue-light);
+            font-size: 1.2rem;
+        }
+
+        /* =====================================================
+           ABOUT & OBJECTIVE
+        ===================================================== */
+        .prose {
+            font-size: 1.05rem;
+            color: var(--text-body);
+        }
+
+        .prose strong {
+            color: var(--blue-main);
+            font-weight: 700;
+        }
+
+        /* =====================================================
+           CARDS
+        ===================================================== */
+        .card-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            border-radius: var(--radius-md);
+            padding: 1.6rem;
+            box-shadow: 0 2px 10px rgba(0, 50, 100, 0.05);
+            transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            background: var(--glass-hover);
+            box-shadow: 0 10px 28px rgba(0, 50, 120, 0.1);
+        }
+
+        .card-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--blue-dark);
+            margin-bottom: 0.3rem;
+        }
+
+        .card-label {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--blue-light);
+            margin-bottom: 0.9rem;
+        }
+
+        .card p {
+            font-size: 0.97rem;
+            color: var(--text-body);
+        }
+
+        /* Full-width card variant */
+        .card--full {
+            grid-column: 1 / -1;
+        }
+
+        /* =====================================================
+           SKILLS
+        ===================================================== */
+        .skills-split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem 3rem;
+        }
+
+        .skill-group h4 {
+            font-size: 0.92rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--blue-dark);
+            margin-bottom: 0.7rem;
+        }
+
+        .tag-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.45rem;
+        }
+
+        .tag {
+            background: rgba(0, 80, 158, 0.08);
+            color: var(--blue-main);
+            border: 1px solid rgba(0, 80, 158, 0.16);
+            border-radius: 6px;
+            padding: 0.28rem 0.75rem;
+            font-size: 0.88rem;
+            font-weight: 600;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .tag:hover {
+            background: var(--blue-main);
+            color: #fff;
+        }
+
+        /* =====================================================
+           BULLET LISTS
+        ===================================================== */
+        .bullet-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .bullet-list li {
+            padding-left: 1.4rem;
+            position: relative;
+            font-size: 0.98rem;
+            color: var(--text-body);
+        }
+
+        .bullet-list li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--blue-light);
+            font-size: 0.9rem;
+        }
+
+        .bullet-list strong {
+            color: var(--blue-main);
+            font-weight: 700;
+        }
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            padding-top: 1.8rem;
+            border-top: 1px solid rgba(0, 80, 158, 0.1);
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+        @media (max-width: 720px) {
+            .page-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .hero {
+                flex-direction: column;
+                text-align: center;
+                gap: 1.5rem;
+            }
+
+            .contact-row {
+                justify-content: center;
+            }
+
+            .card-grid,
+            .skills-split {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-text h1 {
+                font-size: 2.2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Organic custom cursor elements -->
+    <div id="cursor-dot"></div>
+    <div id="cursor-ring"></div>
+
+    <div class="wrapper">
+        <div class="page-card">
+
+            <!-- ========================
+                 HERO / HEADER
+            ======================== -->
+            <header class="hero">
+                <img src="profile.jpeg" alt="Photo of Roni Maity" class="hero-photo">
+                <div class="hero-text">
+                    <h1>Roni Maity</h1>
+                    <p class="tagline">B.Tech Information Technology Student &amp; Developer</p>
+                    <div class="contact-row">
+                        <span><i class="fa-solid fa-location-dot"></i>Contai, West Bengal, India</span>
+                        <a href="tel:+918597176733"><i class="fa-solid fa-phone"></i>+91 85971 76733</a>
+                        <a href="mailto:maityroni2005@gmail.com"><i class="fa-solid fa-envelope"></i>maityroni2005@gmail.com</a>
+                    </div>
+                </div>
+            </header>
+
+            <!-- ========================
+                 ABOUT ME
+            ======================== -->
+            <section class="section" id="about">
+                <h2 class="section-title"><i class="fa-solid fa-user"></i>About Me</h2>
+                <p class="prose">
+                    I am a Fourth-year <strong>Information Technology</strong> student building a strong foundation in
+                    <strong>Python</strong>, data handling, and Data Structures &amp; Algorithms. I enjoy tackling
+                    structural exercises — from C socket programming to PL/SQL — and I maintain an analytical mindset
+                    with a habit of keeping an error log to track and fix recurring mistakes.
+                    <br><br>
+                    When I'm not coding, I'm usually following the <strong>Chennai Super Kings</strong> in the IPL,
+                    reading classics like <em>Siddhartha</em>, or traveling to coastal beaches.
+                </p>
+            </section>
+
+            <!-- ========================
+                 CAREER OBJECTIVE
+            ======================== -->
+            <section class="section" id="objective">
+                <h2 class="section-title"><i class="fa-solid fa-bullseye"></i>Career Objective</h2>
+                <p class="prose">
+                    Actively engaged with industry training programs (<strong>Wipro TalentNext</strong>,
+                    <strong>Infosys Springboard</strong>) and seeking an entry-level role or internship in
+                    software/data development where I can apply my problem-solving skills and grow as a developer.
+                </p>
+            </section>
+
+            <!-- ========================
+                 EDUCATION
+            ======================== -->
+            <section class="section" id="education">
+                <h2 class="section-title"><i class="fa-solid fa-graduation-cap"></i>Education</h2>
+                <div class="card-grid">
+                    <div class="card">
+                        <p class="card-title">B.Tech — Information Technology</p>
+                        <p class="card-label">Govt. College of Engineering &amp; Textile Technology</p>
+                        <p><strong style="color:var(--blue-main);">CGPA:</strong> 7.22 &nbsp;(till current semester)</p>
+                    </div>
+                    <div class="card">
+                        <p class="card-title">Higher Secondary &amp; Secondary</p>
+                        <p class="card-label">Class XII &amp; Class X</p>
+                        <p><strong style="color:var(--blue-main);">Class XII:</strong> 77.8%</p>
+                        <p><strong style="color:var(--blue-main);">Class X:</strong> 86.75%</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================
+                 TECHNICAL SKILLS
+            ======================== -->
+            <section class="section" id="skills">
+                <h2 class="section-title"><i class="fa-solid fa-code"></i>Technical Skills</h2>
+                <div class="card card--full" style="margin-bottom:0;">
+                    <div class="skills-split">
+                        <div class="skill-group">
+                            <h4>Languages &amp; Libraries</h4>
+                            <div class="tag-row">
+                                <span class="tag">Python</span>
+                                <span class="tag">C</span>
+                                <span class="tag">JavaScript</span>
+                                <span class="tag">SQL / PL-SQL</span>
+                                <span class="tag">HTML</span>
+                                <span class="tag">CSS3</span>
+                                <span class="tag">NumPy</span>
+                                <span class="tag">Pandas</span>
+                                <span class="tag">Streamlit</span>
+                            </div>
+                        </div>
+                        <div class="skill-group">
+                            <h4>Frameworks &amp; Core CS</h4>
+                            <div class="tag-row">
+                                <span class="tag">Java (Spring Boot basics)</span>
+                                <span class="tag">MySQL</span>
+                                <span class="tag">Computer Networks</span>
+                            </div>
+                        </div>
+                        <div class="skill-group">
+                            <h4>Tools &amp; Platforms</h4>
+                            <div class="tag-row">
+                                <span class="tag">VS Code</span>
+                                <span class="tag">Git / GitHub</span>
+                                <span class="tag">Jupyter Notebook</span>
+                            </div>
+                        </div>
+                        <div class="skill-group">
+                            <h4>Currently Learning</h4>
+                            <div class="tag-row">
+                                <span class="tag">DSA in Python</span>
+                                <span class="tag">NumPy &amp; Pandas (advanced)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================
+                 PROJECTS
+            ======================== -->
+            <section class="section" id="projects">
+                <h2 class="section-title"><i class="fa-solid fa-laptop-code"></i>Projects</h2>
+                <div class="card-grid">
+                    <div class="card">
+                        <p class="card-title">Student Performance Analyzer</p>
+                        <p class="card-label">Python · NumPy · Pandas</p>
+                        <p>
+                            Built a script that processes student marks data, computes subject-wise statistics
+                            (mean, std dev, max/min) with NumPy, and generates grade summaries and a CSV report
+                            using Pandas.
+                        </p>
+                    </div>
+                    <div class="card">
+                        <p class="card-title">Career Guidance Chatbot</p>
+                        <p class="card-label">Python · Streamlit</p>
+                        <p>
+                            Developed an interactive web app that scores users against the six RIASEC personality
+                            types via a simple questionnaire and recommends matching career paths.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================
+                 TRAINING & CERTIFICATIONS
+            ======================== -->
+            <section class="section" id="certifications">
+                <h2 class="section-title"><i class="fa-solid fa-certificate"></i>Training &amp; Certifications</h2>
+                <div class="card card--full">
+                    <ul class="bullet-list">
+                        <li>
+                            Completed the NPTEL academic examination for
+                            <strong>"The Joy of Computing using Python"</strong> (April 2026).
+                        </li>
+                        <li>
+                            Nominated by college for the <strong>Wipro TalentNext PBLApp Program</strong>
+                            — project-based learning in application development.
+                        </li>
+                        <li>
+                            Enrolled in the <strong>Infosys Springboard</strong> Spring Boot Internship track.
+                        </li>
+                        <li>
+                            Completed core Python fundamentals through a structured 100-video course;
+                            currently progressing through NumPy and Pandas.
+                        </li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- FOOTER -->
+            <footer>
+                <p>&copy; 2026 Roni Maity &nbsp;·&nbsp; Handcrafted in semantic HTML &amp; CSS</p>
+            </footer>
+
+        </div><!-- .page-card -->
+    </div><!-- .wrapper -->
+
+    <!-- ========================
+         CLEAN, VANILLA JS
+    ======================== -->
+    <script>
+        /* Custom cursor — organic, lagged aura */
+        (function () {
+            const dot  = document.getElementById('cursor-dot');
+            const ring = document.getElementById('cursor-ring');
+
+            let mouseX = 0, mouseY = 0;
+            let ringX  = 0, ringY  = 0;
+
+            /* Dot follows instantly */
+            window.addEventListener('mousemove', function (e) {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+                dot.style.left = mouseX + 'px';
+                dot.style.top  = mouseY + 'px';
+            });
+
+            /* Ring follows with gentle easing — feels organic */
+            (function animateRing() {
+                ringX += (mouseX - ringX) * 0.12;
+                ringY += (mouseY - ringY) * 0.12;
+                ring.style.left = ringX + 'px';
+                ring.style.top  = ringY + 'px';
+                requestAnimationFrame(animateRing);
+            }());
+
+            /* Subtle grow effect on hoverable elements */
+            const hoverable = document.querySelectorAll('a, button, .card, .tag');
+            hoverable.forEach(function (el) {
+                el.addEventListener('mouseenter', function () {
+                    ring.style.width           = '46px';
+                    ring.style.height          = '46px';
+                    ring.style.background      = 'rgba(0, 80, 158, 0.09)';
+                    ring.style.borderColor     = 'rgba(0, 80, 158, 0.6)';
+                    dot.style.transform        = 'translate(-50%, -50%) scale(1.6)';
+                });
+                el.addEventListener('mouseleave', function () {
+                    ring.style.width           = '32px';
+                    ring.style.height          = '32px';
+                    ring.style.background      = 'rgba(0, 80, 158, 0.04)';
+                    ring.style.borderColor     = 'rgba(0, 80, 158, 0.45)';
+                    dot.style.transform        = 'translate(-50%, -50%) scale(1)';
+                });
+            });
+        }());
+    </script>
+
+</body>
+</html>
