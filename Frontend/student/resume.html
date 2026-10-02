@@ -283,6 +283,43 @@
         }
 
         /* ════════════════════════════════════════════════════
+           PREMIUM FEATURES (Inspired by Naukri Pro)
+           ════════════════════════════════════════════════════ */
+        .premium-banner {
+            background: linear-gradient(135deg, #facc15 0%, #f59e0b 100%);
+            color: #78350f;
+            padding: 12px 20px;
+            border-radius: 16px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            box-shadow: var(--pp-clay-sm);
+        }
+        .premium-banner .badge-pro {
+            background: #78350f; color: #facc15; padding: 4px 10px; border-radius: 8px; font-size: 11px; margin-right: 10px;
+        }
+        /* Premium Resume Template overrides */
+        .resume-preview.premium-theme {
+            background: #f8fafc;
+            border-top: 12px solid var(--pp-primary);
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.1);
+        }
+        .resume-preview.premium-theme .resume-header-row {
+            border-bottom: none;
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            margin-bottom: 24px;
+        }
+        .resume-preview.premium-theme .resume-section-title {
+            color: var(--pp-primary);
+            border-bottom: 2px solid var(--pp-primary-soft);
+        }
+
+        /* ════════════════════════════════════════════════════
            PRINT STYLES
            ════════════════════════════════════════════════════ */
         @media print {
@@ -340,6 +377,22 @@
                 </button>
                 <button class="btn btn-success fw-bold rounded-pill" onclick="downloadPDF()">
                     <i class="fa fa-download me-2"></i>Download PDF
+                </button>
+            </div>
+        </div>
+
+        <!-- Premium Pro Banner (Inspired by Naukri) -->
+        <div class="premium-banner" id="noprint">
+            <div>
+                <span class="badge-pro"><i class="fa fa-crown me-1"></i>PlacementPro PREMIUM</span>
+                <span>Stand out to recruiters with Expert AI Writing & Visual Templates!</span>
+            </div>
+            <div class="d-flex gap-2">
+                <button class="btn btn-sm btn-light rounded-pill" onclick="togglePremiumTheme()" style="color:#78350f; font-weight:800;">
+                    <i class="fa fa-wand-magic-sparkles me-1"></i>Visual Template
+                </button>
+                <button class="btn btn-sm btn-dark rounded-pill" onclick="applyAIExpertWriting()">
+                    <i class="fa fa-robot me-1"></i>AI Expert Writer
                 </button>
             </div>
         </div>
@@ -949,6 +1002,44 @@ function computeATSScore() {
         matched.slice(0, 8).map(k => '<span class="ats-keyword-pill-good">✓ ' + k + '</span>').join('');
     document.getElementById('atsMissingPills').innerHTML =
         missing.slice(0, 6).map(k => '<span class="ats-keyword-pill-miss">✗ ' + k + '</span>').join('');
+}
+
+// ─────────────────────────────────────────────────────────
+//  Premium Features (Inspired by Naukri Pro)
+// ─────────────────────────────────────────────────────────
+function togglePremiumTheme() {
+    const preview = document.getElementById('resume-content');
+    preview.classList.toggle('premium-theme');
+    const isPremium = preview.classList.contains('premium-theme');
+    showToast(isPremium ? 'Premium Visual Template applied! Recruiters love this layout.' : 'Reverted to Classic ATS format.', 'success');
+}
+
+function applyAIExpertWriting() {
+    showToast('AI Expert is analyzing your profile...', 'info');
+    setTimeout(() => {
+        const summary = document.getElementById('r-summary');
+        if (summary.textContent && summary.textContent !== '—') {
+            let enhanced = summary.textContent;
+            // Basic text enhancement rules
+            enhanced = enhanced.replace(/I am a/gi, 'Results-driven');
+            enhanced = enhanced.replace(/Dedicated/gi, 'Highly motivated');
+            enhanced = enhanced.replace(/passionate about/gi, 'with a proven track record in');
+            if (!enhanced.includes('agile')) enhanced += ' Proven ability to deliver optimized solutions and drive technical excellence in agile environments.';
+            summary.textContent = enhanced;
+        }
+        
+        // Enhance project action verbs
+        const projects = document.getElementById('r-projects');
+        projects.innerHTML = projects.innerHTML
+            .replace(/Built/g, 'Architected and developed')
+            .replace(/Created/g, 'Spearheaded the creation of')
+            .replace(/Used/g, 'Leveraged')
+            .replace(/Made/g, 'Engineered')
+            .replace(/Developed/g, 'Designed and developed');
+            
+        showToast('AI Expert Writing applied! Your resume now uses high-impact action verbs.', 'success');
+        computeATSScore(); // Re-compute with new keywords
+    }, 1500);
 }
 </script>
 
