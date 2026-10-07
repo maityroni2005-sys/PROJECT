@@ -18,7 +18,7 @@ The Machine Learning (ML) architecture resides in the `ML/` folder. It functions
 ### 2. Model Training (`training/`)
 - The system employs Supervised Learning. Scripts like `train_role.py` and `train_company.py` feed the preprocessed data into **Scikit-Learn** estimators.
 - **Algorithm Used:** **Random Forest Classifier**. This is an ensemble learning method that constructs a multitude of decision trees during training and outputs the mode of the classes for classification tasks. It was chosen for its high accuracy, resistance to overfitting, and ability to handle non-linear relationships in student data.
-
+=
 ### 3. Model Serialization (`models/`)
 - Training a **Random Forest** model from scratch for every prediction request is computationally expensive. Therefore, after training, the optimal models are serialized (saved to disk) using the `pickle` module into `.pkl` files (e.g., `role_model.pkl`).
 - These serialized "brain" files allow the models to be loaded instantly into memory when the server starts.
