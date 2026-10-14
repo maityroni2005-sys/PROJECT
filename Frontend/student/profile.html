@@ -309,10 +309,6 @@
             display: none !important;
         }
 
-        body.edit-mode .view-value {
-            display: none;
-        }
-
         /* Form controls inside edit mode — scoped to profile content only */
         .profile-main-content .form-control,
         .profile-main-content .form-select {
@@ -345,6 +341,7 @@
             background: transparent !important;
             pointer-events: none;
             -webkit-appearance: none;
+            appearance: none;
         }
 
         /* Section header action */
@@ -385,16 +382,13 @@
             background: rgba(255, 255, 255, .35);
             transition: background 0.2s, border-color 0.2s, transform 0.2s var(--pp-ease);
             margin-top: 8px;
+            display: none;
         }
 
         .section-add-btn:hover {
             background: #e9e7ff;
             border-color: var(--pp-primary);
             transform: translateY(-1px);
-        }
-
-        .section-add-btn {
-            display: none;
         }
 
         body.edit-mode .section-add-btn {
@@ -805,12 +799,14 @@
                 <!-- Additional Academic Fields -->
                 <div class="row g-3">
                     <div class="col-md-4">
-                        <label class="form-label fw-bold small text-muted text-uppercase">Active Backlogs</label>
+                        <label class="form-label fw-bold small text-muted text-uppercase" for="backlogs">Active
+                            Backlogs</label>
                         <span class="view-value" id="view-backlogs"></span>
                         <input type="number" min="0" class="form-control" id="backlogs" placeholder="0">
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label fw-bold small text-muted text-uppercase">DSA Proficiency</label>
+                        <label class="form-label fw-bold small text-muted text-uppercase" for="dsa">DSA
+                            Proficiency</label>
                         <span class="view-value" id="view-dsa"></span>
                         <select class="form-select" id="dsa">
                             <option value="Beginner">Beginner</option>
@@ -819,7 +815,8 @@
                         </select>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label fw-bold small text-muted text-uppercase">Professional Summary</label>
+                        <label class="form-label fw-bold small text-muted text-uppercase" for="summary">Professional
+                            Summary</label>
                         <span class="view-value" id="view-summary" style="white-space:pre-wrap;"></span>
                         <textarea class="form-control" id="summary" rows="3"
                             placeholder="Brief professional bio for your resume..."></textarea>
