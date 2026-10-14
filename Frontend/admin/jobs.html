@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Job & Applicant Management — PlacementPro AI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* ═══ Admin Portal Specific Styles ═══ */
+        .admin-nav-bar {
+            background: linear-gradient(170deg, rgba(238, 240, 251, 0.95), rgba(231, 234, 248, 0.95));
+            border-bottom: 1px solid rgba(255, 255, 255, 0.85);
+            box-shadow: 0 10px 28px -16px rgba(60, 65, 130, 0.25);
+            position: sticky; top: 0; z-index: 1020;
+            backdrop-filter: blur(12px);
+            padding: 14px 24px;
+        }
+
+        .stat-card-admin {
+            background: linear-gradient(150deg, #f3f4fd 0%, var(--pp-surface) 48%, #e6e9f8 100%);
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            border-radius: var(--pp-radius);
+            box-shadow: var(--pp-clay);
+            padding: 20px 22px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: transform 0.22s var(--pp-ease), box-shadow 0.22s var(--pp-ease);
+        }
+        .stat-card-admin:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--pp-clay-hover);
+        }
+        .stat-admin-icon {
+            width: 52px; height: 52px;
+            border-radius: 16px;
+            display: inline-flex; align-items: center; justify-content: center;
+            font-size: 1.4rem;
+            box-shadow: var(--pp-clay-icon);
+        }
+
+        /* Filter Pills */
+        .filter-pill-btn {
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            background: linear-gradient(150deg, #f3f4fd 0%, var(--pp-surface) 55%, #e6e9f8 100%);
+            box-shadow: var(--pp-clay-sm);
+            color: var(--pp-text);
+            font-weight: 700;
+            font-size: 0.85rem;
+            border-radius: 50px;
+            padding: 8px 18px;
+            cursor: pointer;
+            transition: all 0.2s var(--pp-ease);
+        }
+        .filter-pill-btn.active, .filter-pill-btn:hover {
+            background: linear-gradient(135deg, var(--pp-primary), #6366f1);
+            color: #fff;
+            box-shadow: var(--pp-clay-cta);
+        }
+
+        /* Table Card */
+        .admin-table-card {
+            background: linear-gradient(150deg, #f6f7fe 0%, var(--pp-surface) 48%, #e6e9f8 100%);
+            border: 1px solid rgba(255, 255, 255, 0.95);
+            border-radius: var(--pp-radius-lg);
+            box-shadow: var(--pp-clay);
+            overflow: hidden;
+        }
+
+        .table-custom {
+            margin-bottom: 0;
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+        }
+        .table-custom th {
+            background: linear-gradient(135deg, #e5e4ff 0%, #eceefe 100%);
+            color: var(--pp-primary-dark);
+            font-weight: 700;
+            font-size: 0.78rem;
+            letter-spacing: 0.6px;
+            text-transform: uppercase;
+            padding: 14px 18px;
+            border: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+        }
+        .table-custom td {
+            padding: 16px 18px;
+            vertical-align: middle;
+            border-top: 1px solid rgba(255, 255, 255, 0.65);
+            font-size: 0.92rem;
+        }
+        .table-custom tbody tr {
+            transition: background-color 0.18s;
+        }
+        .table-custom tbody tr:hover {
+            background: rgba(255, 255, 255, 0.55);
+        }
+
+        /* Status Toggle Switch */
+        .form-switch .form-check-input {
+            width: 2.8em;
+            height: 1.45em;
+            cursor: pointer;
+            box-shadow: var(--pp-clay-inset);
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+        .form-switch .form-check-input:checked {
+            background-color: var(--pp-success);
+            border-color: var(--pp-success);
+        }
+
+        /* Slide-Over Drawer */
+        .drawer-overlay {
+            position: fixed; inset: 0;
+            background: rgba(20, 24, 58, 0.45);
+            backdrop-filter: blur(5px);
+            z-index: 1050;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s var(--pp-ease), visibility 0.3s;
+        }
+        .drawer-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        .slide-drawer {
+            position: fixed; top: 0; right: 0; bottom: 0;
+            width: 100%; max-width: 680px;
+            background: linear-gradient(160deg, #f8f9fe 0%, #edf0fc 100%);
+            box-shadow: -12px 0 40px rgba(25, 30, 75, 0.3);
+            border-left: 1px solid rgba(255, 255, 255, 0.85);
+            z-index: 1055;
+            transform: translateX(100%);
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex; flex-direction: column;
+        }
+        .slide-drawer.open {
+            transform: translateX(0);
+        }
+        .drawer-header {
+            padding: 22px 28px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+            background: linear-gradient(135deg, rgba(255,255,255,0.7), rgba(238,240,251,0.9));
+        }
+        .drawer-body {
+            padding: 24px 28px;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+        .drawer-footer {
+            padding: 16px 28px;
+            border-top: 1px solid rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Applicant Card in Drawer */
+        .applicant-row-card {
+            background: #fff;
+            border-radius: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: var(--pp-clay-sm);
+            padding: 18px;
+            margin-bottom: 14px;
+            transition: transform 0.2s var(--pp-ease), box-shadow 0.2s;
+            cursor: pointer;
+        }
+        .applicant-row-card:hover, .applicant-row-card.selected {
+            transform: translateY(-2px);
+            box-shadow: var(--pp-clay);
+            border-color: var(--pp-primary-soft);
+        }
+
+        /* Status Pills Selector */
+        .status-pill-opt {
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.18s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .status-pill-opt:hover { transform: scale(1.05); }
+
+        .st-applied     { background: #e0e7ff; color: #3730a3; }
+        .st-review      { background: #fef3c7; color: #92400e; }
+        .st-shortlisted { background: #dbeafe; color: #1e40af; }
+        .st-interview   { background: #ede9fe; color: #5b21b6; }
+        .st-selected    { background: #d1fae5; color: #065f46; }
+        .st-rejected    { background: #fee2e2; color: #991b1b; }
+
+        /* Tag input pills */
+        .tag-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #e5e4ff;
+            color: var(--pp-primary);
+            padding: 5px 12px;
+            border-radius: 50px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            margin: 3px;
+        }
+        .tag-pill i { cursor: pointer; opacity: 0.65; }
+        .tag-pill i:hover { opacity: 1; }
+
+        /* Steps Timeline in Details */
+        .timeline-steps {
+            display: flex;
+            position: relative;
+            margin: 18px 0;
+            overflow-x: auto;
+            padding-bottom: 8px;
+        }
+        .timeline-step-item {
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            position: relative;
+        }
+        .timeline-step-item:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 15px; left: 50%; width: 100%;
+            height: 3px;
+            background: #cbd5e1;
+            z-index: 1;
+        }
+        .timeline-step-circle {
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            background: #e2e8f0;
+            color: #475569;
+            display: inline-flex; align-items: center; justify-content: center;
+            font-size: 0.85rem; font-weight: 800;
+            position: relative; z-index: 2;
+            box-shadow: var(--pp-clay-sm);
+        }
+        .timeline-step-item.active .timeline-step-circle {
+            background: var(--pp-primary);
+            color: #fff;
+        }
+        .timeline-step-item.active::after {
+            background: var(--pp-primary);
+        }
+        .timeline-step-label {
+            font-size: 0.76rem;
+            font-weight: 700;
+            color: var(--pp-ink);
+            margin-top: 6px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Aurora Glow -->
+    <div class="pp-aurora-b" aria-hidden="true"></div>
+
+    <!-- Admin Navigation Bar -->
+    <header class="admin-nav-bar d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center gap-3">
+            <span class="badge bg-primary px-3 py-2 rounded-pill fw-bold" style="font-size:0.8rem; letter-spacing:0.8px;">
+                <i class="fa fa-shield-halved me-1"></i> ADMIN SUITE
+            </span>
+            <div>
+                <h5 class="fw-bold mb-0 text-primary">PlacementPro Admin</h5>
+                <small class="text-muted">Job Postings &amp; Candidate Pipeline Portal</small>
+            </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-3">
+            <a href="../student/jobs.html" class="btn btn-sm btn-outline-secondary rounded-pill px-3">
+                <i class="fa fa-eye me-1"></i> View Student Portal
+            </a>
+            <button class="btn btn-primary rounded-pill px-4" onclick="openJobModal()">
+                <i class="fa fa-plus-circle me-2"></i> Post New Job
+            </button>
+            <a href="../login.html" class="btn btn-sm btn-outline-danger rounded-pill px-3" onclick="handleLogout()">
+                <i class="fa fa-arrow-right-from-bracket me-1"></i> Logout
+            </a>
+        </div>
+    </header>
+
+    <main class="container-fluid px-lg-5 py-4">
+        <!-- Metric Overview Cards -->
+        <div class="row g-3 mb-4">
+            <div class="col-sm-6 col-lg-3">
+                <div class="stat-card-admin">
+                    <div>
+                        <span class="text-muted fw-bold small text-uppercase" style="letter-spacing:0.5px;">Total Jobs</span>
+                        <h2 class="fw-bold mb-0 text-primary mt-1" id="statTotalJobs">0</h2>
+                        <small class="text-muted">Registered corporate openings</small>
+                    </div>
+                    <div class="stat-admin-icon" style="background:#e5e4ff; color:var(--pp-primary);">
+                        <i class="fa fa-briefcase"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-lg-3">
+                <div class="stat-card-admin">
+                    <div>
+                        <span class="text-muted fw-bold small text-uppercase" style="letter-spacing:0.5px;">Active Listings</span>
+                        <h2 class="fw-bold mb-0 text-success mt-1" id="statActiveJobs">0</h2>
+                        <small class="text-muted">Accepting student applications</small>
+                    </div>
+                    <div class="stat-admin-icon" style="background:#d1fae5; color:var(--pp-success);">
+                        <i class="fa fa-circle-check"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-lg-3">
+                <div class="stat-card-admin">
+                    <div>
+                        <span class="text-muted fw-bold small text-uppercase" style="letter-spacing:0.5px;">Total Applications</span>
+                        <h2 class="fw-bold mb-0 text-info mt-1" id="statTotalApplicants">0</h2>
+                        <small class="text-muted">Processed through ML matching</small>
+                    </div>
+                    <div class="stat-admin-icon" style="background:#cffafe; color:var(--pp-info);">
+                        <i class="fa fa-users"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 col-lg-3">
+                <div class="stat-card-admin">
+                    <div>
+                        <span class="text-muted fw-bold small text-uppercase" style="letter-spacing:0.5px;">Shortlisted / Offers</span>
+                        <h2 class="fw-bold mb-0 text-warning mt-1" id="statShortlisted">0</h2>
+                        <small class="text-muted">Qualified for next interview rounds</small>
+                    </div>
+                    <div class="stat-admin-icon" style="background:#fef3c7; color:var(--pp-warning);">
+                        <i class="fa fa-award"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter & Search Toolbar -->
+        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-3">
+            <div class="d-flex align-items-center gap-2 flex-wrap" id="statusFilterPills">
+                <button class="filter-pill-btn active" data-status="All">All Jobs (<span id="countFilterAll">0</span>)</button>
+                <button class="filter-pill-btn" data-status="Active">Active (<span id="countFilterActive">0</span>)</button>
+                <button class="filter-pill-btn" data-status="Draft">Draft (<span id="countFilterDraft">0</span>)</button>
+                <button class="filter-pill-btn" data-status="Closed">Closed (<span id="countFilterClosed">0</span>)</button>
+            </div>
+
+            <div class="d-flex align-items-center gap-2" style="min-width: 320px;">
+                <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0 rounded-start-pill ps-3 text-muted">
+                        <i class="fa fa-magnifying-glass"></i>
+                    </span>
+                    <input type="text" class="form-control border-start-0 rounded-end-pill py-2" id="jobSearchInput" placeholder="Search by title, company, skills...">
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive Jobs Table Card -->
+        <div class="admin-table-card">
+            <div class="table-responsive">
+                <table class="table-custom" id="jobsTable">
+                    <thead>
+                        <tr>
+                            <th style="min-width: 250px;">Job &amp; Company</th>
+                            <th style="min-width: 150px;">Role &amp; Category</th>
+                            <th style="min-width: 140px;">Work Mode</th>
+                            <th style="min-width: 140px;">CTC / Stipend</th>
+                            <th style="min-width: 150px;">Deadline</th>
+                            <th style="min-width: 130px;" class="text-center">Live Status</th>
+                            <th style="min-width: 130px;" class="text-center">Applicants</th>
+                            <th style="min-width: 160px;" class="text-end pe-4">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="jobsTableBody">
+                        <!-- Populated by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="tableEmptyState" class="text-center py-5 d-none">
+                <div style="font-size: 3rem; color: #a5b4fc; margin-bottom: 12px;">
+                    <i class="fa fa-folder-open"></i>
+                </div>
+                <h5 class="fw-bold text-muted">No Job Postings Found</h5>
+                <p class="text-muted small mb-3">Post a new job opportunity or modify your search filters.</p>
+                <button class="btn btn-sm btn-primary rounded-pill px-4" onclick="openJobModal()">
+                    <i class="fa fa-plus me-1"></i> Post First Job
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- ═════════════════════════════════════════════════════════ -->
+    <!--  SLIDE-OVER APPLICANT PIPELINE DRAWER                     -->
+    <!-- ═════════════════════════════════════════════════════════ -->
+    <div class="drawer-overlay" id="drawerOverlay" onclick="closeDrawer()"></div>
+    <div class="slide-drawer" id="applicantDrawer">
+        <div class="drawer-header d-flex justify-content-between align-items-center">
+            <div>
+                <span class="badge bg-primary rounded-pill px-3 py-1 mb-1" id="drawerBadge">APPLICANT PIPELINE</span>
+                <h5 class="fw-bold mb-0 text-ink" id="drawerJobTitle">—</h5>
+                <small class="text-muted" id="drawerCompany">—</small>
+            </div>
+            <button class="btn btn-sm btn-outline-secondary rounded-circle" style="width:36px; height:36px;" onclick="closeDrawer()" title="Close Drawer">
+                <i class="fa fa-xmark"></i>
+            </button>
+        </div>
+
+        <div class="drawer-body">
+            <!-- Filter & Sort Bar inside Drawer -->
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                <div class="small fw-bold text-muted">
+                    Total Applicants: <span class="text-primary" id="drawerTotalCount">0</span>
+                </div>
+                <div class="d-flex gap-2">
+                    <select class="form-select form-select-sm rounded-pill" id="applicantSortSelect" onchange="filterAndRenderApplicants()">
+                        <option value="match_desc">Highest Match % First</option>
+                        <option value="cgpa_desc">Highest CGPA First</option>
+                        <option value="date_desc">Newest First</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- List of Applicants -->
+            <div id="applicantListContainer">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+
+        <div class="drawer-footer d-flex justify-content-between align-items-center">
+            <span class="text-muted small"><i class="fa fa-wand-magic-sparkles text-primary me-1"></i> ML match scores calculated in real-time</span>
+            <button class="btn btn-sm btn-outline-secondary rounded-pill px-4" onclick="closeDrawer()">Done</button>
+        </div>
+    </div>
+
+    <!-- ═════════════════════════════════════════════════════════ -->
+    <!--  APPLICANT FULL PROFILE MODAL (PREVIEW / CV VIEW)          -->
+    <!-- ═════════════════════════════════════════════════════════ -->
+    <div class="modal fade" id="applicantProfileModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content rounded-4 border-0 shadow-lg">
+                <div class="modal-header border-0 bg-primary text-white p-4 rounded-top-4">
+                    <div class="d-flex align-items-center gap-3">
+                        <div id="modalAvatarRing" style="width:60px; height:60px; border-radius:50%; background:#fff; color:var(--pp-primary); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.5rem; box-shadow:var(--pp-clay);">
+                            JD
+                        </div>
+                        <div>
+                            <h4 class="fw-bold mb-0" id="modalCandidateName">—</h4>
+                            <p class="mb-0 text-white-50" id="modalCandidateMeta">—</p>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body p-4 bg-light">
+                    <!-- ML Score & Status Quick Bar -->
+                    <div class="card p-3 border-0 rounded-4 shadow-sm mb-3">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                            <div class="d-flex align-items-center gap-3">
+                                <div id="modalMatchRing"></div>
+                                <div>
+                                    <h6 class="fw-bold mb-1">AI Profile Suitability Match</h6>
+                                    <p class="text-muted small mb-0">Calculated across skill overlap, academic cutoffs, and project alignment.</p>
+                                </div>
+                            </div>
+                            <div>
+                                <span class="small fw-bold text-muted d-block mb-1">Current Status</span>
+                                <div id="modalStatusPillBadge"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Skills Breakdown -->
+                    <div class="card p-3 border-0 rounded-4 shadow-sm mb-3">
+                        <h6 class="fw-bold text-primary mb-2"><i class="fa fa-code me-2"></i>Skill Compatibility Breakdown</h6>
+                        <div class="mb-2">
+                            <span class="small fw-bold text-success me-2"><i class="fa fa-circle-check"></i> Matched Skills:</span>
+                            <div id="modalMatchedSkills" class="d-inline-flex flex-wrap gap-1 mt-1"></div>
+                        </div>
+                        <div>
+                            <span class="small fw-bold text-danger me-2"><i class="fa fa-triangle-exclamation"></i> Missing Skills:</span>
+                            <div id="modalMissingSkills" class="d-inline-flex flex-wrap gap-1 mt-1"></div>
+                        </div>
+                    </div>
+
+                    <!-- Academic Snapshot -->
+                    <div class="card p-3 border-0 rounded-4 shadow-sm mb-3">
+                        <h6 class="fw-bold text-primary mb-2"><i class="fa fa-graduation-cap me-2"></i>Academic Profile Snapshot</h6>
+                        <div class="row g-2 text-center">
+                            <div class="col-4">
+                                <div class="p-2 rounded-3 bg-white border">
+                                    <small class="text-muted d-block">Graduation CGPA</small>
+                                    <strong class="fs-5 text-primary" id="modalCGPA">—</strong>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="p-2 rounded-3 bg-white border">
+                                    <small class="text-muted d-block">Active Backlogs</small>
+                                    <strong class="fs-5 text-danger" id="modalBacklogs">0</strong>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="p-2 rounded-3 bg-white border">
+                                    <small class="text-muted d-block">Graduation Year</small>
+                                    <strong class="fs-5 text-dark" id="modalGradYear">—</strong>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-2 mt-2">
+                            <div class="col-md-6">
+                                <small class="text-muted d-block">Class 10 (Secondary):</small>
+                                <span class="fw-bold small" id="modalClass10">—</span>
+                            </div>
+                            <div class="col-md-6">
+                                <small class="text-muted d-block">Class 12 (Higher Secondary):</small>
+                                <span class="fw-bold small" id="modalClass12">—</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submitted CV / Resume Section -->
+                    <div class="card p-3 border-0 rounded-4 shadow-sm mb-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="fw-bold mb-1"><i class="fa fa-file-pdf text-danger me-2"></i>Attached Resume</h6>
+                                <small class="text-muted" id="modalResumeName">Candidate_Resume.pdf</small>
+                            </div>
+                            <button class="btn btn-sm btn-outline-primary rounded-pill px-3" onclick="viewApplicantResume()">
+                                <i class="fa fa-download me-1"></i> Download / Preview CV
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer border-0 p-3 bg-white justify-content-between">
+                    <div>
+                        <span class="small fw-bold text-muted me-2">Update Candidate Stage:</span>
+                        <div class="btn-group btn-group-sm" id="modalStatusBtnGroup">
+                            <!-- Populated with status pills -->
+                        </div>
+                    </div>
+                    <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═════════════════════════════════════════════════════════ -->
+    <!--  CREATE / EDIT JOB MODAL                                  -->
+    <!-- ═════════════════════════════════════════════════════════ -->
+    <div class="modal fade" id="jobFormModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content rounded-4 border-0 shadow-lg">
+                <div class="modal-header border-0 bg-primary text-white p-4 rounded-top-4">
+                    <div>
+                        <h4 class="fw-bold mb-0" id="jobModalTitle"><i class="fa fa-briefcase me-2"></i>Post New Job Opportunity</h4>
+                        <small class="text-white-50">Fill in comprehensive job details for registered companies</small>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body p-4">
+                    <form id="jobForm" onsubmit="handleSaveJob(event)">
+                        <input type="hidden" id="formJobId">
+
+                        <!-- SECTION 1: Core Job Info -->
+                        <div class="mb-4">
+                            <h6 class="fw-bold text-primary mb-3"><i class="fa fa-info-circle me-1"></i> 1. Core Job Information</h6>
+                            <div class="row g-3">
+                                <div class="col-md-7">
+                                    <label class="form-label small fw-bold" for="f_title">Job Title *</label>
+                                    <input type="text" class="form-control" id="f_title" placeholder="e.g. Software Development Engineer - 1" required>
+                                </div>
+                                <div class="col-md-5">
+                                    <label class="form-label small fw-bold" for="f_companyName">Company Name *</label>
+                                    <input type="text" class="form-control" id="f_companyName" placeholder="e.g. Google / Microsoft / TCS" required>
+                                </div>
+                                <div class="col-md-8">
+                                    <label class="form-label small fw-bold" for="f_companyLogo">Company Logo URL (optional)</label>
+                                    <input type="url" class="form-control" id="f_companyLogo" placeholder="https://example.com/logo.svg (falls back to initials)">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label small fw-bold" for="f_category">Category</label>
+                                    <select class="form-select" id="f_category">
+                                        <option value="Product-Based">Product-Based</option>
+                                        <option value="Service-Based">Service-Based</option>
+                                        <option value="Startups">Startups</option>
+                                        <option value="FinTech">FinTech</option>
+                                        <option value="Consulting">Consulting</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold" for="f_technicalRole">Technical Role *</label>
+                                    <input type="text" class="form-control" id="f_technicalRole" placeholder="e.g. Backend Developer, ML Engineer" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold" for="f_employmentType">Employment Type</label>
+                                    <select class="form-select" id="f_employmentType">
+                                        <option value="Full-time">Full-time</option>
+                                        <option value="Internship">Internship</option>
+                                        <option value="Intern to Full-time">Intern to Full-time (PPO)</option>
+                                        <option value="Contract">Contract</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SECTION 2: Compensation & Location -->
+                        <div class="mb-4">
+                            <h6 class="fw-bold text-primary mb-3"><i class="fa fa-indian-rupee-sign me-1"></i> 2. Compensation &amp; Location</h6>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label class="form-label small fw-bold" for="f_salary">Salary Package (CTC / Stipend)</label>
+                                    <input type="text" class="form-control" id="f_salary" placeholder="e.g. ₹8.5 - 12 LPA or ₹45,000/mo">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label small fw-bold" for="f_workMode">Work Mode</label>
+                                    <select class="form-select" id="f_workMode">
+                                        <option value="Hybrid">Hybrid</option>
+                                        <option value="On-site">On-site</option>
+                                        <option value="Remote">Remote</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label small fw-bold" for="f_vacancies">Number of Vacancies</label>
+                                    <input type="number" class="form-control" id="f_vacancies" min="1" placeholder="10">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold" for="f_location">Job Location</label>
+                                    <input type="text" class="form-control" id="f_location" placeholder="e.g. Bangalore / Kolkata / Remote">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold" for="f_deadline">Application Deadline *</label>
+                                    <input type="date" class="form-control" id="f_deadline" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SECTION 3: Technical Skills -->
+                        <div class="mb-4">
+                            <h6 class="fw-bold text-primary mb-3"><i class="fa fa-code me-1"></i> 3. Required &amp; Preferred Technical Skills</h6>
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label small fw-bold" for="f_skills">Required Skills (Comma-separated)</label>
+                                    <input type="text" class="form-control" id="f_skills" placeholder="e.g. Java, Python, React, SQL, Data Structures">
+                                    <small class="text-muted">Separate skills with commas. These are matched directly with student profiles.</small>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label small fw-bold" for="f_prefSkills">Preferred / Bonus Skills</label>
+                                    <input type="text" class="form-control" id="f_prefSkills" placeholder="e.g. Docker, Kubernetes, AWS, Spring Boot">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SECTION 4: Eligibility Criteria -->
+                        <div class="mb-4">
+                            <h6 class="fw-bold text-primary mb-3"><i class="fa fa-graduation-cap me-1"></i> 4. Student Eligibility Criteria</h6>
+                            <div class="row g-3">
+                                <div class="col-md-4">
+                                    <label class="form-label small fw-bold" for="f_minCGPA">Minimum CGPA</label>
+                                    <input type="number" step="0.1" min="0" max="10" class="form-control" id="f_minCGPA" placeholder="6.5">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label small fw-bold" for="f_maxBacklogs">Max Allowed Backlogs</label>
+                                    <input type="number" min="0" class="form-control" id="f_maxBacklogs" placeholder="0">
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label small fw-bold" for="f_experience">Experience Level</label>
+                                    <select class="form-select" id="f_experience">
+                                        <option value="Fresher">Fresher</option>
+                                        <option value="0-1 Years">0-1 Years</option>
+                                        <option value="1-2 Years">1-2 Years</option>
+                                        <option value="2+ Years">2+ Years</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold" for="f_branches">Eligible Branches (Comma-separated or leave blank for all)</label>
+                                    <input type="text" class="form-control" id="f_branches" placeholder="e.g. CS, IT, ECE, EE">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label small fw-bold" for="f_batches">Eligible Graduation Batches</label>
+                                    <input type="text" class="form-control" id="f_batches" placeholder="e.g. 2025, 2026, 2027">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SECTION 5: Description & Selection Roadmap -->
+                        <div class="mb-3">
+                            <h6 class="fw-bold text-primary mb-3"><i class="fa fa-list-check me-1"></i> 5. Job Description &amp; Selection Process</h6>
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label small fw-bold" for="f_description">Job Description</label>
+                                    <textarea class="form-control" id="f_description" rows="3" placeholder="Overview of the company, role, and what the candidate will be doing..."></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label small fw-bold" for="f_responsibilities">Key Responsibilities (one per line)</label>
+                                    <textarea class="form-control" id="f_responsibilities" rows="3" placeholder="• Design and maintain microservices&#10;• Collaborate with product teams&#10;• Write unit and integration tests"></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label small fw-bold" for="f_selectionProcess">Selection Process Rounds (one per line or comma-separated)</label>
+                                    <input type="text" class="form-control" id="f_selectionProcess" placeholder="e.g. Online Assessment, Technical Interview 1, HR Discussion">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label small fw-bold" for="f_status">Publishing Status</label>
+                                    <select class="form-select" id="f_status">
+                                        <option value="Active">Active (Published to students)</option>
+                                        <option value="Draft">Draft (Hidden from students)</option>
+                                        <option value="Closed">Closed</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2 pt-3 border-top">
+                            <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary rounded-pill px-5" id="saveJobSubmitBtn">
+                                <i class="fa fa-floppy-disk me-2"></i> Save &amp; Publish Job
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications Container -->
+    <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1100;">
+        <div id="liveToast" class="toast align-items-center text-white border-0 rounded-4 shadow-lg" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body fw-bold" id="toastMessage">
+                    Action executed successfully!
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/student-profile.js"></script>
+    <script src="../js/job-store.js"></script>
+    <script>
+        // State variables
+        let currentJobs = [];
+        let activeFilter = 'All';
+        let currentSearchQuery = '';
+        let currentDrawerJob = null;
+        let currentDrawerApplicants = [];
+        let selectedApplicant = null;
+        let jobModalInstance = null;
+        let applicantModalInstance = null;
+
+        // Initialize Page
+        document.addEventListener('DOMContentLoaded', async () => {
+            jobModalInstance = new bootstrap.Modal(document.getElementById('jobFormModal'));
+            applicantModalInstance = new bootstrap.Modal(document.getElementById('applicantProfileModal'));
+
+            // Set default deadline in form to +14 days
+            const d = new Date();
+            d.setDate(d.getDate() + 14);
+            document.getElementById('f_deadline').value = d.toISOString().split('T')[0];
+
+            // Wire search input
+            const searchInput = document.getElementById('jobSearchInput');
+            searchInput.addEventListener('input', (e) => {
+                currentSearchQuery = e.target.value.trim().toLowerCase();
+                renderJobsTable();
+            });
+
+            // Wire filter buttons
+            document.querySelectorAll('#statusFilterPills .filter-pill-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('#statusFilterPills .filter-pill-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    activeFilter = btn.dataset.status;
+                    renderJobsTable();
+                });
+            });
+
+            await loadAdminData();
+        });
+
+        // Load Jobs & Stats
+        async function loadAdminData() {
+            try {
+                currentJobs = await JobStore.getAllJobs();
+                updateOverviewStats();
+                renderJobsTable();
+            } catch (err) {
+                console.error('[Admin] Load data error:', err);
+            }
+        }
+
+        // Calculate Overview Metrics
+        function updateOverviewStats() {
+            const total = currentJobs.length;
+            const active = currentJobs.filter(j => j.status === 'Active').length;
+            const draft = currentJobs.filter(j => j.status === 'Draft').length;
+            const closed = currentJobs.filter(j => j.status === 'Closed').length;
+
+            document.getElementById('statTotalJobs').textContent = total;
+            document.getElementById('statActiveJobs').textContent = active;
+
+            // Counts in filter pills
+            document.getElementById('countFilterAll').textContent = total;
+            document.getElementById('countFilterActive').textContent = active;
+            document.getElementById('countFilterDraft').textContent = draft;
+            document.getElementById('countFilterClosed').textContent = closed;
+
+            // Total Applicants across all jobs
+            const totalApplicants = currentJobs.reduce((acc, j) => acc + (j.applicantCount || 0), 0);
+            document.getElementById('statTotalApplicants').textContent = totalApplicants;
+
+            // Count shortlisted
+            let shortlistedCount = 0;
+            try {
+                const allApps = JSON.parse(localStorage.getItem('placementpro_applications') || '[]');
+                shortlistedCount = allApps.filter(a => a.status === 'Shortlisted' || a.status === 'Selected').length;
+            } catch (e) {}
+            document.getElementById('statShortlisted').textContent = shortlistedCount;
+        }
+
+        // Render Table Rows
+        function renderJobsTable() {
+            const tbody = document.getElementById('jobsTableBody');
+            const emptyState = document.getElementById('tableEmptyState');
+            tbody.innerHTML = '';
+
+            let filtered = currentJobs.filter(job => {
+                if (activeFilter !== 'All' && job.status !== activeFilter) return false;
+                if (currentSearchQuery) {
+                    const q = currentSearchQuery;
+                    const matchTitle = (job.title || '').toLowerCase().includes(q);
+                    const matchCompany = (job.companyName || '').toLowerCase().includes(q);
+                    const matchLocation = (job.location || '').toLowerCase().includes(q);
+                    const matchSkills = (job.requiredSkills || []).some(s => s.toLowerCase().includes(q));
+                    if (!matchTitle && !matchCompany && !matchLocation && !matchSkills) return false;
+                }
+                return true;
+            });
+
+            if (filtered.length === 0) {
+                emptyState.classList.remove('d-none');
+                return;
+            } else {
+                emptyState.classList.add('d-none');
+            }
+
+            filtered.forEach(job => {
+                const tr = document.createElement('tr');
+
+                // Deadline calculation
+                const deadline = new Date(job.deadline);
+                const daysLeft = Math.ceil((deadline - new Date()) / (1000 * 60 * 60 * 24));
+                let deadlineBadge = '';
+                if (daysLeft < 0) {
+                    deadlineBadge = `<span class="badge bg-secondary">Expired</span>`;
+                } else if (daysLeft <= 2) {
+                    deadlineBadge = `<span class="badge bg-danger">⚡ Closes in ${daysLeft}d</span>`;
+                } else {
+                    deadlineBadge = `<span class="badge bg-light text-dark border">⏳ ${daysLeft} days left</span>`;
+                }
+
+                // Work mode badge
+                let modeColor = 'bg-primary';
+                if (job.workMode === 'Remote') modeColor = 'bg-success';
+                else if (job.workMode === 'On-site') modeColor = 'bg-secondary';
+
+                const applicantCount = job.applicantCount || 0;
+
+                tr.innerHTML = `
+                    <td>
+                        <div class="d-flex align-items-center gap-3">
+                            ${JobStore.getCompanyLogoHTML(job.companyName, job.companyLogo, 42)}
+                            <div>
+                                <h6 class="fw-bold mb-0 text-ink">${escapeHtml(job.title)}</h6>
+                                <small class="text-muted">${escapeHtml(job.companyName)}</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="fw-bold small text-dark d-block">${escapeHtml(job.technicalRole)}</span>
+                        <span class="badge bg-light text-muted border">${escapeHtml(job.category)}</span>
+                    </td>
+                    <td>
+                        <span class="badge ${modeColor} text-white mb-1">${job.workMode}</span>
+                        <small class="text-muted d-block" style="font-size:0.75rem;"><i class="fa fa-location-dot me-1"></i>${escapeHtml(job.location)}</small>
+                    </td>
+                    <td>
+                        <span class="fw-bold text-success">${escapeHtml(job.salary || 'Competitive')}</span>
+                        <small class="text-muted d-block" style="font-size:0.75rem;">${job.vacancies || 1} vacancies</small>
+                    </td>
+                    <td>
+                        ${deadlineBadge}
+                        <small class="text-muted d-block mt-1" style="font-size:0.75rem;">${deadline.toLocaleDateString()}</small>
+                    </td>
+                    <td class="text-center">
+                        <div class="form-check form-switch d-inline-block">
+                            <input class="form-check-input" type="checkbox" role="switch" ${job.status === 'Active' ? 'checked' : ''} onchange="toggleJobPublish('${job._id}', this.checked)">
+                        </div>
+                        <small class="d-block text-muted" style="font-size:0.75rem;">${job.status}</small>
+                    </td>
+                    <td class="text-center">
+                        <button class="btn btn-sm btn-outline-primary rounded-pill px-3 fw-bold" onclick="openApplicantDrawer('${job._id}')" title="View candidates for this job">
+                            <i class="fa fa-users me-1"></i> ${applicantCount}
+                        </button>
+                    </td>
+                    <td class="text-end pe-3">
+                        <div class="btn-group btn-group-sm">
+                            <button class="btn btn-outline-secondary rounded-pill me-1" onclick="openEditJobModal('${job._id}')" title="Edit Job Details">
+                                <i class="fa fa-pen"></i>
+                            </button>
+                            <button class="btn btn-outline-danger rounded-pill" onclick="deleteJobConfirm('${job._id}')" title="Delete Job">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Live Toggle Publish / Unpublish
+        async function toggleJobPublish(jobId, isChecked) {
+            const newStatus = isChecked ? 'Active' : 'Draft';
+            await JobStore.toggleJobStatus(jobId, newStatus);
+            // Update in local cache
+            const j = currentJobs.find(item => item._id === jobId);
+            if (j) j.status = newStatus;
+            updateOverviewStats();
+            renderJobsTable();
+            showToast(`Job status updated to ${newStatus}!`, 'success');
+        }
+
+        // Delete Job
+        async function deleteJobConfirm(jobId) {
+            const job = currentJobs.find(j => j._id === jobId);
+            if (!job) return;
+
+            if (confirm(`Are you sure you want to delete "${job.title}" at ${job.companyName}? This will also delete any related applications.`)) {
+                await JobStore.deleteJob(jobId);
+                currentJobs = currentJobs.filter(j => j._id !== jobId);
+                updateOverviewStats();
+                renderJobsTable();
+                showToast(`Job "${job.title}" deleted.`, 'info');
+            }
+        }
+
+        // Open Job Modal for Creation
+        function openJobModal() {
+            document.getElementById('jobForm').reset();
+            document.getElementById('formJobId').value = '';
+            document.getElementById('jobModalTitle').innerHTML = '<i class="fa fa-briefcase me-2"></i>Post New Job Opportunity';
+            document.getElementById('saveJobSubmitBtn').innerHTML = '<i class="fa fa-floppy-disk me-2"></i> Save &amp; Publish Job';
+
+            const d = new Date();
+            d.setDate(d.getDate() + 14);
+            document.getElementById('f_deadline').value = d.toISOString().split('T')[0];
+            document.getElementById('f_minCGPA').value = '6.5';
+            document.getElementById('f_maxBacklogs').value = '0';
+            document.getElementById('f_vacancies').value = '5';
+            document.getElementById('f_salary').value = '₹7.5 - 12 LPA';
+
+            jobModalInstance.show();
+        }
+
+        // Open Job Modal for Edit
+        function openEditJobModal(jobId) {
+            const job = currentJobs.find(j => String(j._id) === String(jobId));
+            if (!job) return;
+
+            document.getElementById('formJobId').value = job._id;
+            document.getElementById('jobModalTitle').innerHTML = '<i class="fa fa-pen me-2"></i>Edit Job Opportunity';
+            document.getElementById('saveJobSubmitBtn').innerHTML = '<i class="fa fa-floppy-disk me-2"></i> Update Job';
+
+            document.getElementById('f_title').value = job.title || '';
+            document.getElementById('f_companyName').value = job.companyName || '';
+            document.getElementById('f_companyLogo').value = job.companyLogo || '';
+            document.getElementById('f_category').value = job.category || 'Product-Based';
+            document.getElementById('f_technicalRole').value = job.technicalRole || '';
+            document.getElementById('f_employmentType').value = job.employmentType || 'Full-time';
+            document.getElementById('f_salary').value = job.salary || '';
+            document.getElementById('f_workMode').value = job.workMode || 'Hybrid';
+            document.getElementById('f_vacancies').value = job.vacancies || 5;
+            document.getElementById('f_location').value = job.location || '';
+            document.getElementById('f_deadline').value = job.deadline ? job.deadline.split('T')[0] : '';
+            document.getElementById('f_skills').value = (job.requiredSkills || []).join(', ');
+            document.getElementById('f_prefSkills').value = (job.preferredSkills || []).join(', ');
+            document.getElementById('f_minCGPA').value = job.eligibility?.minimumCGPA ?? 6.0;
+            document.getElementById('f_maxBacklogs').value = job.eligibility?.maximumBacklogs ?? 0;
+            document.getElementById('f_experience').value = job.eligibility?.experienceLevel || 'Fresher';
+            document.getElementById('f_branches').value = (job.eligibility?.eligibleBranches || []).join(', ');
+            document.getElementById('f_batches').value = (job.eligibility?.eligibleBatches || []).join(', ');
+            document.getElementById('f_description').value = job.description || '';
+            document.getElementById('f_responsibilities').value = (job.responsibilities || []).join('\n');
+            document.getElementById('f_selectionProcess').value = (job.selectionProcess || []).join(', ');
+            document.getElementById('f_status').value = job.status || 'Active';
+
+            jobModalInstance.show();
+        }
+
+        // Save Job Submission
+        async function handleSaveJob(e) {
+            e.preventDefault();
+            const submitBtn = document.getElementById('saveJobSubmitBtn');
+            submitBtn.disabled = true;
+
+            const existingId = document.getElementById('formJobId').value;
+            const requiredSkills = document.getElementById('f_skills').value.split(',').map(s => s.trim()).filter(Boolean);
+            const preferredSkills = document.getElementById('f_prefSkills').value.split(',').map(s => s.trim()).filter(Boolean);
+            const eligibleBranches = document.getElementById('f_branches').value.split(',').map(s => s.trim()).filter(Boolean);
+            const eligibleBatches = document.getElementById('f_batches').value.split(',').map(s => parseInt(s.trim())).filter(n => !isNaN(n));
+            const responsibilities = document.getElementById('f_responsibilities').value.split('\n').map(s => s.trim()).filter(Boolean);
+            const selectionProcess = document.getElementById('f_selectionProcess').value.split(',').map(s => s.trim()).filter(Boolean);
+
+            const jobData = {
+                title: document.getElementById('f_title').value.trim(),
+                companyName: document.getElementById('f_companyName').value.trim(),
+                companyLogo: document.getElementById('f_companyLogo').value.trim(),
+                category: document.getElementById('f_category').value,
+                technicalRole: document.getElementById('f_technicalRole').value.trim(),
+                employmentType: document.getElementById('f_employmentType').value,
+                salary: document.getElementById('f_salary').value.trim(),
+                workMode: document.getElementById('f_workMode').value,
+                vacancies: parseInt(document.getElementById('f_vacancies').value) || 5,
+                location: document.getElementById('f_location').value.trim(),
+                deadline: new Date(document.getElementById('f_deadline').value).toISOString(),
+                requiredSkills,
+                preferredSkills,
+                eligibility: {
+                    requiredDegree: 'B.Tech / B.E. / MCA',
+                    minimumCGPA: parseFloat(document.getElementById('f_minCGPA').value) || 6.0,
+                    maximumBacklogs: parseInt(document.getElementById('f_maxBacklogs').value) || 0,
+                    experienceLevel: document.getElementById('f_experience').value,
+                    eligibleBranches,
+                    eligibleBatches
+                },
+                description: document.getElementById('f_description').value.trim(),
+                responsibilities,
+                selectionProcess: selectionProcess.length ? selectionProcess : ['Online Assessment', 'Technical Round', 'HR Discussion'],
+                status: document.getElementById('f_status').value
+            };
+
+            try {
+                if (existingId) {
+                    await JobStore.updateJob(existingId, jobData);
+                    showToast('Job updated successfully! ✨', 'success');
+                } else {
+                    await JobStore.createJob(jobData);
+                    showToast('New job posted successfully! 🚀', 'success');
+                }
+                jobModalInstance.hide();
+                await loadAdminData();
+            } catch (err) {
+                console.error(err);
+                showToast('Failed to save job.', 'danger');
+            } finally {
+                submitBtn.disabled = false;
+            }
+        }
+
+        // ═════════════════════════════════════════════════════════
+        //  APPLICANT DRAWER LOGIC
+        // ═════════════════════════════════════════════════════════
+        async function openApplicantDrawer(jobId) {
+            currentDrawerJob = currentJobs.find(j => String(j._id) === String(jobId));
+            if (!currentDrawerJob) return;
+
+            document.getElementById('drawerJobTitle').textContent = currentDrawerJob.title;
+            document.getElementById('drawerCompany').textContent = `${currentDrawerJob.companyName} · ${currentDrawerJob.location}`;
+
+            // Fetch applicants for this job
+            currentDrawerApplicants = await JobStore.getApplicationsForJob(jobId);
+            document.getElementById('drawerTotalCount').textContent = currentDrawerApplicants.length;
+
+            filterAndRenderApplicants();
+
+            document.getElementById('drawerOverlay').classList.add('open');
+            document.getElementById('applicantDrawer').classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeDrawer() {
+            document.getElementById('drawerOverlay').classList.remove('open');
+            document.getElementById('applicantDrawer').classList.remove('open');
+            document.body.style.overflow = '';
+        }
+
+        function filterAndRenderApplicants() {
+            const container = document.getElementById('applicantListContainer');
+            container.innerHTML = '';
+
+            const sortVal = document.getElementById('applicantSortSelect').value;
+            let list = [...currentDrawerApplicants];
+
+            if (sortVal === 'match_desc') {
+                list.sort((a, b) => (b.mlMatchScore || 0) - (a.mlMatchScore || 0));
+            } else if (sortVal === 'cgpa_desc') {
+                list.sort((a, b) => (b.studentCGPA || 0) - (a.studentCGPA || 0));
+            } else if (sortVal === 'date_desc') {
+                list.sort((a, b) => new Date(b.appliedAt) - new Date(a.appliedAt));
+            }
+
+            if (list.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-5">
+                        <div style="font-size:2.8rem; color:#cbd5e1; margin-bottom:10px;"><i class="fa fa-user-clock"></i></div>
+                        <h6 class="fw-bold text-muted">No Applications Received Yet</h6>
+                        <p class="text-muted small">Applications submitted by students will appear here, ranked automatically by their ML match score.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            list.forEach(app => {
+                const card = document.createElement('div');
+                card.className = 'applicant-row-card';
+
+                const initials = (app.studentName || 'Student').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+                const score = app.mlMatchScore || 75;
+
+                // Status pill
+                const statusClass = getStatusClass(app.status);
+
+                card.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                        <div class="d-flex align-items-center gap-3">
+                            <div style="width:48px; height:48px; border-radius:14px; background:linear-gradient(135deg, #e5e4ff, #ecebff); color:var(--pp-primary); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem; box-shadow:var(--pp-clay-sm);">
+                                ${initials}
+                            </div>
+                            <div>
+                                <h6 class="fw-bold mb-0 text-ink">${escapeHtml(app.studentName)}</h6>
+                                <small class="text-muted">${escapeHtml(app.studentBranch)} · CGPA: <strong>${app.studentCGPA || '—'}</strong> · ${app.studentEmail}</small>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center gap-3">
+                            ${JobStore.renderMatchRingSVG(score, 54, 5)}
+                            <div class="text-end">
+                                <span class="status-pill-opt ${statusClass}">${app.status}</span>
+                                <small class="text-muted d-block mt-1" style="font-size:0.75rem;">${new Date(app.appliedAt).toLocaleDateString()}</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Status Change Bar -->
+                    <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
+                        <small class="text-muted">Change Stage:</small>
+                        <div class="d-flex gap-1 flex-wrap">
+                            <span class="status-pill-opt st-applied" onclick="changeStatus('${app._id}', 'Applied', event)">Applied</span>
+                            <span class="status-pill-opt st-review" onclick="changeStatus('${app._id}', 'Under Review', event)">Review</span>
+                            <span class="status-pill-opt st-shortlisted" onclick="changeStatus('${app._id}', 'Shortlisted', event)">Shortlist</span>
+                            <span class="status-pill-opt st-selected" onclick="changeStatus('${app._id}', 'Selected', event)">Select</span>
+                            <span class="status-pill-opt st-rejected" onclick="changeStatus('${app._id}', 'Rejected', event)">Reject</span>
+                        </div>
+                    </div>
+                `;
+
+                // Clicking the card opens full profile snapshot modal
+                card.addEventListener('click', (ev) => {
+                    if (ev.target.closest('.status-pill-opt')) return; // handled separately
+                    openApplicantProfileModal(app);
+                });
+
+                container.appendChild(card);
+            });
+        }
+
+        function getStatusClass(status) {
+            switch(status) {
+                case 'Applied': return 'st-applied';
+                case 'Under Review': return 'st-review';
+                case 'Shortlisted': return 'st-shortlisted';
+                case 'Interview': return 'st-interview';
+                case 'Selected': return 'st-selected';
+                case 'Rejected': return 'st-rejected';
+                default: return 'st-applied';
+            }
+        }
+
+        // Change Application Status
+        async function changeStatus(appId, newStatus, ev) {
+            if (ev) ev.stopPropagation();
+            await JobStore.updateApplicationStatus(appId, newStatus);
+
+            // Update local memory
+            const app = currentDrawerApplicants.find(a => a._id === appId);
+            if (app) app.status = newStatus;
+
+            filterAndRenderApplicants();
+            updateOverviewStats();
+            showToast(`Candidate status updated to "${newStatus}"!`, 'success');
+        }
+
+        // Open Full Profile Snapshot Modal
+        function openApplicantProfileModal(app) {
+            selectedApplicant = app;
+
+            document.getElementById('modalCandidateName').textContent = app.studentName;
+            document.getElementById('modalCandidateMeta').textContent = `${app.studentEmail} · ${app.studentPhone || 'No phone'} · Branch: ${app.studentBranch}`;
+
+            const initials = (app.studentName || 'Student').split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
+            document.getElementById('modalAvatarRing').textContent = initials;
+
+            // Match Ring
+            document.getElementById('modalMatchRing').innerHTML = JobStore.renderMatchRingSVG(app.mlMatchScore || 75, 68, 6);
+
+            // Status Pill
+            document.getElementById('modalStatusPillBadge').innerHTML = `
+                <span class="status-pill-opt ${getStatusClass(app.status)} fs-6 px-3 py-1">${app.status}</span>
+            `;
+
+            // Skills
+            const matchedContainer = document.getElementById('modalMatchedSkills');
+            matchedContainer.innerHTML = (app.matchedSkills && app.matchedSkills.length)
+                ? app.matchedSkills.map(s => `<span class="badge bg-success-subtle text-success border border-success-subtle px-2 py-1"><i class="fa fa-check me-1"></i>${escapeHtml(s)}</span>`).join('')
+                : '<span class="text-muted small">None matched</span>';
+
+            const missingContainer = document.getElementById('modalMissingSkills');
+            missingContainer.innerHTML = (app.missingSkills && app.missingSkills.length)
+                ? app.missingSkills.map(s => `<span class="badge bg-danger-subtle text-danger border border-danger-subtle px-2 py-1"><i class="fa fa-xmark me-1"></i>${escapeHtml(s)}</span>`).join('')
+                : '<span class="text-success small"><i class="fa fa-check-circle me-1"></i>All requirements met!</span>';
+
+            // Academics
+            const snap = app.studentProfileSnapshot || {};
+            document.getElementById('modalCGPA').textContent = app.studentCGPA || snap.cgpa || '—';
+            document.getElementById('modalBacklogs').textContent = snap.backlogs || 0;
+            document.getElementById('modalGradYear').textContent = snap.gradYear || '2026';
+
+            document.getElementById('modalClass10').textContent = snap.madhyamikPercent ? `${snap.madhyamikPercent}% (${snap.madhyamikSchool || 'Secondary'})` : 'Not provided';
+            document.getElementById('modalClass12').textContent = snap.higherSecPercent ? `${snap.higherSecPercent}% (${snap.higherSecSchool || 'Higher Secondary'})` : 'Not provided';
+
+            document.getElementById('modalResumeName').textContent = app.resumeFileName || 'EduScope_Resume.pdf';
+
+            // Status Buttons in Modal Footer
+            const btnGroup = document.getElementById('modalStatusBtnGroup');
+            btnGroup.innerHTML = `
+                <button class="btn btn-outline-primary ${app.status === 'Applied' ? 'active' : ''}" onclick="changeStatusFromModal('${app._id}', 'Applied')">Applied</button>
+                <button class="btn btn-outline-warning ${app.status === 'Under Review' ? 'active' : ''}" onclick="changeStatusFromModal('${app._id}', 'Under Review')">Review</button>
+                <button class="btn btn-outline-info ${app.status === 'Shortlisted' ? 'active' : ''}" onclick="changeStatusFromModal('${app._id}', 'Shortlisted')">Shortlist</button>
+                <button class="btn btn-outline-success ${app.status === 'Selected' ? 'active' : ''}" onclick="changeStatusFromModal('${app._id}', 'Selected')">Select</button>
+                <button class="btn btn-outline-danger ${app.status === 'Rejected' ? 'active' : ''}" onclick="changeStatusFromModal('${app._id}', 'Rejected')">Reject</button>
+            `;
+
+            applicantModalInstance.show();
+        }
+
+        async function changeStatusFromModal(appId, newStatus) {
+            await changeStatus(appId, newStatus, null);
+            if (selectedApplicant) {
+                selectedApplicant.status = newStatus;
+                openApplicantProfileModal(selectedApplicant);
+            }
+        }
+
+        function viewApplicantResume() {
+            if (!selectedApplicant) return;
+            const snap = selectedApplicant.studentProfileSnapshot || {};
+
+            // If an uploaded resume URL exists, open it
+            if (selectedApplicant.resumeUrl) {
+                window.open(selectedApplicant.resumeUrl, '_blank');
+                return;
+            }
+
+            // Otherwise, render a clean resume preview modal or alert
+            const resumeText = `
+                ==============================
+                CANDIDATE ATS RESUME SNAPSHOT
+                ==============================
+                Name: ${selectedApplicant.studentName}
+                Email: ${selectedApplicant.studentEmail}
+                Phone: ${selectedApplicant.studentPhone || 'N/A'}
+                College: ${snap.college || 'Engineering Institute'}
+                Branch: ${selectedApplicant.studentBranch} | CGPA: ${selectedApplicant.studentCGPA}
+                
+                TECHNICAL SKILLS:
+                ${(snap.programming || 'N/A')}
+                ${(snap.web || '')}
+                ${(snap.databases || '')}
+
+                EXPERIENCE & PROJECTS:
+                ${(snap.projects || []).map(p => `• ${p.title || p.projectName}: ${p.tech || ''}`).join('\n') || 'Academic Projects Listed'}
+
+                AI ML MATCH SCORE: ${selectedApplicant.mlMatchScore}%
+                ==============================
+            `;
+
+            const blob = new Blob([resumeText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = selectedApplicant.resumeFileName || 'Candidate_Resume.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('Resume downloaded for review.', 'info');
+        }
+
+        // Toast feedback helper
+        function showToast(message, type = 'success') {
+            const toastEl = document.getElementById('liveToast');
+            document.getElementById('toastMessage').textContent = message;
+            toastEl.className = `toast align-items-center text-white border-0 rounded-4 shadow-lg bg-${type}`;
+            const toast = new bootstrap.Toast(toastEl, { delay: 3500 });
+            toast.show();
+        }
+
+        // HTML escaping
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        }
+    </script>
+</body>
+</html>

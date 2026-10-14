@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Applications — PlacementPro AI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* ═══ Visual Stepper Timeline Styling ═══ */
+        .app-card {
+            background: linear-gradient(150deg, #f6f7fe 0%, var(--pp-surface) 48%, #e6e9f8 100%);
+            border: 1px solid rgba(255, 255, 255, 0.95);
+            border-radius: var(--pp-radius-lg);
+            box-shadow: var(--pp-clay);
+            padding: 24px;
+            margin-bottom: 22px;
+            transition: transform 0.22s var(--pp-ease), box-shadow 0.22s var(--pp-ease);
+        }
+        .app-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--pp-clay-hover);
+        }
+
+        /* 5-Step Horizontal Stepper */
+        .stepper-timeline {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            margin: 28px 0 16px;
+            padding: 0 10px;
+        }
+        .stepper-timeline::before {
+            content: '';
+            position: absolute;
+            top: 18px;
+            left: 30px;
+            right: 30px;
+            height: 4px;
+            background: #e2e8f0;
+            z-index: 1;
+        }
+        .stepper-progress-fill {
+            position: absolute;
+            top: 18px;
+            left: 30px;
+            height: 4px;
+            background: linear-gradient(90deg, #4338ca, #10b981);
+            z-index: 2;
+            transition: width 0.6s var(--pp-ease);
+        }
+
+        .step-node {
+            position: relative;
+            z-index: 3;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: default;
+        }
+        .step-node-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #fff;
+            border: 3px solid #cbd5e1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: #94a3b8;
+            box-shadow: var(--pp-clay-sm);
+            transition: all 0.3s var(--pp-ease);
+        }
+        .step-node.completed .step-node-circle {
+            background: #10b981;
+            border-color: #10b981;
+            color: #fff;
+        }
+        .step-node.active .step-node-circle {
+            background: #4338ca;
+            border-color: #4338ca;
+            color: #fff;
+            box-shadow: 0 0 0 5px rgba(67, 56, 202, 0.22);
+            animation: pulseCircle 1.8s infinite;
+        }
+        .step-node.rejected .step-node-circle {
+            background: #e0455c;
+            border-color: #e0455c;
+            color: #fff;
+        }
+
+        @keyframes pulseCircle {
+            0%, 100% { box-shadow: 0 0 0 4px rgba(67, 56, 202, 0.2); }
+            50% { box-shadow: 0 0 0 9px rgba(67, 56, 202, 0.4); }
+        }
+
+        .step-node-label {
+            font-size: 0.76rem;
+            font-weight: 700;
+            color: #64748b;
+            margin-top: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+        .step-node.active .step-node-label {
+            color: var(--pp-primary);
+            font-weight: 800;
+        }
+        .step-node.completed .step-node-label {
+            color: #065f46;
+        }
+        .step-node.rejected .step-node-label {
+            color: #991b1b;
+        }
+
+        /* Filter Pills */
+        .app-filter-btn {
+            border: 1px solid rgba(255, 255, 255, 0.85);
+            background: linear-gradient(150deg, #f3f4fd 0%, var(--pp-surface) 55%, #e6e9f8 100%);
+            box-shadow: var(--pp-clay-sm);
+            color: var(--pp-text);
+            font-weight: 700;
+            font-size: 0.85rem;
+            border-radius: 50px;
+            padding: 8px 18px;
+            cursor: pointer;
+            transition: all 0.2s var(--pp-ease);
+        }
+        .app-filter-btn.active, .app-filter-btn:hover {
+            background: linear-gradient(135deg, var(--pp-primary), #6366f1);
+            color: #fff;
+            box-shadow: var(--pp-clay-cta);
+        }
+    </style>
+</head>
+<body>
+    <div class="d-flex">
+        <div class="pp-aurora-b" aria-hidden="true"></div>
+
+        <!-- Sidebar -->
+        <div class="sidebar p-3 d-flex flex-column" id="ppSidebar" style="width: 250px; min-height: 100vh;">
+            <h4 class="fw-bold text-primary mb-4 px-2">PlacementPro</h4>
+            <ul class="nav flex-column mb-auto">
+                <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="fa fa-gauge me-2"></i>Dashboard</a></li>
+                <li class="nav-item"><a href="profile.html" class="nav-link"><i class="fa fa-user me-2"></i>My Profile</a></li>
+                <li class="nav-item"><a href="jobs.html" class="nav-link"><i class="fa fa-briefcase me-2"></i>Explore Jobs</a></li>
+                <li class="nav-item"><a href="applications.html" class="nav-link active"><i class="fa fa-paper-plane me-2"></i>My Applications</a></li>
+                <li class="nav-item"><a href="analysis.html" class="nav-link"><i class="fa fa-chart-bar me-2"></i>My Analysis</a></li>
+                <li class="nav-item"><a href="companies.html" class="nav-link"><i class="fa fa-building me-2"></i>Companies</a></li>
+                <li class="nav-item"><a href="roles.html" class="nav-link"><i class="fa fa-briefcase me-2"></i>Career Roles</a></li>
+                <li class="nav-item"><a href="skill-gap.html" class="nav-link"><i class="fa fa-triangle-exclamation me-2"></i>Skill Gap</a></li>
+                <li class="nav-item"><a href="resume.html" class="nav-link"><i class="fa fa-file-lines me-2"></i>Resume Generator</a></li>
+            </ul>
+            <a href="#" onclick="handleLogout(); return false;" class="nav-link text-danger mt-4">
+                <i class="fa fa-right-from-bracket me-2"></i>Logout
+            </a>
+        </div>
+        <div class="pp-backdrop" aria-hidden="true"></div>
+
+        <!-- Main Content -->
+        <div class="flex-grow-1 p-4 bg-light">
+            <!-- Mobile topbar (hidden ≥992px) -->
+            <div class="pp-topbar">
+                <button class="pp-burger" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="ppSidebar">
+                    <i class="fa fa-bars"></i>
+                </button>
+                <span class="pp-topbar-brand"><i class="fa fa-robot me-2"></i>PlacementPro</span>
+            </div>
+
+            <!-- Page Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                <div>
+                    <h2 class="fw-bold mb-0">My Job Applications</h2>
+                    <small class="text-muted">Track application progress, recruitment rounds, and selection status in real-time</small>
+                </div>
+                <div>
+                    <a href="jobs.html" class="btn btn-primary rounded-pill fw-bold px-4">
+                        <i class="fa fa-plus me-1"></i> Apply to More Jobs
+                    </a>
+                </div>
+            </div>
+
+            <!-- Summary Metric Cards -->
+            <div class="row g-3 mb-4">
+                <div class="col-sm-6 col-lg-3">
+                    <div class="stat-card-admin">
+                        <div>
+                            <span class="text-muted fw-bold small text-uppercase" style="letter-spacing:0.5px;">Total Applied</span>
+                            <h2 class="fw-bold mb-0 text-primary mt-1" id="statAppliedTotal">0</h2>
+                            <small class="text-muted">Positions in active funnel</small>
+                        </div>
+                        <div class="stat-admin-icon" style="background:#e5e4ff; color:var(--pp-primary);">
+                            <i class="fa fa-paper-plane"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-lg-3">
+                    <div class="stat-card-admin">
+                        <div>
+                            <span class="text-muted fw-bold small text-uppercase" style="letter-spacing:0.5px;">Under Review</span>
+                            <h2 class="fw-bold mb-0 text-warning mt-1" id="statReviewTotal">0</h2>
+                            <small class="text-muted">Profiles currently screened</small>
+                        </div>
+                        <div class="stat-admin-icon" style="background:#fef3c7; color:var(--pp-warning);">
+                            <i class="fa fa-hourglass-half"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-lg-3">
+                    <div class="stat-card-admin">
+                        <div>
+                            <span class="text-muted fw-bold small text-uppercase" style="letter-spacing:0.5px;">Shortlisted</span>
+                            <h2 class="fw-bold mb-0 text-info mt-1" id="statShortlistedTotal">0</h2>
+                            <small class="text-muted">Progressed to rounds</small>
+                        </div>
+                        <div class="stat-admin-icon" style="background:#cffafe; color:var(--pp-info);">
+                            <i class="fa fa-user-check"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-6 col-lg-3">
+                    <div class="stat-card-admin">
+                        <div>
+                            <span class="text-muted fw-bold small text-uppercase" style="letter-spacing:0.5px;">Interview / Offers</span>
+                            <h2 class="fw-bold mb-0 text-success mt-1" id="statSelectedTotal">0</h2>
+                            <small class="text-muted">Final round / Job offered</small>
+                        </div>
+                        <div class="stat-admin-icon" style="background:#d1fae5; color:var(--pp-success);">
+                            <i class="fa fa-award"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filter Tabs -->
+            <div class="d-flex align-items-center gap-2 mb-4 flex-wrap" id="appFilterBar">
+                <button class="app-filter-btn active" data-filter="All">All (<span id="countAllApps">0</span>)</button>
+                <button class="app-filter-btn" data-filter="Active">In Progress (<span id="countActiveApps">0</span>)</button>
+                <button class="app-filter-btn" data-filter="Shortlisted">Shortlisted (<span id="countShortlistedApps">0</span>)</button>
+                <button class="app-filter-btn" data-filter="Selected">Offers (<span id="countSelectedApps">0</span>)</button>
+                <button class="app-filter-btn" data-filter="Rejected">Archived (<span id="countRejectedApps">0</span>)</button>
+            </div>
+
+            <!-- Applications List Container -->
+            <div id="applicationsContainer">
+                <!-- Dynamically populated -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyApplications" class="text-center py-5 d-none">
+                <div style="font-size: 3.5rem; color: #a5b4fc; margin-bottom: 12px;">
+                    <i class="fa fa-file-circle-check"></i>
+                </div>
+                <h4 class="fw-bold text-muted">No Applications Submitted Yet</h4>
+                <p class="text-muted small mb-4">Explore top corporate openings tailored to your profile and apply in one click.</p>
+                <a href="jobs.html" class="btn btn-primary rounded-pill px-5 fw-bold">
+                    <i class="fa fa-briefcase me-2"></i> Explore Live Openings
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Snapshot Modal -->
+    <div class="modal fade" id="appDetailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0 shadow-lg">
+                <div class="modal-header border-0 bg-primary text-white p-4 rounded-top-4">
+                    <div>
+                        <h5 class="fw-bold mb-0" id="mAppJobTitle">—</h5>
+                        <small class="text-white-50" id="mAppCompany">—</small>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body p-4 bg-light">
+                    <!-- Status & Submission Details -->
+                    <div class="card p-3 border-0 rounded-4 shadow-sm mb-3">
+                        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+                            <div>
+                                <small class="text-muted d-block">Submitted On</small>
+                                <strong class="text-dark" id="mAppDate">—</strong>
+                            </div>
+                            <div>
+                                <small class="text-muted d-block">Recorded AI Profile Fit</small>
+                                <span class="badge bg-success-subtle text-success fs-6 fw-bold" id="mAppScore">—</span>
+                            </div>
+                            <div>
+                                <small class="text-muted d-block">Current Pipeline Stage</small>
+                                <span class="badge bg-primary fs-6 fw-bold" id="mAppStatusBadge">Applied</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submitted CV info -->
+                    <div class="card p-3 border-0 rounded-4 shadow-sm mb-3">
+                        <h6 class="fw-bold text-ink mb-2"><i class="fa fa-file-pdf text-danger me-2"></i>Attached Application Resume</h6>
+                        <p class="text-muted small mb-3" id="mAppResumeFile">EduScope_Resume.pdf</p>
+                        <button class="btn btn-sm btn-outline-primary rounded-pill px-3" onclick="downloadSubmittedResume()">
+                            <i class="fa fa-download me-1"></i> Download Submitted Copy
+                        </button>
+                    </div>
+
+                    <!-- Stage History Timeline -->
+                    <div class="card p-3 border-0 rounded-4 shadow-sm">
+                        <h6 class="fw-bold text-ink mb-3"><i class="fa fa-clock-rotate-left text-primary me-2"></i>Application Status History</h6>
+                        <div id="mAppHistoryList" class="small">
+                            <!-- Populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer border-0 p-3 bg-white">
+                    <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/student-profile.js"></script>
+    <script src="../js/layout.js"></script>
+    <script src="../js/auth-guard.js"></script>
+    <script src="../js/job-store.js"></script>
+    <script>
+        let myApps = [];
+        let activeStudent = null;
+        let activeFilter = 'All';
+        let selectedApp = null;
+        let appDetailsModalInstance = null;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            appDetailsModalInstance = new bootstrap.Modal(document.getElementById('appDetailsModal'));
+            activeStudent = getProfile();
+
+            // Wire filter pills
+            document.querySelectorAll('#appFilterBar .app-filter-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('#appFilterBar .app-filter-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    activeFilter = btn.dataset.filter;
+                    renderApplications();
+                });
+            });
+
+            await loadMyApplications();
+        });
+
+        async function loadMyApplications() {
+            if (!activeStudent || !activeStudent.email) return;
+
+            try {
+                myApps = await JobStore.getMyApplications(activeStudent.email);
+                updateMetricCards();
+                renderApplications();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        function updateMetricCards() {
+            const total = myApps.length;
+            const review = myApps.filter(a => a.status === 'Under Review').length;
+            const shortlisted = myApps.filter(a => a.status === 'Shortlisted').length;
+            const selected = myApps.filter(a => a.status === 'Interview' || a.status === 'Selected').length;
+            const rejected = myApps.filter(a => a.status === 'Rejected').length;
+            const inProgress = myApps.filter(a => ['Applied', 'Under Review', 'Shortlisted', 'Interview'].includes(a.status)).length;
+
+            document.getElementById('statAppliedTotal').textContent = total;
+            document.getElementById('statReviewTotal').textContent = review;
+            document.getElementById('statShortlistedTotal').textContent = shortlisted;
+            document.getElementById('statSelectedTotal').textContent = selected;
+
+            document.getElementById('countAllApps').textContent = total;
+            document.getElementById('countActiveApps').textContent = inProgress;
+            document.getElementById('countShortlistedApps').textContent = shortlisted;
+            document.getElementById('countSelectedApps').textContent = selected;
+            document.getElementById('countRejectedApps').textContent = rejected;
+        }
+
+        function renderApplications() {
+            const container = document.getElementById('applicationsContainer');
+            const emptyEl = document.getElementById('emptyApplications');
+            container.innerHTML = '';
+
+            let filtered = myApps.filter(app => {
+                if (activeFilter === 'Active') {
+                    return ['Applied', 'Under Review', 'Shortlisted', 'Interview'].includes(app.status);
+                } else if (activeFilter === 'Shortlisted') {
+                    return app.status === 'Shortlisted';
+                } else if (activeFilter === 'Selected') {
+                    return app.status === 'Selected' || app.status === 'Interview';
+                } else if (activeFilter === 'Rejected') {
+                    return app.status === 'Rejected';
+                }
+                return true;
+            });
+
+            if (filtered.length === 0) {
+                emptyEl.classList.remove('d-none');
+                return;
+            } else {
+                emptyEl.classList.add('d-none');
+            }
+
+            filtered.forEach(app => {
+                const card = document.createElement('div');
+                card.className = 'app-card';
+
+                const job = app.jobDetails || {};
+                const score = app.mlMatchScore || 75;
+
+                // Build Stepper HTML
+                const stepperHtml = renderStepper(app.status);
+
+                card.innerHTML = `
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 pb-3 border-bottom">
+                        <div class="d-flex align-items-center gap-3">
+                            ${JobStore.getCompanyLogoHTML(app.companyName, app.companyLogo || job.companyLogo, 56)}
+                            <div>
+                                <h5 class="fw-bold mb-1 text-ink">${escapeHtml(app.jobTitle)}</h5>
+                                <div class="d-flex align-items-center gap-2 flex-wrap">
+                                    <span class="text-primary fw-bold small">${escapeHtml(app.companyName)}</span>
+                                    <span class="text-muted small">·</span>
+                                    <span class="text-muted small"><i class="fa fa-location-dot me-1"></i>${escapeHtml(job.location || 'Pan India')}</span>
+                                    <span class="text-muted small">·</span>
+                                    <span class="badge bg-success-subtle text-success border border-success-subtle">${escapeHtml(job.salary || 'Competitive')}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-center gap-3">
+                            ${JobStore.renderMatchRingSVG(score, 56, 5)}
+                            <div class="text-end">
+                                <span class="badge rounded-pill px-3 py-2 fs-6 ${getStatusBadgeClass(app.status)}">${app.status}</span>
+                                <small class="text-muted d-block mt-1">Applied: ${new Date(app.appliedAt).toLocaleDateString()}</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 5-Step Visual Progress Stepper -->
+                    ${stepperHtml}
+
+                    <!-- Card Actions -->
+                    <div class="d-flex justify-content-between align-items-center pt-3 border-top flex-wrap gap-2">
+                        <span class="text-muted small">
+                            <i class="fa fa-circle-info text-primary me-1"></i> Stage: <strong>${getStageDescription(app.status)}</strong>
+                        </span>
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-sm btn-outline-secondary rounded-pill px-3" onclick="openAppModal('${app._id}')">
+                                <i class="fa fa-file-lines me-1"></i> View Submitted Snapshot
+                            </button>
+                            <a href="jobs.html" class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                                Explore Openings
+                            </a>
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        // Render 5-Step Horizontal Stepper
+        function renderStepper(status) {
+            // Steps: 1: Applied, 2: Under Review, 3: Shortlisted, 4: Interview, 5: Selected / Rejected
+            let currentStep = 1;
+            let isRejected = false;
+
+            if (status === 'Applied') currentStep = 1;
+            else if (status === 'Under Review') currentStep = 2;
+            else if (status === 'Shortlisted') currentStep = 3;
+            else if (status === 'Interview') currentStep = 4;
+            else if (status === 'Selected') currentStep = 5;
+            else if (status === 'Rejected') {
+                currentStep = 5;
+                isRejected = true;
+            }
+
+            const fillWidths = ['0%', '25%', '50%', '75%', '100%'];
+            const fillWidth = fillWidths[currentStep - 1] || '0%';
+
+            return `
+                <div class="stepper-timeline">
+                    <div class="stepper-progress-fill" style="width: ${fillWidth}; ${isRejected ? 'background: #e0455c;' : ''}"></div>
+
+                    <!-- Step 1: Applied -->
+                    <div class="step-node ${currentStep > 1 ? 'completed' : (currentStep === 1 ? 'active' : '')}">
+                        <div class="step-node-circle"><i class="fa ${currentStep > 1 ? 'fa-check' : 'fa-paper-plane'}"></i></div>
+                        <span class="step-node-label">Applied</span>
+                    </div>
+
+                    <!-- Step 2: Under Review -->
+                    <div class="step-node ${currentStep > 2 ? 'completed' : (currentStep === 2 ? 'active' : '')}">
+                        <div class="step-node-circle"><i class="fa ${currentStep > 2 ? 'fa-check' : 'fa-magnifying-glass'}"></i></div>
+                        <span class="step-node-label">Screening</span>
+                    </div>
+
+                    <!-- Step 3: Shortlisted -->
+                    <div class="step-node ${currentStep > 3 ? 'completed' : (currentStep === 3 ? 'active' : '')}">
+                        <div class="step-node-circle"><i class="fa ${currentStep > 3 ? 'fa-check' : 'fa-list-check'}"></i></div>
+                        <span class="step-node-label">Shortlisted</span>
+                    </div>
+
+                    <!-- Step 4: Interview -->
+                    <div class="step-node ${currentStep > 4 ? 'completed' : (currentStep === 4 ? 'active' : '')}">
+                        <div class="step-node-circle"><i class="fa ${currentStep > 4 ? 'fa-check' : 'fa-laptop-code'}"></i></div>
+                        <span class="step-node-label">Interview</span>
+                    </div>
+
+                    <!-- Step 5: Selected or Rejected -->
+                    <div class="step-node ${isRejected ? 'rejected' : (currentStep === 5 ? 'completed active' : '')}">
+                        <div class="step-node-circle">
+                            <i class="fa ${isRejected ? 'fa-xmark' : (currentStep === 5 ? 'fa-trophy' : 'fa-award')}"></i>
+                        </div>
+                        <span class="step-node-label">${isRejected ? 'Not Selected' : 'Offered'}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function getStatusBadgeClass(status) {
+            switch(status) {
+                case 'Applied': return 'bg-primary-subtle text-primary border border-primary-subtle';
+                case 'Under Review': return 'bg-warning-subtle text-warning border border-warning-subtle';
+                case 'Shortlisted': return 'bg-info-subtle text-info border border-info-subtle';
+                case 'Interview': return 'bg-purple-subtle text-purple border';
+                case 'Selected': return 'bg-success text-white';
+                case 'Rejected': return 'bg-danger-subtle text-danger border border-danger-subtle';
+                default: return 'bg-secondary';
+            }
+        }
+
+        function getStageDescription(status) {
+            switch(status) {
+                case 'Applied': return 'Application successfully received by the hiring panel.';
+                case 'Under Review': return 'Recruiters are evaluating your academic background and project history.';
+                case 'Shortlisted': return 'Congratulations! You qualified for the technical assessment / interview round.';
+                case 'Interview': return 'Interview rounds in progress. Check your email for assessment links and schedule.';
+                case 'Selected': return 'Offer extended! The company has selected your profile.';
+                case 'Rejected': return 'Application not selected for this cohort. Keep applying to matching companies!';
+                default: return 'Application in progress.';
+            }
+        }
+
+        // Open App Detail Modal
+        function openAppModal(appId) {
+            selectedApp = myApps.find(a => String(a._id) === String(appId));
+            if (!selectedApp) return;
+
+            document.getElementById('mAppJobTitle').textContent = selectedApp.jobTitle;
+            document.getElementById('mAppCompany').textContent = selectedApp.companyName;
+            document.getElementById('mAppDate').textContent = new Date(selectedApp.appliedAt).toLocaleDateString();
+            document.getElementById('mAppScore').textContent = `${selectedApp.mlMatchScore || 75}% Match`;
+            document.getElementById('mAppStatusBadge').textContent = selectedApp.status;
+            document.getElementById('mAppStatusBadge').className = `badge fs-6 fw-bold ${getStatusBadgeClass(selectedApp.status)}`;
+            document.getElementById('mAppResumeFile').textContent = selectedApp.resumeFileName || 'EduScope_Resume.pdf';
+
+            // History list
+            const historyContainer = document.getElementById('mAppHistoryList');
+            const history = selectedApp.statusHistory || [
+                { status: 'Applied', updatedAt: selectedApp.appliedAt, comment: 'Application submitted.' }
+            ];
+
+            historyContainer.innerHTML = history.map(h => `
+                <div class="d-flex align-items-start gap-2 mb-2">
+                    <i class="fa fa-circle-check text-primary mt-1"></i>
+                    <div>
+                        <strong class="text-ink">${h.status}</strong>: ${escapeHtml(h.comment || 'Status updated')}
+                        <small class="text-muted d-block">${new Date(h.updatedAt).toLocaleString()}</small>
+                    </div>
+                </div>
+            `).join('');
+
+            appDetailsModalInstance.show();
+        }
+
+        function downloadSubmittedResume() {
+            if (!selectedApp) return;
+            const snap = selectedApp.studentProfileSnapshot || {};
+
+            const content = `
+                ==============================
+                SUBMITTED EDUSCOPE APPLICATION
+                ==============================
+                Position: ${selectedApp.jobTitle}
+                Company: ${selectedApp.companyName}
+                Candidate: ${selectedApp.studentName} (${selectedApp.studentEmail})
+                Branch: ${selectedApp.studentBranch} | CGPA: ${selectedApp.studentCGPA}
+                ML Match at Application: ${selectedApp.mlMatchScore}%
+                Date Submitted: ${new Date(selectedApp.appliedAt).toLocaleString()}
+                ==============================
+            `;
+
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = selectedApp.resumeFileName || 'Submitted_Resume.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        }
+    </script>
+</body>
+</html>

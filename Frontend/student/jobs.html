@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore Jobs — PlacementPro AI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        /* ═══ Smart Job Cards & Explorer Styling ═══ */
+        .job-card {
+            background: linear-gradient(150deg, #f6f7fe 0%, var(--pp-surface) 48%, #e6e9f8 100%);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            border-radius: var(--pp-radius-lg);
+            box-shadow: var(--pp-clay);
+            padding: 24px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: transform 0.25s var(--pp-ease), box-shadow 0.25s var(--pp-ease), border-color 0.25s;
+            cursor: pointer;
+            height: 100%;
+        }
+        .job-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--pp-clay-hover), 0 10px 24px -8px var(--pp-primary-ring);
+            border-color: rgba(67, 56, 202, 0.35);
+        }
+
+        /* Sticky Search & Filter Bar */
+        .sticky-filter-bar {
+            position: sticky;
+            top: 72px;
+            z-index: 100;
+            background: linear-gradient(170deg, rgba(238, 240, 251, 0.95), rgba(231, 234, 248, 0.95));
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            border-radius: var(--pp-radius);
+            box-shadow: 0 10px 30px -15px rgba(49, 46, 129, 0.2);
+            backdrop-filter: blur(14px);
+            padding: 16px 20px;
+            margin-bottom: 24px;
+        }
+
+        /* Bookmark Button on Card */
+        .bookmark-btn {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            width: 36px; height: 36px;
+            border-radius: 50%;
+            display: inline-flex; align-items: center; justify-content: center;
+            color: #94a3b8;
+            box-shadow: var(--pp-clay-sm);
+            transition: all 0.2s var(--pp-ease);
+            cursor: pointer;
+        }
+        .bookmark-btn:hover, .bookmark-btn.bookmarked {
+            color: #e0455c;
+            background: #ffe4e6;
+            transform: scale(1.1);
+        }
+
+        /* Eligibility Badges */
+        .eligibility-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 50px;
+            letter-spacing: 0.3px;
+        }
+        .eligibility-pill.eligible {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+        .eligibility-pill.ineligible {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        /* Skill Pill Tags */
+        .skill-pill {
+            display: inline-block;
+            background: linear-gradient(135deg, #e5e4ff, #ecebff);
+            color: var(--pp-primary);
+            font-size: 0.76rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 50px;
+            margin-right: 4px;
+            margin-bottom: 4px;
+            box-shadow: var(--pp-clay-sm);
+        }
+        .skill-pill.matched {
+            background: #dcfce7;
+            color: #15803d;
+            border: 1px solid #bbf7d0;
+        }
+        .skill-pill.missing {
+            background: #fee2e2;
+            color: #b91c1c;
+            border: 1px solid #fecaca;
+        }
+
+        /* Skeleton Shimmer Loader */
+        .shimmer-card {
+            background: linear-gradient(90deg, #e2e8f0 25%, #f1f5f9 50%, #e2e8f0 75%);
+            background-size: 200% 100%;
+            animation: shimmerAnim 1.5s infinite;
+            border-radius: 14px;
+        }
+        @keyframes shimmerAnim {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Selection Process Timeline */
+        .roadmap-track {
+            display: flex;
+            position: relative;
+            margin: 20px 0;
+            padding: 10px 0;
+            overflow-x: auto;
+        }
+        .roadmap-step {
+            flex: 1;
+            min-width: 140px;
+            text-align: center;
+            position: relative;
+        }
+        .roadmap-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 18px; left: 50%; width: 100%;
+            height: 3px;
+            background: #cbd5e1;
+            z-index: 1;
+        }
+        .roadmap-circle {
+            width: 38px; height: 38px;
+            border-radius: 50%;
+            background: #fff;
+            color: var(--pp-primary);
+            border: 2px solid var(--pp-primary);
+            display: inline-flex; align-items: center; justify-content: center;
+            font-weight: 800;
+            font-size: 0.95rem;
+            position: relative; z-index: 2;
+            box-shadow: var(--pp-clay-sm);
+        }
+        .roadmap-label {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--pp-ink);
+            margin-top: 8px;
+        }
+
+        /* Sticky Apply Bar inside details modal */
+        .sticky-apply-bar {
+            position: sticky;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(255, 255, 255, 0.8);
+            padding: 16px 24px;
+            border-radius: 0 0 24px 24px;
+            box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.06);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+    <div class="d-flex">
+        <div class="pp-aurora-b" aria-hidden="true"></div>
+
+        <!-- Sidebar -->
+        <div class="sidebar p-3 d-flex flex-column" id="ppSidebar" style="width: 250px; min-height: 100vh;">
+            <h4 class="fw-bold text-primary mb-4 px-2">PlacementPro</h4>
+            <ul class="nav flex-column mb-auto">
+                <li class="nav-item"><a href="dashboard.html" class="nav-link"><i class="fa fa-gauge me-2"></i>Dashboard</a></li>
+                <li class="nav-item"><a href="profile.html" class="nav-link"><i class="fa fa-user me-2"></i>My Profile</a></li>
+                <li class="nav-item"><a href="jobs.html" class="nav-link active"><i class="fa fa-briefcase me-2"></i>Explore Jobs</a></li>
+                <li class="nav-item"><a href="applications.html" class="nav-link"><i class="fa fa-paper-plane me-2"></i>My Applications</a></li>
+                <li class="nav-item"><a href="analysis.html" class="nav-link"><i class="fa fa-chart-bar me-2"></i>My Analysis</a></li>
+                <li class="nav-item"><a href="companies.html" class="nav-link"><i class="fa fa-building me-2"></i>Companies</a></li>
+                <li class="nav-item"><a href="roles.html" class="nav-link"><i class="fa fa-briefcase me-2"></i>Career Roles</a></li>
+                <li class="nav-item"><a href="skill-gap.html" class="nav-link"><i class="fa fa-triangle-exclamation me-2"></i>Skill Gap</a></li>
+                <li class="nav-item"><a href="resume.html" class="nav-link"><i class="fa fa-file-lines me-2"></i>Resume Generator</a></li>
+            </ul>
+            <a href="#" onclick="handleLogout(); return false;" class="nav-link text-danger mt-4">
+                <i class="fa fa-right-from-bracket me-2"></i>Logout
+            </a>
+        </div>
+        <div class="pp-backdrop" aria-hidden="true"></div>
+
+        <!-- Main Content -->
+        <div class="flex-grow-1 p-4 bg-light">
+            <!-- Mobile topbar (hidden ≥992px) -->
+            <div class="pp-topbar">
+                <button class="pp-burger" type="button" aria-label="Toggle navigation" aria-expanded="false" aria-controls="ppSidebar">
+                    <i class="fa fa-bars"></i>
+                </button>
+                <span class="pp-topbar-brand"><i class="fa fa-robot me-2"></i>PlacementPro</span>
+            </div>
+
+            <!-- Page Header -->
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                <div>
+                    <h2 class="fw-bold mb-0">Explore Jobs &amp; Openings</h2>
+                    <small class="text-muted">Live opportunities matched in real-time against your profile and skills</small>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <a href="applications.html" class="btn btn-outline-primary rounded-pill fw-bold px-3">
+                        <i class="fa fa-paper-plane me-2"></i>My Applications (<span id="userAppCount">0</span>)
+                    </a>
+                </div>
+            </div>
+
+            <!-- Sticky Filter & Search Bar -->
+            <div class="sticky-filter-bar">
+                <div class="row g-2 align-items-center">
+                    <!-- Search Input -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text bg-white border-end-0 rounded-start-pill ps-3 text-muted">
+                                <i class="fa fa-magnifying-glass"></i>
+                            </span>
+                            <input type="text" class="form-control border-start-0 rounded-end-pill py-2" id="jobSearch" placeholder="Search by job title, company, skills, or city...">
+                        </div>
+                    </div>
+
+                    <!-- Role / Category Filter -->
+                    <div class="col-lg-2 col-md-3 col-6">
+                        <select class="form-select rounded-pill py-2" id="filterCategory">
+                            <option value="All">All Categories</option>
+                            <option value="Product-Based">Product-Based</option>
+                            <option value="Service-Based">Service-Based</option>
+                            <option value="Startups">Startups</option>
+                            <option value="FinTech">FinTech</option>
+                        </select>
+                    </div>
+
+                    <!-- Work Mode Filter -->
+                    <div class="col-lg-2 col-md-3 col-6">
+                        <select class="form-select rounded-pill py-2" id="filterWorkMode">
+                            <option value="All">All Work Modes</option>
+                            <option value="Remote">Remote</option>
+                            <option value="Hybrid">Hybrid</option>
+                            <option value="On-site">On-site</option>
+                        </select>
+                    </div>
+
+                    <!-- Employment Type -->
+                    <div class="col-lg-2 col-md-6 col-6">
+                        <select class="form-select rounded-pill py-2" id="filterType">
+                            <option value="All">All Types</option>
+                            <option value="Full-time">Full-time</option>
+                            <option value="Internship">Internship</option>
+                            <option value="Intern to Full-time">Intern to Full-time</option>
+                        </select>
+                    </div>
+
+                    <!-- Show Only Eligible Switch & Bookmarks Toggle -->
+                    <div class="col-lg-2 col-md-6 col-6 text-end">
+                        <div class="d-flex align-items-center justify-content-end gap-2">
+                            <div class="form-check form-switch mb-0" title="Only display jobs where you meet the academic cutoff">
+                                <input class="form-check-input" type="checkbox" id="eligibleOnlySwitch">
+                                <label class="form-check-label small fw-bold text-dark" for="eligibleOnlySwitch">Eligible Only</label>
+                            </div>
+                            <button class="btn btn-sm btn-outline-secondary rounded-pill px-2" id="savedJobsFilterBtn" title="View Bookmarked Jobs" onclick="toggleSavedFilter()">
+                                <i class="fa fa-bookmark"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Job Cards Grid -->
+            <div class="row g-4" id="jobsGridContainer">
+                <!-- Populated via JavaScript -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="noJobsFound" class="text-center py-5 d-none">
+                <div style="font-size: 3.5rem; color: #a5b4fc; margin-bottom: 12px;">
+                    <i class="fa fa-briefcase"></i>
+                </div>
+                <h4 class="fw-bold text-muted">No Opportunities Match Your Criteria</h4>
+                <p class="text-muted small mb-3">Try clearing some filters or searching for broader skills.</p>
+                <button class="btn btn-sm btn-primary rounded-pill px-4" onclick="resetFilters()">
+                    <i class="fa fa-rotate-left me-1"></i> Reset Filters
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═════════════════════════════════════════════════════════ -->
+    <!--  RICH JOB DETAILS MODAL                                   -->
+    <!-- ═════════════════════════════════════════════════════════ -->
+    <div class="modal fade" id="jobDetailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content rounded-4 border-0 shadow-lg overflow-hidden" style="max-height:90vh;">
+                <!-- Hero Header -->
+                <div class="p-4 p-md-5 text-white position-relative" style="background: linear-gradient(135deg, #312e81 0%, #4338ca 50%, #0d9488 100%);">
+                    <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-4" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <div class="d-flex align-items-center gap-4 flex-wrap">
+                        <div id="modalCompanyLogo"></div>
+                        <div>
+                            <span class="badge bg-white text-primary rounded-pill px-3 py-1 mb-2 fw-bold" id="modalCategoryBadge">Category</span>
+                            <h2 class="fw-bold mb-1 text-white" id="modalTitle">—</h2>
+                            <h5 class="text-white-50 mb-3" id="modalCompanyLocation">—</h5>
+                            <div class="d-flex flex-wrap gap-2" id="modalMetaPills"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-body p-4 p-md-5 bg-light">
+                    <div class="row g-4">
+                        <!-- Left Column: AI Match & Overview -->
+                        <div class="col-lg-8">
+                            <!-- AI Eligibility & Skill Gap Card -->
+                            <div class="card p-4 border-0 rounded-4 shadow-sm mb-4" style="background: linear-gradient(145deg, #ffffff 0%, #f4f6fe 100%); border: 1px solid rgba(67, 56, 202, 0.15) !important;">
+                                <div class="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
+                                    <h5 class="fw-bold text-primary mb-0">
+                                        <i class="fa fa-wand-magic-sparkles me-2"></i>Personalized AI Eligibility &amp; Skill Fit
+                                    </h5>
+                                    <div id="modalEligibilityTag"></div>
+                                </div>
+
+                                <div class="d-flex align-items-center gap-4 mb-4 flex-wrap">
+                                    <div id="modalMatchScoreRing"></div>
+                                    <div class="flex-grow-1">
+                                        <h6 class="fw-bold text-dark mb-1">Live Profile Evaluation</h6>
+                                        <p class="text-muted small mb-2" id="modalEligibilitySummary">—</p>
+                                        <div class="row g-2 text-center" style="font-size:0.85rem;">
+                                            <div class="col-4 p-2 bg-white rounded-3 border">
+                                                <small class="text-muted d-block">Your CGPA</small>
+                                                <strong class="text-primary" id="modalYourCGPA">—</strong>
+                                            </div>
+                                            <div class="col-4 p-2 bg-white rounded-3 border">
+                                                <small class="text-muted d-block">Req. CGPA</small>
+                                                <strong class="text-dark" id="modalReqCGPA">—</strong>
+                                            </div>
+                                            <div class="col-4 p-2 bg-white rounded-3 border">
+                                                <small class="text-muted d-block">Backlogs</small>
+                                                <strong class="text-success" id="modalYourBacklogs">0</strong>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Skill Compatibility Breakdown -->
+                                <div class="pt-3 border-top">
+                                    <h6 class="fw-bold small text-muted text-uppercase mb-2">Technical Skills Breakdown</h6>
+                                    <div class="mb-2">
+                                        <span class="small fw-bold text-success me-2"><i class="fa fa-check-circle"></i> Matched Skills:</span>
+                                        <div id="modalMatchedPills" class="d-inline-flex flex-wrap gap-1 mt-1"></div>
+                                    </div>
+                                    <div>
+                                        <span class="small fw-bold text-danger me-2"><i class="fa fa-triangle-exclamation"></i> Skills to Upskill:</span>
+                                        <div id="modalMissingPills" class="d-inline-flex flex-wrap gap-1 mt-1"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Job Description & Responsibilities -->
+                            <div class="card p-4 border-0 rounded-4 shadow-sm mb-4">
+                                <h5 class="fw-bold text-ink mb-3"><i class="fa fa-file-lines me-2 text-primary"></i>About The Role</h5>
+                                <p class="text-muted leading-relaxed" id="modalDescription" style="white-space:pre-line;">—</p>
+
+                                <h6 class="fw-bold text-ink mt-4 mb-2">Key Responsibilities:</h6>
+                                <ul class="text-muted small ps-3" id="modalResponsibilitiesList"></ul>
+                            </div>
+
+                            <!-- Visual Selection Roadmap -->
+                            <div class="card p-4 border-0 rounded-4 shadow-sm mb-4">
+                                <h5 class="fw-bold text-ink mb-1"><i class="fa fa-route me-2 text-primary"></i>Hiring &amp; Selection Roadmap</h5>
+                                <small class="text-muted">Steps required to receive a formal placement offer</small>
+                                <div class="roadmap-track mt-3" id="modalSelectionRoadmap"></div>
+                            </div>
+                        </div>
+
+                        <!-- Right Column: Quick Criteria & Sticky Action -->
+                        <div class="col-lg-4">
+                            <div class="card p-4 border-0 rounded-4 shadow-sm mb-4">
+                                <h6 class="fw-bold text-primary mb-3"><i class="fa fa-circle-info me-1"></i> Quick Facts</h6>
+                                <div class="d-flex flex-column gap-3 small">
+                                    <div class="d-flex justify-content-between">
+                                        <span class="text-muted">Package (CTC):</span>
+                                        <strong class="text-success" id="modalSalary">—</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span class="text-muted">Work Mode:</span>
+                                        <strong class="text-dark" id="modalWorkMode">—</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span class="text-muted">Vacancies:</span>
+                                        <strong class="text-dark" id="modalVacancies">—</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span class="text-muted">Eligible Batches:</span>
+                                        <strong class="text-dark" id="modalBatches">—</strong>
+                                    </div>
+                                    <div class="d-flex justify-content-between">
+                                        <span class="text-muted">Application Deadline:</span>
+                                        <strong class="text-danger" id="modalDeadline">—</strong>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card p-4 border-0 rounded-4 shadow-sm mb-4">
+                                <h6 class="fw-bold text-ink mb-2"><i class="fa fa-shield-halved me-1 text-primary"></i> Instructions</h6>
+                                <p class="text-muted small mb-0" id="modalAdditionalInstructions">Ensure your academic snapshot is up to date before applying.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Similar Opportunities Row -->
+                    <div class="mt-4 pt-3 border-top">
+                        <h5 class="fw-bold mb-3 text-ink"><i class="fa fa-layer-group me-2 text-primary"></i>Similar Openings You Might Like</h5>
+                        <div class="row g-3" id="modalSimilarJobsRow"></div>
+                    </div>
+                </div>
+
+                <!-- Sticky Bottom Action Bar -->
+                <div class="sticky-apply-bar">
+                    <div>
+                        <small class="text-muted d-block">Ready to take the next step?</small>
+                        <h5 class="fw-bold mb-0 text-success" id="modalStickySalary">—</h5>
+                    </div>
+                    <div class="d-flex gap-2 align-items-center">
+                        <button class="btn btn-outline-secondary rounded-pill px-3" id="modalBookmarkBtn" onclick="toggleModalBookmark()">
+                            <i class="fa fa-bookmark me-1"></i> Save
+                        </button>
+                        <button class="btn btn-primary rounded-pill px-5 fw-bold" id="modalApplyNowBtn" onclick="openApplyConfirmationModal()">
+                            <i class="fa fa-paper-plane me-2"></i> Apply Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ═════════════════════════════════════════════════════════ -->
+    <!--  1-CLICK APPLICATION CONFIRMATION MODAL                   -->
+    <!-- ═════════════════════════════════════════════════════════ -->
+    <div class="modal fade" id="applyConfirmModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered">
+            <div class="modal-content rounded-4 border-0 shadow-lg">
+                <div class="modal-header border-0 bg-primary text-white p-4 rounded-top-4">
+                    <div>
+                        <h5 class="fw-bold mb-0"><i class="fa fa-circle-check me-2"></i>Confirm Application</h5>
+                        <small class="text-white-50" id="applyJobMetaSubtitle">—</small>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body p-4 bg-light">
+                    <!-- Academic snapshot pre-fill -->
+                    <div class="card p-3 border-0 rounded-4 shadow-sm mb-3">
+                        <h6 class="fw-bold small text-muted text-uppercase mb-2">Student Academic Snapshot</h6>
+                        <div class="row g-2 text-center">
+                            <div class="col-4">
+                                <div class="p-2 bg-white rounded-3 border">
+                                    <small class="text-muted d-block">B.Tech CGPA</small>
+                                    <strong class="text-primary" id="applySnapCGPA">8.5</strong>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="p-2 bg-white rounded-3 border">
+                                    <small class="text-muted d-block">Class 12 %</small>
+                                    <strong class="text-dark" id="applySnap12">80%</strong>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="p-2 bg-white rounded-3 border">
+                                    <small class="text-muted d-block">Class 10 %</small>
+                                    <strong class="text-dark" id="applySnap10">85%</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Match & ATS score preview -->
+                    <div class="card p-3 border-0 rounded-4 shadow-sm mb-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <small class="text-muted d-block">AI Profile Fit</small>
+                                <span class="badge bg-success-subtle text-success fs-6 fw-bold" id="applySnapMatch">92% Match</span>
+                            </div>
+                            <div>
+                                <small class="text-muted d-block">ATS Score</small>
+                                <span class="badge bg-primary-subtle text-primary fs-6 fw-bold" id="applySnapATS">85 / 100</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Resume Option -->
+                    <div class="card p-3 border-0 rounded-4 shadow-sm mb-3">
+                        <h6 class="fw-bold small text-muted text-uppercase mb-2">Attach Resume</h6>
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" name="resumeSource" id="resEduScope" value="generated" checked onchange="toggleResumeUpload(false)">
+                            <label class="form-check-label fw-bold text-dark small" for="resEduScope">
+                                <i class="fa fa-file-pdf text-danger me-1"></i> Generated EduScope / PlacementPro CV
+                            </label>
+                            <small class="text-muted d-block ms-4">Automatically built from your profile details and project history.</small>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="resumeSource" id="resCustom" value="uploaded" onchange="toggleResumeUpload(true)">
+                            <label class="form-check-label fw-bold text-dark small" for="resCustom">
+                                <i class="fa fa-upload text-primary me-1"></i> Upload Custom PDF Resume
+                            </label>
+                        </div>
+
+                        <div id="customResumeInputGroup" class="mt-3 ms-4 d-none">
+                            <input type="file" class="form-control form-control-sm rounded-pill" id="customResumeFile" accept=".pdf">
+                            <small class="text-muted">Supported format: PDF only, max 5 MB.</small>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info py-2 px-3 rounded-3 small mb-0">
+                        <i class="fa fa-info-circle me-1"></i> By submitting, your verified academic history and contact details will be shared directly with the corporate talent acquisition team.
+                    </div>
+                </div>
+
+                <div class="modal-footer border-0 p-3 bg-white justify-content-between">
+                    <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary rounded-pill px-5 fw-bold" id="confirmSubmitApplicationBtn" onclick="submitApplication()">
+                        <i class="fa fa-paper-plane me-1"></i> Submit Application
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/student-profile.js"></script>
+    <script src="../js/layout.js"></script>
+    <script src="../js/auth-guard.js"></script>
+    <script src="../js/job-store.js"></script>
+    <script>
+        // State
+        let allJobs = [];
+        let activeStudent = null;
+        let selectedJob = null;
+        let jobDetailsModalInstance = null;
+        let applyConfirmModalInstance = null;
+        let filterOnlyBookmarked = false;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            jobDetailsModalInstance = new bootstrap.Modal(document.getElementById('jobDetailsModal'));
+            applyConfirmModalInstance = new bootstrap.Modal(document.getElementById('applyConfirmModal'));
+
+            // Load student profile
+            activeStudent = getProfile();
+
+            // Wire filter listeners
+            document.getElementById('jobSearch').addEventListener('input', renderJobsGrid);
+            document.getElementById('filterCategory').addEventListener('change', renderJobsGrid);
+            document.getElementById('filterWorkMode').addEventListener('change', renderJobsGrid);
+            document.getElementById('filterType').addEventListener('change', renderJobsGrid);
+            document.getElementById('eligibleOnlySwitch').addEventListener('change', renderJobsGrid);
+
+            // Fetch applications count for badge
+            updateUserAppCount();
+
+            // Load jobs
+            await loadJobs();
+        });
+
+        async function loadJobs() {
+            try {
+                allJobs = await JobStore.getAllJobs();
+                renderJobsGrid();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function updateUserAppCount() {
+            if (!activeStudent || !activeStudent.email) return;
+            const apps = await JobStore.getMyApplications(activeStudent.email);
+            document.getElementById('userAppCount').textContent = apps.length;
+        }
+
+        function toggleSavedFilter() {
+            filterOnlyBookmarked = !filterOnlyBookmarked;
+            const btn = document.getElementById('savedJobsFilterBtn');
+            if (filterOnlyBookmarked) {
+                btn.classList.add('btn-danger', 'text-white');
+                btn.classList.remove('btn-outline-secondary');
+            } else {
+                btn.classList.remove('btn-danger', 'text-white');
+                btn.classList.add('btn-outline-secondary');
+            }
+            renderJobsGrid();
+        }
+
+        function resetFilters() {
+            document.getElementById('jobSearch').value = '';
+            document.getElementById('filterCategory').value = 'All';
+            document.getElementById('filterWorkMode').value = 'All';
+            document.getElementById('filterType').value = 'All';
+            document.getElementById('eligibleOnlySwitch').checked = false;
+            filterOnlyBookmarked = false;
+            const btn = document.getElementById('savedJobsFilterBtn');
+            btn.classList.remove('btn-danger', 'text-white');
+            btn.classList.add('btn-outline-secondary');
+            renderJobsGrid();
+        }
+
+        function renderJobsGrid() {
+            const container = document.getElementById('jobsGridContainer');
+            const emptyState = document.getElementById('noJobsFound');
+            container.innerHTML = '';
+
+            const q = document.getElementById('jobSearch').value.trim().toLowerCase();
+            const category = document.getElementById('filterCategory').value;
+            const workMode = document.getElementById('filterWorkMode').value;
+            const empType = document.getElementById('filterType').value;
+            const eligibleOnly = document.getElementById('eligibleOnlySwitch').checked;
+            const email = activeStudent?.email || '';
+
+            let filtered = allJobs.filter(job => {
+                // Must be active
+                if (job.status !== 'Active') return false;
+
+                // Category
+                if (category !== 'All' && job.category !== category) return false;
+                // Work mode
+                if (workMode !== 'All' && job.workMode !== workMode) return false;
+                // Employment type
+                if (empType !== 'All' && job.employmentType !== empType) return false;
+
+                // Search
+                if (q) {
+                    const matchTitle = (job.title || '').toLowerCase().includes(q);
+                    const matchCompany = (job.companyName || '').toLowerCase().includes(q);
+                    const matchLocation = (job.location || '').toLowerCase().includes(q);
+                    const matchSkills = (job.requiredSkills || []).some(s => s.toLowerCase().includes(q));
+                    if (!matchTitle && !matchCompany && !matchLocation && !matchSkills) return false;
+                }
+
+                // Bookmark filter
+                if (filterOnlyBookmarked && !JobStore.isBookmarked(job._id, email)) {
+                    return false;
+                }
+
+                // Check eligibility filter
+                if (eligibleOnly) {
+                    const match = JobStore.calculateMatch(activeStudent, job);
+                    if (!match.isEligible) return false;
+                }
+
+                return true;
+            });
+
+            if (filtered.length === 0) {
+                emptyState.classList.remove('d-none');
+                return;
+            } else {
+                emptyState.classList.add('d-none');
+            }
+
+            filtered.forEach(job => {
+                const match = JobStore.calculateMatch(activeStudent, job);
+                const bookmarked = JobStore.isBookmarked(job._id, email);
+                const alreadyApplied = JobStore.hasApplied(job._id, email);
+
+                const col = document.createElement('div');
+                col.className = 'col-lg-4 col-md-6';
+
+                // Mode pill color
+                let modeColor = 'bg-primary-subtle text-primary border border-primary-subtle';
+                if (job.workMode === 'Remote') modeColor = 'bg-success-subtle text-success border border-success-subtle';
+                else if (job.workMode === 'On-site') modeColor = 'bg-secondary-subtle text-secondary border';
+
+                // Eligibility pill
+                let eligibilityBadge = '';
+                if (match.isEligible) {
+                    eligibilityBadge = `<span class="eligibility-pill eligible"><i class="fa fa-circle-check"></i> Eligible to Apply</span>`;
+                } else {
+                    eligibilityBadge = `<span class="eligibility-pill ineligible"><i class="fa fa-triangle-exclamation"></i> CGPA / Skill Gap</span>`;
+                }
+
+                // Skills pills preview (max 3)
+                const skillsHtml = (job.requiredSkills || []).slice(0, 3)
+                    .map(s => `<span class="skill-pill">${escapeHtml(s)}</span>`).join('') +
+                    ((job.requiredSkills?.length > 3) ? `<span class="skill-pill">+${job.requiredSkills.length - 3}</span>` : '');
+
+                col.innerHTML = `
+                    <div class="job-card" onclick="openJobDetails('${job._id}')">
+                        <div>
+                            <!-- Header Row: Logo, Company & Bookmark -->
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div class="d-flex align-items-center gap-3">
+                                    ${JobStore.getCompanyLogoHTML(job.companyName, job.companyLogo, 52)}
+                                    <div>
+                                        <h5 class="fw-bold mb-0 text-ink line-clamp-1" title="${escapeHtml(job.title)}">${escapeHtml(job.title)}</h5>
+                                        <small class="text-muted fw-bold">${escapeHtml(job.companyName)}</small>
+                                    </div>
+                                </div>
+                                <button class="bookmark-btn ${bookmarked ? 'bookmarked' : ''}" onclick="handleCardBookmark('${job._id}', event)" title="Bookmark job">
+                                    <i class="fa${bookmarked ? 's' : 'r'} fa-heart"></i>
+                                </button>
+                            </div>
+
+                            <!-- Badges row: Work Mode, CTC, Urgency -->
+                            <div class="d-flex flex-wrap gap-2 mb-3">
+                                <span class="badge rounded-pill px-3 py-1 fw-bold ${modeColor}">${job.workMode}</span>
+                                <span class="badge bg-success rounded-pill px-3 py-1 fw-bold">${escapeHtml(job.salary || 'Competitive')}</span>
+                                <span class="${match.urgency.badgeClass} rounded-pill px-3 py-1 fw-bold">${match.urgency.text}</span>
+                            </div>
+
+                            <!-- Skills preview -->
+                            <div class="mb-3">
+                                ${skillsHtml}
+                            </div>
+                        </div>
+
+                        <!-- Card Footer: ML Match Ring + Eligibility + Action -->
+                        <div class="pt-3 border-top mt-2">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    ${eligibilityBadge}
+                                    <small class="text-muted d-block mt-1" style="font-size:0.75rem;"><i class="fa fa-location-dot me-1"></i>${escapeHtml(job.location)}</small>
+                                </div>
+                                <div class="d-flex align-items-center gap-2">
+                                    ${JobStore.renderMatchRingSVG(match.matchScore, 52, 5)}
+                                </div>
+                            </div>
+
+                            <div class="mt-3">
+                                ${alreadyApplied ? `
+                                    <button class="btn btn-sm btn-outline-success w-100 rounded-pill disabled" style="pointer-events:none;">
+                                        <i class="fa fa-circle-check me-1"></i> Applied on ${new Date(alreadyApplied.appliedAt).toLocaleDateString()}
+                                    </button>
+                                ` : `
+                                    <button class="btn btn-sm btn-primary w-100 rounded-pill fw-bold">
+                                        View Details &amp; Apply <i class="fa fa-arrow-right ms-1"></i>
+                                    </button>
+                                `}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(col);
+            });
+        }
+
+        // Bookmark Handler on Card
+        function handleCardBookmark(jobId, ev) {
+            ev.stopPropagation();
+            const email = activeStudent?.email || '';
+            const isNowBookmarked = JobStore.toggleBookmark(jobId, email);
+            renderJobsGrid();
+        }
+
+        // Open Rich Job Details View
+        function openJobDetails(jobId) {
+            selectedJob = allJobs.find(j => String(j._id) === String(jobId));
+            if (!selectedJob) return;
+
+            const match = JobStore.calculateMatch(activeStudent, selectedJob);
+            const email = activeStudent?.email || '';
+            const alreadyApplied = JobStore.hasApplied(jobId, email);
+
+            // Populate Modal Fields
+            document.getElementById('modalCompanyLogo').innerHTML = JobStore.getCompanyLogoHTML(selectedJob.companyName, selectedJob.companyLogo, 76);
+            document.getElementById('modalCategoryBadge').textContent = selectedJob.category || 'Product-Based';
+            document.getElementById('modalTitle').textContent = selectedJob.title;
+            document.getElementById('modalCompanyLocation').textContent = `${selectedJob.companyName} · ${selectedJob.location}`;
+
+            // Meta Pills
+            document.getElementById('modalMetaPills').innerHTML = `
+                <span class="badge bg-white text-dark rounded-pill px-3 py-2 fw-bold"><i class="fa fa-briefcase me-1"></i>${selectedJob.employmentType || 'Full-time'}</span>
+                <span class="badge bg-white text-dark rounded-pill px-3 py-2 fw-bold"><i class="fa fa-laptop me-1"></i>${selectedJob.workMode}</span>
+                <span class="badge bg-white text-success rounded-pill px-3 py-2 fw-bold"><i class="fa fa-money-bill-wave me-1"></i>${selectedJob.salary || 'Competitive'}</span>
+                <span class="badge bg-warning text-dark rounded-pill px-3 py-2 fw-bold">${match.urgency.text}</span>
+            `;
+
+            // AI Match Card
+            document.getElementById('modalMatchScoreRing').innerHTML = JobStore.renderMatchRingSVG(match.matchScore, 78, 7);
+            document.getElementById('modalYourCGPA').textContent = activeStudent?.cgpa || '—';
+            document.getElementById('modalReqCGPA').textContent = selectedJob.eligibility?.minimumCGPA ?? 6.0;
+            document.getElementById('modalYourBacklogs').textContent = activeStudent?.backlogs || '0';
+
+            if (match.isEligible) {
+                document.getElementById('modalEligibilityTag').innerHTML = `<span class="badge bg-success rounded-pill px-3 py-2 fs-6"><i class="fa fa-circle-check me-1"></i> You are fully eligible to apply!</span>`;
+                document.getElementById('modalEligibilitySummary').textContent = 'Your academic qualifications and core branch align with the company profile guidelines.';
+            } else {
+                document.getElementById('modalEligibilityTag').innerHTML = `<span class="badge bg-danger rounded-pill px-3 py-2 fs-6"><i class="fa fa-triangle-exclamation me-1"></i> Eligibility Gap Detected</span>`;
+                document.getElementById('modalEligibilitySummary').textContent = match.eligibilityReasons.join(' ') || 'One or more academic cutoffs are not satisfied.';
+            }
+
+            // Matched & Missing Skills
+            const matchedPills = document.getElementById('modalMatchedPills');
+            matchedPills.innerHTML = match.matchedSkills.length
+                ? match.matchedSkills.map(s => `<span class="skill-pill matched"><i class="fa fa-check me-1"></i>${escapeHtml(s)}</span>`).join('')
+                : '<span class="text-muted small">None matched</span>';
+
+            const missingPills = document.getElementById('modalMissingPills');
+            missingPills.innerHTML = match.missingSkills.length
+                ? match.missingSkills.map(s => `<span class="skill-pill missing"><i class="fa fa-xmark me-1"></i>${escapeHtml(s)}</span>`).join('')
+                : '<span class="text-success small fw-bold"><i class="fa fa-circle-check me-1"></i>You have all required skills!</span>';
+
+            // Job Description & Responsibilities
+            document.getElementById('modalDescription').textContent = selectedJob.description || 'No detailed description provided.';
+            const respList = document.getElementById('modalResponsibilitiesList');
+            respList.innerHTML = (selectedJob.responsibilities && selectedJob.responsibilities.length)
+                ? selectedJob.responsibilities.map(r => `<li class="mb-1">${escapeHtml(r)}</li>`).join('')
+                : '<li>Develop, maintain, and test mission-critical software solutions.</li>';
+
+            // Selection Roadmap
+            const roadmapContainer = document.getElementById('modalSelectionRoadmap');
+            const rounds = selectedJob.selectionProcess && selectedJob.selectionProcess.length
+                ? selectedJob.selectionProcess
+                : ['Application Screening', 'Online Assessment', 'Technical Round', 'HR Round'];
+
+            roadmapContainer.innerHTML = rounds.map((r, i) => `
+                <div class="roadmap-step">
+                    <div class="roadmap-circle">${i + 1}</div>
+                    <div class="roadmap-label">${escapeHtml(r)}</div>
+                </div>
+            `).join('');
+
+            // Quick Facts
+            document.getElementById('modalSalary').textContent = selectedJob.salary || 'Competitive';
+            document.getElementById('modalWorkMode').textContent = selectedJob.workMode;
+            document.getElementById('modalVacancies').textContent = `${selectedJob.vacancies || 1} Openings`;
+            document.getElementById('modalBatches').textContent = (selectedJob.eligibility?.eligibleBatches || []).join(', ') || 'All Open';
+            document.getElementById('modalDeadline').textContent = new Date(selectedJob.deadline).toLocaleDateString();
+            document.getElementById('modalAdditionalInstructions').textContent = selectedJob.additionalInstructions || 'Ensure all college records are updated.';
+
+            // Sticky Bottom Action Bar
+            document.getElementById('modalStickySalary').textContent = `${selectedJob.salary || 'Attractive Package'} · ${selectedJob.location}`;
+
+            const applyBtn = document.getElementById('modalApplyNowBtn');
+            if (alreadyApplied) {
+                applyBtn.disabled = true;
+                applyBtn.className = 'btn btn-outline-success rounded-pill px-5 fw-bold';
+                applyBtn.innerHTML = `<i class="fa fa-circle-check me-2"></i> Applied on ${new Date(alreadyApplied.appliedAt).toLocaleDateString()}`;
+            } else if (!match.isEligible) {
+                applyBtn.disabled = false;
+                applyBtn.className = 'btn btn-warning rounded-pill px-5 fw-bold text-dark';
+                applyBtn.innerHTML = `<i class="fa fa-paper-plane me-2"></i> Apply Despite Gap`;
+            } else {
+                applyBtn.disabled = false;
+                applyBtn.className = 'btn btn-primary rounded-pill px-5 fw-bold';
+                applyBtn.innerHTML = `<i class="fa fa-paper-plane me-2"></i> Apply Now`;
+            }
+
+            // Bookmark Button in modal
+            const bmBtn = document.getElementById('modalBookmarkBtn');
+            const isBm = JobStore.isBookmarked(jobId, email);
+            bmBtn.innerHTML = isBm ? '<i class="fas fa-heart text-danger me-1"></i> Saved' : '<i class="far fa-heart me-1"></i> Save';
+
+            // Similar Jobs Carousel
+            const similarContainer = document.getElementById('modalSimilarJobsRow');
+            const similar = allJobs.filter(j => j._id !== selectedJob._id && (j.category === selectedJob.category || j.technicalRole === selectedJob.technicalRole)).slice(0, 3);
+            similarContainer.innerHTML = similar.map(sJob => `
+                <div class="col-md-4">
+                    <div class="card p-3 border-0 rounded-4 shadow-sm h-100" style="cursor:pointer;" onclick="openJobDetails('${sJob._id}')">
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            ${JobStore.getCompanyLogoHTML(sJob.companyName, sJob.companyLogo, 36)}
+                            <div>
+                                <h6 class="fw-bold mb-0 text-ink line-clamp-1">${escapeHtml(sJob.title)}</h6>
+                                <small class="text-muted">${escapeHtml(sJob.companyName)}</small>
+                            </div>
+                        </div>
+                        <span class="badge bg-success-subtle text-success small mb-1 align-self-start">${escapeHtml(sJob.salary || 'Competitive')}</span>
+                    </div>
+                </div>
+            `).join('');
+
+            jobDetailsModalInstance.show();
+        }
+
+        function toggleModalBookmark() {
+            if (!selectedJob) return;
+            const email = activeStudent?.email || '';
+            const isNowBookmarked = JobStore.toggleBookmark(selectedJob._id, email);
+            const bmBtn = document.getElementById('modalBookmarkBtn');
+            bmBtn.innerHTML = isNowBookmarked ? '<i class="fas fa-heart text-danger me-1"></i> Saved' : '<i class="far fa-heart me-1"></i> Save';
+            renderJobsGrid();
+        }
+
+        // ═════════════════════════════════════════════════════════
+        //  APPLY CONFIRMATION MODAL & SUBMISSION
+        // ═════════════════════════════════════════════════════════
+        function openApplyConfirmationModal() {
+            if (!selectedJob) return;
+
+            // Check profile completeness
+            if (!activeStudent || !activeStudent.email) {
+                alert('Please sign in to submit your job application.');
+                window.location.href = '../login.html';
+                return;
+            }
+
+            document.getElementById('applyJobMetaSubtitle').textContent = `${selectedJob.title} at ${selectedJob.companyName}`;
+
+            // Pre-fill Academic snapshot
+            document.getElementById('applySnapCGPA').textContent = activeStudent.cgpa || '7.5';
+            document.getElementById('applySnap12').textContent = activeStudent.higherSecPercent ? `${activeStudent.higherSecPercent}%` : '78%';
+            document.getElementById('applySnap10').textContent = activeStudent.madhyamikPercent ? `${activeStudent.madhyamikPercent}%` : '82%';
+
+            const match = JobStore.calculateMatch(activeStudent, selectedJob);
+            document.getElementById('applySnapMatch').textContent = `${match.matchScore}% Match`;
+
+            // ATS Score (derived from profile completeness)
+            const fields = ['name','email','phone','location','college','branch','cgpa','programming','web','databases'];
+            const filled = fields.filter(f => activeStudent[f] && String(activeStudent[f]).trim()).length;
+            const atsScore = Math.min(95, 65 + Math.round((filled / fields.length) * 30));
+            document.getElementById('applySnapATS').textContent = `${atsScore} / 100`;
+
+            applyConfirmModalInstance.show();
+        }
+
+        function toggleResumeUpload(isCustom) {
+            const group = document.getElementById('customResumeInputGroup');
+            if (isCustom) {
+                group.classList.remove('d-none');
+            } else {
+                group.classList.add('d-none');
+            }
+        }
+
+        // Submit Application
+        async function submitApplication() {
+            if (!selectedJob || !activeStudent) return;
+
+            const submitBtn = document.getElementById('confirmSubmitApplicationBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fa fa-spinner fa-spin me-2"></i> Submitting...';
+
+            const resumeType = document.querySelector('input[name="resumeSource"]:checked').value;
+            let resumeFileName = `${(activeStudent.name || 'Student').replace(/\s+/g, '_')}_EduScope_CV.pdf`;
+
+            if (resumeType === 'uploaded') {
+                const fileInput = document.getElementById('customResumeFile');
+                if (fileInput.files && fileInput.files[0]) {
+                    resumeFileName = fileInput.files[0].name;
+                }
+            }
+
+            try {
+                const payload = {
+                    studentProfile: activeStudent,
+                    resumeType,
+                    resumeFileName,
+                    atsScore: 85
+                };
+
+                const result = await JobStore.applyToJob(selectedJob._id, payload);
+
+                // Close modals
+                applyConfirmModalInstance.hide();
+                jobDetailsModalInstance.hide();
+
+                // Trigger celebratory confetti animation!
+                fireConfetti();
+
+                // Re-render
+                renderJobsGrid();
+                updateUserAppCount();
+
+            } catch (err) {
+                alert(err.message || 'Failed to submit application.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fa fa-paper-plane me-1"></i> Submit Application';
+            }
+        }
+
+        // Confetti Celebration Effect
+        function fireConfetti() {
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+                setTimeout(() => {
+                    confetti({
+                        particleCount: 50,
+                        angle: 60,
+                        spread: 55,
+                        origin: { x: 0 }
+                    });
+                    confetti({
+                        particleCount: 50,
+                        angle: 120,
+                        spread: 55,
+                        origin: { x: 1 }
+                    });
+                }, 250);
+            }
+
+            // Create temporary floating toast
+            const toast = document.createElement('div');
+            toast.className = 'pp-saved-flash';
+            toast.style.position = 'fixed';
+            toast.style.top = '30px';
+            toast.style.left = '50%';
+            toast.style.transform = 'translateX(-50%)';
+            toast.style.zIndex = '9999';
+            toast.style.background = 'linear-gradient(135deg, #0aa06e, #14b8a6)';
+            toast.style.color = '#fff';
+            toast.style.padding = '14px 28px';
+            toast.style.borderRadius = '50px';
+            toast.style.boxShadow = '0 12px 30px rgba(10, 160, 110, 0.4)';
+            toast.style.fontWeight = '800';
+            toast.innerHTML = '<i class="fa fa-circle-check me-2"></i> Application Submitted Successfully! 🎉';
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(-50%) translateY(-20px)';
+                setTimeout(() => toast.remove(), 500);
+            }, 3000);
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        }
+    </script>
+</body>
+</html>
