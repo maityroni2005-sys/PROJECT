@@ -4,9 +4,12 @@ const companySchema = new mongoose.Schema({
   companyName: { type: String, required: true },
   category: { 
     type: String, 
-    enum: ['Service-Based', 'Product-Based', 'Startups'],
+    enum: ['Service-Based', 'Product-Based', 'Unicorns', 'Startups'],
     required: true 
   },
+  officialUrl: { type: String, default: '' },
+  logo: { type: String, default: '' },
+  packageCTC: { type: String, default: '' },
   description: { type: String },
   minimumCGPA: { type: Number, required: true },
   maximumBacklogs: { type: Number, required: true },

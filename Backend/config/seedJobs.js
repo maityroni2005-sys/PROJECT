@@ -1,245 +1,130 @@
 /**
- * 6 Pre-seeded Realistic PlacementPro Demo Jobs
- * Matches TCS, Infosys, Zoho, Flipkart, Amazon, Cognizant
+ * Backend/config/seedJobs.js
+ * ─────────────────────────────────────────────────────────────────
+ * 50 Real PlacementPro Demo Job Openings across all 50 Tech Giants
+ * Categorized into Service-Based (20), Product-Based (20), and Unicorns (10)
+ * Includes official career URLs, detailed descriptions, packages, and eligibility.
+ * ─────────────────────────────────────────────────────────────────
  */
-const DEMO_JOBS = [
-  {
-    _id: "job_tcs_digital_001",
-    title: "Digital Software Engineer",
-    companyName: "TCS",
-    companyLogo: "https://upload.wikimedia.org/wikipedia/commons/b/b1/Tata_Consultancy_Services_Logo.svg",
-    category: "Service-Based",
-    technicalRole: "Full Stack Developer",
-    description: "Join the elite TCS Digital unit to architect, engineer, and deploy next-generation enterprise cloud platforms and microservices for Fortune 500 clients.",
-    responsibilities: [
-      "Design and implement scalable RESTful APIs using Java / Spring Boot and Node.js.",
-      "Build high-performance, accessible frontend interfaces in React.js and modern JavaScript.",
-      "Work with relational and NoSQL databases (PostgreSQL, MongoDB) with clean query optimization.",
-      "Collaborate in cross-functional Agile squads with automated CI/CD deployment pipelines."
-    ],
-    requiredSkills: ["Java", "Python", "JavaScript", "React", "SQL", "Data Structures"],
-    preferredSkills: ["Spring Boot", "Docker", "AWS", "Git", "REST APIs"],
+
+const SEED_COMPANIES = require('./seedCompanies');
+
+const ROLE_TITLES = {
+  "TCS": "Digital Software Engineer - Cloud & Microservices",
+  "Infosys": "Specialist Programmer (Power Programmer)",
+  "Wipro": "Project Engineer - Enterprise Cloud Solutions",
+  "Cognizant": "GenC Next Developer - Full Stack & DevOps",
+  "Accenture": "Advanced App Engineering Analyst - Cloud & AI",
+  "Capgemini": "Senior Software Engineer - Full Stack Java/Angular",
+  "Tech Mahindra": "Software Engineer - 5G & Digital Platforms",
+  "HCLTech": "Software Engineer - Cloud & Infrastructure Services",
+  "LTIMindtree": "Software Engineer - Microservices & Digital Core",
+  "Mphasis": "Associate Software Engineer - Cognitive Cloud",
+  "Persistent Systems": "Product Engineering Associate - Cloud Native",
+  "Hexaware": "Software Engineer - Next-Gen Automation & APIs",
+  "Coforge": "Software Engineer - Digital Enterprise Solutions",
+  "Zensar": "Software Engineer - Data & Cloud Engineering",
+  "Birlasoft": "Software Engineer - Enterprise Cloud Applications",
+  "Sonata Software": "Software Engineer - Platformation & Azure",
+  "Cyient": "Embedded Software Engineer - Aerospace & IoT",
+  "KPIT Technologies": "Software Engineer - Autonomous & EV Mobility",
+  "Tata Elxsi": "Embedded AI/ML Software Engineer - Computer Vision",
+  "Genpact": "Data Engineer - Analytics & AI Platforms",
+  "Google": "Software Engineer - Distributed Systems (L3/L4)",
+  "Microsoft": "Software Development Engineer - Azure Core Cloud",
+  "Amazon": "Software Development Engineer (SDE I)",
+  "Meta": "Software Engineer - Product Infrastructure",
+  "Apple": "Software Engineer - CoreOS & Systems Architecture",
+  "Adobe": "Computer Scientist - Creative Cloud Platforms",
+  "Oracle": "Software Developer - Autonomous Database Engine",
+  "Salesforce": "Member Technical Staff (MTS) - Platform Engineering",
+  "SAP": "Associate Developer - SAP S/4HANA Cloud Core",
+  "Cisco": "Software Engineer - Cloud Networking & Cybersecurity",
+  "Intel": "System Software Engineer - Hardware/Firmware Architecture",
+  "IBM": "Associate System Software Engineer - Hybrid Cloud & watsonx",
+  "Walmart Global Tech": "Software Engineer III - Supply Chain & Omnichannel",
+  "Atlassian": "Software Engineer - Cloud Platform Architecture",
+  "Intuit": "Software Engineer - Financial Data Systems",
+  "Uber": "Software Engineer II - Real-Time Marketplace Core",
+  "ServiceNow": "Software Engineer - Cloud Workflow Platform",
+  "Nvidia": "Deep Learning Systems Software Engineer - CUDA/GPU",
+  "Qualcomm": "Modem Software Engineer - 5G / Mobile Systems",
+  "Dell Technologies": "Cloud Infrastructure & Storage Software Engineer",
+  "Flipkart": "Software Development Engineer I (SDE I)",
+  "Zoho": "Member Technical Staff (Software Developer)",
+  "Razorpay": "Software Development Engineer - Payments Core",
+  "Zomato": "Software Engineer - High Concurrency Platforms",
+  "Swiggy": "Software Development Engineer - Hyperlocal Logistics",
+  "Paytm": "Backend Software Engineer - Payments & FinTech",
+  "PhonePe": "Software Engineer - Distributed UPI Transaction Engine",
+  "Cred": "Backend Engineer - High Performance FinTech Systems",
+  "Postman": "Software Engineer - API Platform & Cloud Architecture",
+  "Zerodha": "Software Engineer - Low Latency Trading Systems"
+};
+
+const DEMO_JOBS = SEED_COMPANIES.map((company, index) => {
+  const slug = company.companyName.toLowerCase().replace(/[^a-z0-9]/g, '_');
+  const roleTitle = ROLE_TITLES[company.companyName] || `Software Development Engineer - ${company.companyName}`;
+  const isProduct = company.category === 'Product-Based';
+  const isUnicorn = company.category === 'Unicorns';
+
+  const defaultResponsibilities = [
+    `Architect and develop highly scalable, resilient microservices for ${company.companyName}'s production workloads.`,
+    `Collaborate with cross-functional engineering teams using modern Agile and CI/CD automation pipelines.`,
+    `Optimize performance, query latency, database indexing, and memory efficiency across distributed systems.`,
+    `Write comprehensive unit and integration tests adhering to enterprise engineering best practices.`
+  ];
+
+  const defaultSelectionProcess = isProduct ? [
+    "Online Coding Qualifier (DSA & Problem Solving)",
+    "Technical Round 1: Data Structures, Algorithms & Concurrency",
+    "Technical Round 2: System Architecture & Low-Level Design",
+    "Managerial Fitment & Leadership Principles"
+  ] : isUnicorn ? [
+    "Machine Coding / Practical Problem Solving Round",
+    "Deep Technical Interview (High Scale & DB Internals)",
+    "Cultural Fit & Architectural Alignment"
+  ] : [
+    "National Qualifier Cognitive & Coding Assessment",
+    "Technical Interview (Core CS, DSA, OOP, Projects)",
+    "HR Discussion & Communication Evaluation"
+  ];
+
+  const now = Date.now();
+  const deadlineDays = 10 + (index % 25);
+
+  return {
+    _id: `job_${slug}_${String(index + 1).padStart(3, '0')}`,
+    title: roleTitle,
+    companyName: company.companyName,
+    companyLogo: company.logo,
+    officialUrl: company.officialUrl,
+    category: company.category,
+    technicalRole: company.jobRoles && company.jobRoles[0] ? company.jobRoles[0] : "Full Stack Developer",
+    description: company.description,
+    responsibilities: defaultResponsibilities,
+    requiredSkills: company.requiredSkills,
+    preferredSkills: company.preferredSkills,
     eligibility: {
       requiredDegree: "B.Tech / B.E. / MCA",
       eligibleBranches: ["CS", "IT", "ECE", "EE"],
-      minimumCGPA: 7.0,
-      maximumBacklogs: 0,
+      minimumCGPA: company.minimumCGPA,
+      maximumBacklogs: company.maximumBacklogs,
       eligibleBatches: [2025, 2026, 2027],
       experienceLevel: "Fresher"
     },
-    location: "Bangalore / Kolkata / Hyderabad",
-    workMode: "Hybrid",
+    location: isProduct ? "Bangalore / Hyderabad" : isUnicorn ? "Bangalore" : "Pan-India / Hybrid",
+    workMode: isProduct && index % 4 === 0 ? "Remote" : "Hybrid",
     employmentType: "Full-time",
-    salary: "₹7.0 - 9.5 LPA",
-    vacancies: 45,
-    startDate: new Date(Date.now() - 3 * 86400000).toISOString(),
-    deadline: new Date(Date.now() + 18 * 86400000).toISOString(),
-    selectionProcess: [
-      "TCS NQT Online Cognitive & Coding Assessment",
-      "Technical Interview (DSA, System Design Basics)",
-      "Managerial & HR Discussion"
-    ],
-    additionalInstructions: "Ensure all educational details from Class 10 to B.Tech are updated. Candidates must bring 2 copies of their resume and valid college ID.",
+    salary: company.packageCTC,
+    vacancies: 10 + ((index * 7) % 40),
+    startDate: new Date(now - (index % 5 + 1) * 86400000).toISOString(),
+    deadline: new Date(now + deadlineDays * 86400000).toISOString(),
+    selectionProcess: defaultSelectionProcess,
+    additionalInstructions: `Candidates are advised to review core ${company.requiredSkills.slice(0, 3).join(', ')} concepts. Please ensure your academic records and resume are fully up to date.`,
     status: "Active",
-    featured: true
-  },
-  {
-    _id: "job_infosys_sp_002",
-    title: "Specialist Programmer (Power Programmer)",
-    companyName: "Infosys",
-    companyLogo: "https://upload.wikimedia.org/wikipedia/commons/9/95/Infosys_logo.svg",
-    category: "Service-Based",
-    technicalRole: "Backend Engineer",
-    description: "Infosys Specialist Programmers are high-calibre competitive coders focused on complex algorithmic modeling, distributed cloud architectures, and core software systems.",
-    responsibilities: [
-      "Solve advanced algorithmic challenges with high concurrency and strict latency constraints.",
-      "Contribute to Infosys Cobalt cloud solutions and microservice design patterns.",
-      "Automate testing suites and mentor graduate engineers on secure coding practices."
-    ],
-    requiredSkills: ["C++", "Java", "Data Structures", "Algorithms", "Database Management", "System Design"],
-    preferredSkills: ["Kubernetes", "Kafka", "Linux", "Competitive Programming"],
-    eligibility: {
-      requiredDegree: "B.Tech / B.E.",
-      eligibleBranches: ["CS", "IT", "ECE"],
-      minimumCGPA: 7.5,
-      maximumBacklogs: 0,
-      eligibleBatches: [2025, 2026],
-      experienceLevel: "Fresher"
-    },
-    location: "Pune / Mysore / Bangalore",
-    workMode: "On-site",
-    employmentType: "Full-time",
-    salary: "₹9.5 - 11.5 LPA",
-    vacancies: 25,
-    startDate: new Date(Date.now() - 2 * 86400000).toISOString(),
-    deadline: new Date(Date.now() + 10 * 86400000).toISOString(),
-    selectionProcess: [
-      "HackWithInfy / National Coding Qualifier (3 Hard Problems)",
-      "Deep Technical Problem-Solving Interview",
-      "Behavioral Leadership Fit"
-    ],
-    additionalInstructions: "Strong command of dynamic programming, graphs, and OS concepts will be rigorously tested.",
-    status: "Active",
-    featured: true
-  },
-  {
-    _id: "job_zoho_sde_003",
-    title: "Member Technical Staff (Software Developer)",
-    companyName: "Zoho",
-    companyLogo: "https://upload.wikimedia.org/wikipedia/commons/5/5f/Zoho_Corporation_2019_logo.svg",
-    category: "Product-Based",
-    technicalRole: "Full Stack Developer",
-    description: "Zoho builds 50+ enterprise SaaS products used by over 100 million users worldwide. As an MTS, you will write clean, un-bloated native code from scratch.",
-    responsibilities: [
-      "Develop scalable web features with deep architectural independence and minimal external dependencies.",
-      "Optimize browser rendering performance, memory footprint, and server response times.",
-      "Work on proprietary database engines and distributed storage subsystems."
-    ],
-    requiredSkills: ["C", "Java", "JavaScript", "Data Structures", "OOP", "Problem Solving"],
-    preferredSkills: ["HTML5", "CSS3", "SQL", "Operating Systems", "Networking"],
-    eligibility: {
-      requiredDegree: "Any Engineering Degree / MCA / B.Sc CS",
-      eligibleBranches: ["CS", "IT", "TT", "APM", "ECE", "EE", "ME", "Other"],
-      minimumCGPA: 6.0,
-      maximumBacklogs: 2,
-      eligibleBatches: [2024, 2025, 2026, 2027],
-      experienceLevel: "Fresher"
-    },
-    location: "Chennai / Tenkasi / Salem",
-    workMode: "On-site",
-    employmentType: "Full-time",
-    salary: "₹8.0 - 12.0 LPA",
-    vacancies: 30,
-    startDate: new Date(Date.now() - 5 * 86400000).toISOString(),
-    deadline: new Date(Date.now() + 7 * 86400000).toISOString(),
-    selectionProcess: [
-      "Round 1: General Aptitude & C/Java Debugging",
-      "Round 2: Basic Programming (Matrix, Strings, Recursion)",
-      "Round 3: Advanced Application Programming (Mini System e.g. Railway Reservation)",
-      "Round 4: Technical & HR Interview"
-    ],
-    additionalInstructions: "Zoho values pure problem-solving and coding logic above college marks or branches. All branches are welcome to apply.",
-    status: "Active",
-    featured: true
-  },
-  {
-    _id: "job_flipkart_sde_004",
-    title: "Software Development Engineer - 1 (SDE-1)",
-    companyName: "Flipkart",
-    companyLogo: "https://upload.wikimedia.org/wikipedia/commons/7/7a/Flipkart_logo.svg",
-    category: "Product-Based",
-    technicalRole: "Backend Developer",
-    description: "Power India's largest e-commerce infrastructure handling billions of requests during Big Billion Days. Build mission-critical checkout, order management, and catalog services.",
-    responsibilities: [
-      "Write high-throughput, low-latency microservices using Java / Go and Kafka.",
-      "Design database schemas, caching layers (Redis/Aerospike), and resilient asynchronous messaging.",
-      "Participate in design reviews, production on-call rotations, and performance benchmarking."
-    ],
-    requiredSkills: ["Java", "Data Structures", "Algorithms", "Low-Level Design", "SQL", "Multithreading"],
-    preferredSkills: ["Redis", "Kafka", "Elasticsearch", "AWS", "Docker"],
-    eligibility: {
-      requiredDegree: "B.Tech / B.E. / Dual Degree",
-      eligibleBranches: ["CS", "IT", "ECE"],
-      minimumCGPA: 7.5,
-      maximumBacklogs: 0,
-      eligibleBatches: [2025, 2026],
-      experienceLevel: "Fresher"
-    },
-    location: "Bangalore",
-    workMode: "Hybrid",
-    employmentType: "Full-time",
-    salary: "₹18.0 - 24.0 LPA",
-    vacancies: 15,
-    startDate: new Date(Date.now() - 1 * 86400000).toISOString(),
-    deadline: new Date(Date.now() + 5 * 86400000).toISOString(),
-    selectionProcess: [
-      "Online Coding Challenge (3 LeetCode Medium/Hard)",
-      "Machine Coding Round (2 Hours: Clean Working Code)",
-      "Problem Solving & DSA Round",
-      "Hiring Manager / Culture Fit"
-    ],
-    additionalInstructions: "Machine coding round requires modular design, clean separation of concerns, and unit tests. LLD design patterns will be evaluated.",
-    status: "Active",
-    featured: true
-  },
-  {
-    _id: "job_amazon_intern_005",
-    title: "SDE Intern (Summer 2026 / 6-Month Co-op)",
-    companyName: "Amazon",
-    companyLogo: "https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg",
-    category: "Product-Based",
-    technicalRole: "Software Engineer",
-    description: "Work shoulder-to-shoulder with senior Amazon engineers to develop, test, and deploy software features impacting hundreds of millions of global customers.",
-    responsibilities: [
-      "Own an end-to-end software feature deliverable over a 6-month internship period.",
-      "Implement scalable backend logic guided by Amazon Leadership Principles (Customer Obsession, Bias for Action).",
-      "Write comprehensive automated unit, integration, and load tests."
-    ],
-    requiredSkills: ["Java", "C++", "Python", "Data Structures", "Algorithms", "Object-Oriented Design"],
-    preferredSkills: ["AWS Services", "Git", "REST APIs", "Linux"],
-    eligibility: {
-      requiredDegree: "B.Tech / B.E. / M.Tech",
-      eligibleBranches: ["CS", "IT", "ECE", "EE"],
-      minimumCGPA: 7.0,
-      maximumBacklogs: 0,
-      eligibleBatches: [2026, 2027],
-      experienceLevel: "Fresher"
-    },
-    location: "Hyderabad / Bangalore / Chennai",
-    workMode: "Hybrid",
-    employmentType: "Internship",
-    salary: "₹80,000 / month Stipend (PPO opportunity up to 45 LPA)",
-    vacancies: 20,
-    startDate: new Date(Date.now() - 4 * 86400000).toISOString(),
-    deadline: new Date(Date.now() + 2 * 86400000).toISOString(),
-    selectionProcess: [
-      "Online Assessment 1: Code Debugging + Coding Challenge",
-      "Online Assessment 2: Work Style Simulation & Behavioral",
-      "Virtual Technical Rounds 1 & 2 (DSA & Leadership Principles)"
-    ],
-    additionalInstructions: "Top performing interns will be offered full-time Pre-Placement Offers (PPO) before graduation.",
-    status: "Active",
-    featured: true
-  },
-  {
-    _id: "job_cognizant_gen_006",
-    title: "GenC Next Developer",
-    companyName: "Cognizant",
-    companyLogo: "https://upload.wikimedia.org/wikipedia/commons/9/95/Cognizant_logo_2022.svg",
-    category: "Service-Based",
-    technicalRole: "Cloud & DevOps Engineer",
-    description: "Cognizant GenC Next is the premier engineering track for high-performing graduates to work on modern cloud migrations, AI integrations, and full-stack development.",
-    responsibilities: [
-      "Deploy cloud infrastructure components across Azure and AWS ecosystems.",
-      "Build CI/CD pipelines, containerize microservices, and configure observability dashboards.",
-      "Collaborate with solution architects to deliver client transformation projects."
-    ],
-    requiredSkills: ["Python", "Java", "Cloud Computing", "SQL", "Web Technologies"],
-    preferredSkills: ["AWS", "Azure", "Docker", "DevOps", "Linux", "Git"],
-    eligibility: {
-      requiredDegree: "B.Tech / B.E. / MCA",
-      eligibleBranches: ["CS", "IT", "ECE", "EE", "ME"],
-      minimumCGPA: 6.5,
-      maximumBacklogs: 1,
-      eligibleBatches: [2025, 2026, 2027],
-      experienceLevel: "Fresher"
-    },
-    location: "Kolkata / Chennai / Pune / Coimbatore",
-    workMode: "Hybrid",
-    employmentType: "Full-time",
-    salary: "₹6.75 - 8.5 LPA",
-    vacancies: 35,
-    startDate: new Date(Date.now() - 6 * 86400000).toISOString(),
-    deadline: new Date(Date.now() + 22 * 86400000).toISOString(),
-    selectionProcess: [
-      "Skill-Based Assessment (Coding + Advanced Tech MCQ)",
-      "Technical Interview (Cloud Basics, Project Deep Dive)",
-      "HR & Communication Assessment"
-    ],
-    additionalInstructions: "Certifications in AWS Cloud Practitioner or Azure Fundamentals will receive extra preference during technical evaluation.",
-    status: "Active",
-    featured: false
-  }
-];
+    featured: index < 12
+  };
+});
 
 module.exports = DEMO_JOBS;

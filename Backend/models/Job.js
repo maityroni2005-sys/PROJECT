@@ -15,9 +15,13 @@ const jobSchema = new mongoose.Schema({
     type: String,
     default: ''
   },
+  officialUrl: {
+    type: String,
+    default: ''
+  },
   category: {
     type: String,
-    enum: ['Product-Based', 'Service-Based', 'Startups', 'FinTech', 'Consulting', 'Other'],
+    enum: ['Product-Based', 'Service-Based', 'Unicorns', 'Startups', 'FinTech', 'Consulting', 'Other'],
     default: 'Product-Based'
   },
   technicalRole: {

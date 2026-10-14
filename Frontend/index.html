@@ -169,6 +169,7 @@
             <i class="fa fa-robot me-2"></i>PlacementPro AI
         </a>
         <div class="d-flex align-items-center gap-2">
+            <a href="#explore-companies" class="nav-link text-dark fw-semibold"><i class="fa fa-building me-1"></i>Top Companies (50)</a>
             <a href="student/jobs.html" class="nav-link text-primary fw-bold"><i class="fa fa-briefcase me-1"></i>Explore Jobs</a>
             <a href="login.html" class="nav-link">Student Login</a>
             <a href="admin/jobs.html" class="btn btn-outline-primary btn-sm px-3 rounded-pill"><i class="fa fa-shield-halved me-1"></i>Admin Portal</a>
@@ -201,8 +202,8 @@
         <!-- Stats -->
         <div class="stats-strip mt-5">
             <div class="stat-item">
-                <div class="stat-num">15+</div>
-                <div class="stat-lbl">Companies Analyzed</div>
+                <div class="stat-num">50+</div>
+                <div class="stat-lbl">Top Tech Companies</div>
             </div>
             <div class="stat-item">
                 <div class="stat-num">6</div>
@@ -231,7 +232,7 @@
                 <div class="feat-card">
                     <div class="feat-icon indigo"><i class="fa fa-building"></i></div>
                     <h5>Company Recommendations</h5>
-                    <p>ML-driven suitability scores for service-based, product-based and startup companies ranked by your profile fit.</p>
+                    <p>ML-driven suitability scores for 50 service-based, product-based and startup companies ranked by your profile fit.</p>
                 </div>
             </div>
             <div class="col-md-6 col-lg-3">
@@ -259,6 +260,73 @@
     </div>
 </section>
 
+<!-- Explore 50 Tech Companies Section -->
+<section class="feature-section pt-0" id="explore-companies">
+    <div class="container">
+        <div class="text-center mb-5">
+            <span class="badge rounded-pill mb-2 px-3 py-2 fw-bold" style="background:#EEF2FF; color:#4F46E5;">
+                <i class="fa fa-building me-1"></i> 50 Premier Tech Employers
+            </span>
+            <h2 class="section-title">Explore Top Tech Companies</h2>
+            <p class="section-sub">
+                Explore real industry benchmarks across Service-Based giants, Product-Based MNCs, and top Indian Unicorns. Click any company or logo to visit their official careers portal.
+            </p>
+        </div>
+
+        <!-- Toolbar: Search & Category Pills -->
+        <div class="card p-4 border-0 rounded-4 shadow-sm mb-4" style="background:#FFFFFF; border:1px solid #E2E8F0;">
+            <div class="row g-3 align-items-center mb-3">
+                <div class="col-md-7">
+                    <div class="input-group">
+                        <span class="input-group-text bg-light border-end-0 rounded-start-pill text-muted ps-3">
+                            <i class="fa fa-search"></i>
+                        </span>
+                        <input type="text" id="landingCompanySearch" class="form-control border-start-0 rounded-end-pill py-2"
+                               placeholder="Search 50 companies by name, skills (e.g. Google, Python, React, DSA)...">
+                    </div>
+                </div>
+                <div class="col-md-5 text-md-end text-muted small fw-semibold">
+                    <span id="landingShowingCount">Showing 50 of 50 companies</span>
+                    <a href="student/companies.html" class="ms-3 text-primary fw-bold text-decoration-none">
+                        View Detailed Match <i class="fa fa-arrow-right ms-1"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Category Pills -->
+            <div class="d-flex flex-wrap gap-2">
+                <button class="landing-category-pill category-pill active" data-category="All">
+                    <i class="fa fa-globe"></i> All (50)
+                </button>
+                <button class="landing-category-pill category-pill" data-category="Service-Based">
+                    <i class="fa fa-server"></i> Service-Based (20)
+                </button>
+                <button class="landing-category-pill category-pill" data-category="Product-Based">
+                    <i class="fa fa-microchip"></i> Product-Based (20)
+                </button>
+                <button class="landing-category-pill category-pill" data-category="Unicorns">
+                    <i class="fa fa-rocket"></i> Indian Unicorns (10)
+                </button>
+            </div>
+        </div>
+
+        <!-- No Companies Found State -->
+        <div id="landingNoCompanies" class="card p-5 text-center my-4 d-none border-0 shadow-sm rounded-4">
+            <h5 class="fw-bold mb-1">No matching companies found</h5>
+            <p class="text-muted small">Try searching for a different skill or clear your filter.</p>
+        </div>
+
+        <!-- Companies Grid Container -->
+        <div class="row g-4" id="landingCompaniesGrid"></div>
+
+        <div class="text-center mt-5">
+            <a href="register.html" class="btn btn-primary btn-lg px-5 rounded-pill fw-bold">
+                <i class="fa fa-sparkles me-2"></i>Check Your Personal ML Match With All 50 Companies
+            </a>
+        </div>
+    </div>
+</section>
+
 <!-- CTA Band -->
 <section class="cta-section">
     <div class="container">
@@ -276,6 +344,7 @@
     <p class="mb-0">
         <strong style="color:var(--pp-primary);">PlacementPro AI</strong> &nbsp;·&nbsp;
         Built for engineering students &nbsp;·&nbsp;
+        <a href="#explore-companies" style="color:var(--pp-primary);">50 Companies</a> &nbsp;·&nbsp;
         <a href="student/jobs.html" style="color:var(--pp-primary);">Explore Jobs</a> &nbsp;·&nbsp;
         <a href="admin/jobs.html" style="color:var(--pp-primary);">Admin Portal</a> &nbsp;·&nbsp;
         <a href="login.html" style="color:var(--pp-primary);">Login</a> &nbsp;·&nbsp;
@@ -284,5 +353,7 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="js/companies-data.js"></script>
+<script src="js/company.js"></script>
 </body>
 </html>
