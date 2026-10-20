@@ -17,7 +17,12 @@
             flex-direction: column;
             align-items: center;
             gap: 10px;
-            margin-bottom: 24px;
+            margin-bottom: 14px;
+        }
+
+        .profile-photo-ring-container {
+            position: relative;
+            display: inline-block;
         }
 
         .profile-photo-ring {
@@ -34,6 +39,7 @@
             color: var(--pp-border-strong);
             box-shadow: var(--pp-clay-icon), 0 0 0 3px rgba(67, 56, 202, .25);
             transition: box-shadow 0.25s var(--pp-ease), transform 0.25s var(--pp-ease);
+            position: relative;
         }
 
         .profile-photo-ring img {
@@ -45,6 +51,88 @@
         .profile-photo-ring:hover {
             box-shadow: var(--pp-clay-hover), 0 0 0 3px rgba(67, 56, 202, .35);
             transform: scale(1.04);
+        }
+
+        .profile-photo-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.45);
+            backdrop-filter: blur(2px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 1.4rem;
+            opacity: 0;
+            transition: opacity 0.22s var(--pp-ease);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .profile-photo-ring:hover .profile-photo-overlay {
+            opacity: 1;
+        }
+
+        .profile-photo-badge {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: var(--pp-primary, #4338ca);
+            color: #fff;
+            border: 2px solid #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.82rem;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(67, 56, 202, 0.35);
+            transition: transform 0.2s var(--pp-ease), background 0.2s var(--pp-ease);
+            z-index: 2;
+        }
+
+        .profile-photo-badge:hover {
+            transform: scale(1.12);
+            background: var(--pp-primary-dark, #3730a3);
+        }
+
+        /* Profile Photo Tool Card (Matches Resume section studio-card style) */
+        .profile-photo-tool-card {
+            background: linear-gradient(150deg, #f8faff 0%, #ffffff 100%);
+            border: 1px solid rgba(67, 56, 202, 0.16);
+            border-radius: 16px;
+            padding: 12px 18px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: var(--pp-clay-sm, 0 4px 12px rgba(67, 56, 202, 0.05));
+            transition: box-shadow 0.22s var(--pp-ease), border-color 0.22s var(--pp-ease);
+            margin-top: 14px;
+        }
+
+        .profile-photo-tool-card:hover {
+            box-shadow: var(--pp-clay, 0 8px 24px rgba(67, 56, 202, 0.1));
+            border-color: rgba(67, 56, 202, 0.3);
+        }
+
+        .profile-photo-icon-circle {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(67, 56, 202, 0.12), rgba(99, 102, 241, 0.18));
+            color: var(--pp-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .btn-xs {
+            padding: 4px 12px;
+            font-size: 0.75rem;
+            border-radius: 50px;
         }
 
         /* ---------- View mode: display spans ---------- */
@@ -569,19 +657,55 @@
             <!-- Profile Photo Card -->
             <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
                 <div class="profile-photo-wrapper">
-                    <div class="profile-photo-ring" id="photoRing">
-                        <i class="fa fa-user" id="photoIconFallback"></i>
-                        <img id="profilePhotoImg" src="" alt="Profile Photo" style="display:none;">
+                    <!-- Photo Ring with Camera Overlay & Floating Badge -->
+                    <div class="profile-photo-ring-container position-relative">
+                        <div class="profile-photo-ring" id="photoRing" title="Click to upload or change profile photo" style="cursor: pointer;" onclick="document.getElementById('photoFileInput').click()">
+                            <i class="fa fa-user" id="photoIconFallback"></i>
+                            <img id="profilePhotoImg" src="" alt="Profile Photo" style="display:none;">
+                            <div class="profile-photo-overlay" aria-hidden="true">
+                                <i class="fa fa-camera"></i>
+                            </div>
+                        </div>
+                        <button type="button" class="profile-photo-badge" onclick="document.getElementById('photoFileInput').click()" title="Upload or change photo" aria-label="Upload photo">
+                            <i class="fa fa-camera"></i>
+                        </button>
                     </div>
-                    <div class="text-center">
+
+                    <div class="text-center mt-2">
                         <h5 class="fw-bold mb-0" id="displayName">—</h5>
                         <small class="text-muted" id="displayBranch">—</small>
                     </div>
+
                     <!-- Completion bar -->
-                    <div style="width:200px; text-align:center;">
+                    <div style="width:220px; text-align:center;" class="mt-1">
                         <small class="text-muted">Profile Completion: <strong id="completionPct">0%</strong></small>
                         <div class="completion-bar mt-1">
                             <div class="completion-fill" id="completionFill" style="width:0%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Profile Picture Feature (matches Resume section) -->
+                    <div class="profile-photo-tool-card" id="profilePhotoToolCard">
+                        <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="profile-photo-icon-circle">
+                                    <i class="fa fa-camera"></i>
+                                </div>
+                                <div>
+                                    <strong class="d-block small fw-bold text-dark">Profile Picture</strong>
+                                    <small class="text-muted" id="profilePhotoStatus" style="font-size:0.72rem;">JPG, PNG or WEBP (Max 2.5 MB)</small>
+                                    <div id="photoFileName" class="text-primary small fw-semibold" style="font-size:0.72rem; display:none;"></div>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center gap-1">
+                                <label for="photoFileInput" class="btn btn-xs btn-outline-primary rounded-pill px-3 py-1 mb-0 d-inline-flex align-items-center gap-1 shadow-sm" style="font-size:0.75rem; cursor:pointer; font-weight:600;">
+                                    <i class="fa fa-upload"></i> <span id="photoUploadBtnText">Upload</span>
+                                </label>
+                                <input type="file" id="photoFileInput" accept="image/*" style="display:none;" onchange="handlePhotoUpload(this)">
+                                <button type="button" class="btn btn-xs btn-outline-danger rounded-pill px-2 py-1 shadow-sm" id="removePhotoBtn" onclick="handleRemovePhoto()" style="display:none; font-size:0.75rem;" title="Remove Profile Picture">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1131,6 +1255,7 @@
 
             // Photo
             updatePhotoDisplay(photo);
+            initPhotoControls();
 
             // Summary header
             document.getElementById('displayName').textContent = p.name || '—';
@@ -1282,12 +1407,8 @@
             renderSectionEditMode('workshopsContainer', p.workshops || [], workshopEntryHTML, 'workshop');
             renderSectionEditMode('extraContainer', p.extracurricular || [], extraEntryHTML, 'extra');
 
-            // Check remove photo button
-            const photo = getPhoto();
-            const removeBtn = document.getElementById('removePhotoBtn');
-            if (removeBtn) removeBtn.style.display = photo ? 'inline-flex' : 'none';
-            const fileName = document.getElementById('photoFileName');
-            if (fileName) fileName.textContent = photo ? 'Photo already uploaded.' : 'No photo selected';
+            // Check photo controls
+            initPhotoControls();
 
             // Switch DOM to edit mode
             document.body.classList.add('edit-mode');
@@ -1779,8 +1900,34 @@
         }
 
         // ─────────────────────────────────────────────────────────
-        //  Photo Handlers
+        //  Photo Handlers & Controls (Matches Resume Section)
         // ─────────────────────────────────────────────────────────
+        function initPhotoControls() {
+            const photo = getPhoto();
+            const statusEl = document.getElementById('profilePhotoStatus');
+            const removeBtn = document.getElementById('removePhotoBtn');
+            const fileNameEl = document.getElementById('photoFileName');
+            const uploadBtnText = document.getElementById('photoUploadBtnText');
+
+            if (photo) {
+                if (statusEl) statusEl.textContent = 'Custom photo attached.';
+                if (removeBtn) removeBtn.style.display = 'inline-flex';
+                if (uploadBtnText) uploadBtnText.textContent = 'Change';
+                if (fileNameEl) {
+                    fileNameEl.textContent = 'Custom photo active';
+                    fileNameEl.style.display = 'block';
+                }
+            } else {
+                if (statusEl) statusEl.textContent = 'JPG, PNG or WEBP (Max 2.5 MB)';
+                if (removeBtn) removeBtn.style.display = 'none';
+                if (uploadBtnText) uploadBtnText.textContent = 'Upload';
+                if (fileNameEl) {
+                    fileNameEl.textContent = '';
+                    fileNameEl.style.display = 'none';
+                }
+            }
+        }
+
         function handlePhotoUpload(input) {
             const file = input.files && input.files[0];
             if (!file) return;
@@ -1798,9 +1945,14 @@
             reader.onload = e => {
                 if (savePhoto(e.target.result)) {
                     updatePhotoDisplay(e.target.result);
-                    document.getElementById('photoFileName').textContent = file.name;
-                    document.getElementById('removePhotoBtn').style.display = 'inline-flex';
-                    showToast('Photo uploaded and saved!', 'success');
+                    initPhotoControls();
+                    const fileNameEl = document.getElementById('photoFileName');
+                    if (fileNameEl) {
+                        fileNameEl.textContent = file.name;
+                        fileNameEl.style.display = 'block';
+                    }
+                    updateCompletionBar(getProfile());
+                    showToast('Profile photo uploaded and saved!', 'success');
                 } else {
                     showToast('Could not save photo — image might be too large for your browser storage.', 'danger');
                 }
@@ -1811,10 +1963,10 @@
         function handleRemovePhoto() {
             removePhoto();
             updatePhotoDisplay(null);
-            document.getElementById('photoFileName').textContent = 'No photo selected';
-            document.getElementById('removePhotoBtn').style.display = 'none';
+            initPhotoControls();
             const fileInput = document.getElementById('photoFileInput');
             if (fileInput) fileInput.value = '';
+            updateCompletionBar(getProfile());
             showToast('Profile photo removed.', 'info');
         }
 
@@ -1822,15 +1974,51 @@
             const img = document.getElementById('profilePhotoImg');
             const icon = document.getElementById('photoIconFallback');
             if (photoSrc) {
-                img.src = photoSrc;
-                img.style.display = 'block';
+                if (img) {
+                    img.src = photoSrc;
+                    img.style.display = 'block';
+                }
                 if (icon) icon.style.display = 'none';
             } else {
-                img.src = '';
-                img.style.display = 'none';
+                if (img) {
+                    img.src = '';
+                    img.style.display = 'none';
+                }
                 if (icon) icon.style.display = 'block';
             }
         }
+
+        // Drag & drop support for profile photo card
+        (function initPhotoDragDrop() {
+            window.addEventListener('DOMContentLoaded', () => {
+                const dropArea = document.querySelector('.profile-photo-wrapper');
+                const fileInput = document.getElementById('photoFileInput');
+                if (!dropArea || !fileInput) return;
+
+                ['dragenter', 'dragover'].forEach(eventName => {
+                    dropArea.addEventListener(eventName, (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }, false);
+                });
+
+                ['dragleave', 'drop'].forEach(eventName => {
+                    dropArea.addEventListener(eventName, (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                    }, false);
+                });
+
+                dropArea.addEventListener('drop', (e) => {
+                    const dt = e.dataTransfer;
+                    const files = dt && dt.files;
+                    if (files && files.length) {
+                        fileInput.files = files;
+                        handlePhotoUpload(fileInput);
+                    }
+                }, false);
+            });
+        })();
 
         // ─────────────────────────────────────────────────────────
         //  Profile Completion Score
